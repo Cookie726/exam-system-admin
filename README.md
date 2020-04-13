@@ -1,4 +1,4 @@
-# supermarket-admin
+# This is an examsystem
 
 ## Project setup
 ```

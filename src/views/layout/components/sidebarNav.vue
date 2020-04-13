@@ -67,6 +67,12 @@
         <span>注册审核</span>
       </el-menu-item>
     </el-submenu>
+    <el-menu-item @click="gotoRoute('addPaper')" index="addPaper">
+      <div class="svg-container">
+        <svg-icon icon-class="sale"></svg-icon>
+      </div>
+      <span>添加试卷</span>
+    </el-menu-item>
   </el-menu>
 </template>
 

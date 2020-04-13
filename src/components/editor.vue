@@ -65,54 +65,14 @@ export default {
       this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024; // 将图片大小限制为 2M
       this.editor.customConfig.uploadImgMaxLength = 6; // 限制一次最多上传 6 张图片
       this.editor.customConfig.uploadImgTimeout = 3 * 60 * 1000; // 设置超时时间
-      // 自定义 onchange 触发的延迟时间，默认为 200 ms
-      // this.editor.customConfig.onchangeTimeout = 1000 // 单位 ms
-      // 隐藏�网络图片�tab
-      // this.editor.customConfig.showLinkImg = false
-      // 表情面板可以有多个 tab ，因此要配置成一个数组。数组每个元素代表一个 tab 的配置
-      // this.editor.customConfig.emotions = [
-      //     {
-      //         // tab 的标题
-      //         title: '默认',
-      //         // type -> 'emoji' / 'image'
-      //         type: 'image',
-      //         // content -> 数组
-      //         content: [
-      //             {
-      //                 alt: '[坏笑]',
-      //                 src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/pcmoren_huaixiao_org.png'
-      //             },
-      //             {
-      //                 alt: '[舔屏]',
-      //                 src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/pcmoren_tian_org.png'
-      //             },
-      //             {
-      //                 alt: "[哈哈]",
-      //                 src: "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/8f/2018new_haha_org.png",
-      //             },
-      //             {
-      //                 src : "http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7a/shenshou_thumb.gif",
-      //                 alt : "[草泥马]"
-      //             }
-      //         ]
-      //     },
-      //     {
-      //         // tab 的标题
-      //         title: 'emoji',
-      //         // type -> 'emoji' / 'image'
-      //         type: 'emoji',
-      //         // content -> 数组
-      //         content: ['😀', '😃', '😄', '😁', '😆']
-      //     }
-      // ],
+
       // 配置菜单
       this.editor.customConfig.menus = [
-        "head", // 标题
         "bold", // 粗体
-        "fontSize", // 字号
-        "fontName", // 字体
         "italic", // 斜体
         "underline", // 下划线
+        "fontSize", // 字号
+        "fontName", // 字体
         "strikeThrough", // 删除线
         "foreColor", // 文字颜色
         "backColor", // 背景颜色
@@ -125,23 +85,9 @@ export default {
         "table", // 表格
         "video", // 插入视频
         "code", // 插入代码
-        "undo", // 撤销
-        "redo", // 重复
         "fullscreen" // 全屏
       ];
 
-      this.editor.customConfig.colors = [
-        "#000000",
-        "#eeece0",
-        "#1c487f",
-        "#4d80bf",
-        "#c24f4a",
-        "#8baa4a",
-        "#7b5ba1",
-        "#46acc8",
-        "#f9963b",
-        "#ffffff"
-      ];
       this.editor.customConfig.uploadImgHooks = {
         fail: (xhr, editor, result) => {
           console.log(xhr, editor, result);
@@ -188,10 +134,11 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style>
 .editor {
   width: 100%;
   margin: 0 auto;
+  background-color: #fff;
   position: relative;
   z-index: 0;
 }
@@ -200,6 +147,9 @@ export default {
 }
 .text {
   border: 1px solid #ccc;
-  min-height: 500px;
+  min-height: 200px;
+}
+.w-e-text-container {
+  height: 200px !important;
 }
 </style>

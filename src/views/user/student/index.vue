@@ -38,10 +38,19 @@
         min-width="240"
       >
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">
+          <el-button
+            @click="handleDelete([scope.row.sno])"
+            type="text"
+            size="small"
+          >
             {{ scope.row.status | getStatusButton }}
           </el-button>
-          <el-button type="text" size="small">设置为老师</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="updatePower(scope.row.sno)"
+            >设置为老师</el-button
+          >
           <el-button type="text" size="small">修改信息</el-button>
         </template>
       </el-table-column>
@@ -58,14 +67,21 @@
 </template>
 <script>
 import VPage from "../../../components/pager";
-import { getUserList } from "../../../api/userManage";
+import {
+  getUserList,
+  updateUserPower,
+  deleteUser
+} from "../../../api/userManage";
 export default {
   methods: {
-    handleClick(row) {
-      console.log(row);
+    handleDelete(snoList) {
+      deleteUser({ snoList });
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    updatePower(sno) {
+      updateUserPower({ sno, power: 1 });
     },
     async onPageChange(option) {
       Object.assign(this.param, option);
