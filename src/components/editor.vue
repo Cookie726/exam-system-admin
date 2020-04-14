@@ -125,7 +125,7 @@ export default {
       };
       this.editor.customConfig.onchange = html => {
         this.info_ = html; // 绑定当前逐渐地值
-        this.$emit("change", this.info_); // 将内容同步到父组件中
+        this.$emit("update:value", this.info_); // 将内容同步到父组件中
       };
       // 创建富文本编辑器
       this.editor.create();
@@ -147,9 +147,6 @@ export default {
 }
 .text {
   border: 1px solid #ccc;
-  min-height: 200px;
-}
-.w-e-text-container {
-  height: 200px !important;
+  min-height: 0;
 }
 </style>

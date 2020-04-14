@@ -28,10 +28,19 @@
         min-width="240"
       >
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">
+          <el-button
+            @click="handlePass([scope.row.sno])"
+            type="text"
+            size="small"
+          >
             同意
           </el-button>
-          <el-button type="text" size="small">拒绝</el-button>
+          <el-button
+            @click="handleRefuse([scope.row.sno])"
+            type="text"
+            size="small"
+            >拒绝</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -39,9 +48,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="pageConfig.page"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageConfig.limit"
         layout="total, sizes, prev, pager, next, jumper"
         :total="400"
       >
@@ -50,10 +59,18 @@
   </div>
 </template>
 <script>
+import {
+  getNewUserList,
+  passNewUser,
+  refuseNewUser
+} from "../../../api/message";
 export default {
   methods: {
-    handleClick(row) {
-      console.log(row);
+    handlePass(sno_list) {
+      passNewUser({ sno_list });
+    },
+    handleRefuse(sno_list) {
+      refuseNewUser({ sno_list });
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -71,17 +88,25 @@ export default {
         {
           id: null,
           password: null,
-          realName: "张三",
-          sno: "2018010003",
-          sex: "男",
-          enterTime: "2020/3/11 20:29:31",
+          realName: "小王",
+          sno: "2018012698",
+          sex: "女",
+          enterTime: "2020/4/14 19:08:08",
           power: null,
           status: null
         }
       ],
-      currentPage4: 4,
-      multipleSelection: []
+      multipleSelection: [],
+      pageConfig: {
+        limit: 10,
+        page: 1
+      }
     };
+  },
+  mounted() {
+    getNewUserList(this.pageConfig).then(res => {
+      console.log(res);
+    });
   }
 };
 </script>

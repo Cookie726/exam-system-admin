@@ -3,12 +3,16 @@ import axios from "axios"
 //     Message,
 //     MessageBox
 // } from "element-ui"
-axios.defaults.baseURL = 'http://182.92.4.123/examSystem'
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
-// const service = axios.create({
-//     baseURL: "http://182.92.4.123/examSystem",
-//     timeout: 5000
-// })
+// axios.defaults.baseURL = 'http://182.92.4.123/examSystem'
+// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+const service = axios.create({
+    baseURL: "http://182.92.4.123/examSystem",
+    timeout: 5000,
+    withCredentials: true,
+    headers: {
+        "Content-Type": 'application/json;charset=UTF-8'
+    }
+})
 
 // service.interceptors.response.use(
 //     response => {
@@ -48,7 +52,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
 export function post(url, params) {
     return new Promise((resolve, reject) => {
-        axios.post(url, JSON.stringify(params))
+        service.post(url, JSON.stringify(params))
             .then(res => {
                 resolve(res.data);
             })
@@ -60,7 +64,7 @@ export function post(url, params) {
 
 export function get(url, params) {
     return new Promise((resolve, reject) => {
-        axios.get(url, {
+        service.get(url, {
                 params: params
             })
             .then(res => {
