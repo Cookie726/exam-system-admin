@@ -127,6 +127,10 @@ export default {
         this.info_ = html; // 绑定当前逐渐地值
         this.$emit("update:value", this.info_); // 将内容同步到父组件中
       };
+      this.editor.customConfig.onblur = html => {
+        this.info_ = html; // 绑定当前逐渐地值
+        this.$emit("update:value", this.info_);
+      };
       // 创建富文本编辑器
       this.editor.create();
     }
@@ -148,5 +152,8 @@ export default {
 .text {
   border: 1px solid #ccc;
   min-height: 0;
+}
+.w-e-toolbar {
+  flex-wrap: wrap;
 }
 </style>

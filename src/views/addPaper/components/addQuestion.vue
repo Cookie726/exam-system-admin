@@ -16,10 +16,6 @@
         <el-tab-pane label="导入文件" name="third">角色管理</el-tab-pane>
       </el-tabs>
     </div>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-    </span>
   </el-dialog>
 </template>
 
@@ -40,6 +36,9 @@ export default {
     },
     handleClick(tab, event) {
       console.log(tab, event);
+    },
+    handleConfirm() {
+      this.close();
     }
   },
   components: {
@@ -50,7 +49,6 @@ export default {
 
 <style lang="less" scoped>
 .el-dialog-div {
-  height: 60vh;
   overflow: auto;
 }
 </style>
@@ -63,13 +61,14 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /*height:600px;*/
-  max-height: calc(100% - 30px);
+  /* max-height: calc(100% - 30px); */
+  min-height: 400px;
+  height: 80%;
   max-width: calc(100% - 30px);
 }
 .el-dialog .el-dialog__body {
   flex: 1;
   overflow: auto;
-  padding: 0px 25px 30px;
+  padding: 0px 25px 50px;
 }
 </style>

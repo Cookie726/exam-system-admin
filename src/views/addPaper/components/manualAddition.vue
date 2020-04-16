@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="manual-container">
     <div class="top">
       <span style="margin-right: 12px">题目类型</span>
       <el-select v-model="type">
@@ -10,7 +10,6 @@
           :value="item.type"
         ></el-option>
       </el-select>
-      <el-button @click="getAnswer">获取答案</el-button>
     </div>
     <div class="question-content">
       <div class="desc-panel">
@@ -19,7 +18,10 @@
           <span class="intro">这里写题目描述</span>
         </div>
         <div class="editor-container" @click="updateActive('desc-panel')">
-          <editor :class="{ active: active === 'desc-panel' }"></editor>
+          <editor
+            :value.sync="content"
+            :class="{ active: active === 'desc-panel' }"
+          ></editor>
         </div>
       </div>
       <div v-if="type === '单选题'" class="key-panel">
@@ -30,10 +32,11 @@
         <div v-for="(item, index) in answerList" :key="index" class="key-list">
           <div class="key-left">
             <input
+              :value="index"
               type="radio"
               class="radioOrCheck"
               name="keyChk"
-              @change="onChange(index)"
+              v-model="radio"
             />
           </div>
           <div class="key-right">
@@ -72,7 +75,8 @@
               type="checkbox"
               class="radioOrCheck"
               name="keyChk"
-              @change="onChange(index)"
+              :value="index"
+              v-model="chks"
             />
           </div>
           <div class="key-right">
@@ -109,19 +113,19 @@
           <input
             type="radio"
             class="hidden"
-            :value="1"
+            :value="0"
             name="keyChk"
             id="judgeYes"
-            v-model="answetList[0].key"
+            v-model="radio"
           />
           <label for="judgeYes" class="btn btn-border-gray">正确</label>
           <input
             type="radio"
-            :value="1"
             class="hidden"
             name="keyChk"
+            :value="1"
             id="judgeNo"
-            v-model="answetList[1].key"
+            v-model="radio"
           />
           <label for="judgeNo" class="btn btn-border-gray">错误</label>
         </div>
@@ -132,7 +136,10 @@
           <span class="intro">这里填写该问题对应的答案解释</span>
         </div>
         <div class="editor-container" @click="updateActive('cloze-panel')">
-          <editor :class="{ active: active === 'cloze-panel' }"></editor>
+          <editor
+            :value.sync="answerList[0].answer"
+            :class="{ active: active === 'cloze-panel' }"
+          ></editor>
         </div>
       </div>
       <div class="analysis-panel">
@@ -148,35 +155,42 @@
         </div>
       </div>
     </div>
+    <span class="bottom-btn">
+      <el-button @click="handleAddQuestion" type="primary">导 入</el-button>
+    </span>
   </div>
 </template>
 
 <script>
 import { questionType } from "../../../config/default";
 import editor from "../../../components/editor";
+import { isSetAnswer } from "../../../utils/validate";
 export default {
   data() {
     return {
+      radio: null,
+      chks: [],
       questionType: questionType,
       type: "单选题",
       showEditor: false,
       active: "",
-      analysis: "<p>aaa<br></p>",
+      content: "",
+      analysis: "",
       answerList: [
         {
-          key: false,
+          key: 0,
           answer: ""
         },
         {
-          key: false,
+          key: 0,
           answer: ""
         },
         {
-          key: false,
+          key: 0,
           answer: ""
         },
         {
-          key: false,
+          key: 0,
           answer: ""
         }
       ]
@@ -184,6 +198,10 @@ export default {
   },
   watch: {
     type(newVal) {
+      this.content = "";
+      this.analysis = "";
+      this.chks = [];
+      this.radio = null;
       switch (newVal) {
         case "单选题":
           this.answerList = [
@@ -228,7 +246,7 @@ export default {
         case "判断题":
           this.answerList = [
             {
-              key: 1,
+              key: 0,
               answer: ""
             },
             {
@@ -248,23 +266,63 @@ export default {
         default:
           break;
       }
+    },
+    radio(newVal, oldVal) {
+      if (oldVal !== null) {
+        if (oldVal + 1 <= this.answerList.length) {
+          this.answerList[oldVal].key = 0;
+        }
+      }
+      if (newVal !== null) {
+        if (newVal + 1 <= this.answerList.length) {
+          this.answerList[newVal].key = 1;
+        }
+      }
+    },
+    chks(newVal, oldVal) {
+      if (oldVal.length !== 0) {
+        oldVal.forEach(v => {
+          this.answerList[v].key = 0;
+        });
+      }
+      if (newVal.length !== 0) {
+        newVal.forEach(v => {
+          console.log(v);
+          this.answerList[v].key = 1;
+        });
+      }
     }
   },
   methods: {
     updateActive(new_active) {
       this.active = new_active;
     },
-    getAnswer() {
-      console.log(this.answerList);
-    },
     addOption() {
       this.answerList.push({ key: 0, answer: "" });
     },
     removeOption(index) {
       this.answerList.splice(index, 1);
+      this.radio = null;
+      this.chks = [];
     },
-    onChange(index) {
-      console.log(index);
+    handleAddQuestion() {
+      setTimeout(() => {
+        if (!isSetAnswer(this.answerList)) {
+          this.$message.warning("请设置答案");
+          return;
+        }
+        const param = {};
+        this.answerList.forEach((ans, idx) => {
+          const key = `key${idx + 1}`;
+          const answer = `answer${idx + 1}`;
+          param[key] = ans.key;
+          param[answer] = ans.answer;
+        });
+        param.type = this.type;
+        param.content = this.content;
+        param.analysis = this.analysis;
+        console.log(param);
+      }, 0);
     }
   },
   components: {
@@ -300,11 +358,21 @@ export default {
 }
 </style>
 <style lang="less" scoped>
-.top {
-  margin-bottom: 18px;
-}
-.hidden {
-  display: none !important;
+.manual-container {
+  .top {
+    margin-bottom: 18px;
+  }
+  .bottom-btn {
+    z-index: 100;
+    position: fixed;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    line-height: 50px;
+    background-color: #fff;
+    bottom: 0;
+  }
 }
 input[type="checkbox"],
 input[type="radio"] {
@@ -349,7 +417,7 @@ label {
   width: 14px;
   height: 14px;
   right: -24px;
-  z-index: 99999;
+  z-index: 10;
   position: absolute;
   top: 50%;
   margin-top: -9px;

@@ -13,32 +13,38 @@
       <div class="add-question center">
         <div class="create center">创建新的题目</div>
         <div class="select center">
-          <el-button style="margin: 0" @click="showDialog = true" type="primary" plain>单选题</el-button>
+          <el-button
+            style="margin: 0"
+            @click="showDialog = true"
+            type="primary"
+            plain
+            >单选题</el-button
+          >
           <el-button style="margin: 0" type="primary" plain>多选题</el-button>
           <el-button style="margin: 0" type="primary" plain>判断题</el-button>
           <el-button style="margin: 0" type="primary" plain>简答题</el-button>
         </div>
       </div>
     </div>
-    <add-question
-      :dialogAddQuestion="showDialog"
-      @close="showDialog = false"
-    ></add-question>
+    <!-- <select-question :showDialog="showDialog"></select-question> -->
+    <!-- <manual-addition :showDialog="showDialog"></manual-addition> -->
+    <add-question :dialogAddQuestion="showDialog"></add-question>
   </div>
 </template>
 
 <script>
+// import SelectQuestion from "./selectQuestion";
 import AddQuestion from "./addQuestion";
 export default {
   props: {
     title: {
       type: String,
-      default: "测试"
-    }
+      default: "测试",
+    },
   },
   data() {
     return {
-      showDialog: false
+      showDialog: false,
     };
   },
   methods: {
@@ -47,11 +53,11 @@ export default {
     },
     handleAddQuestion() {
       this.showDialog = true;
-    }
+    },
   },
   components: {
-    "add-question": AddQuestion
-  }
+    "add-question": AddQuestion,
+  },
 };
 </script>
 

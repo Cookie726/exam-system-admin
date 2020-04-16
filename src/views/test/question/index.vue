@@ -9,7 +9,6 @@
       </el-table-column>
       <el-table-column
         align="center"
-        fixed
         prop="content"
         label="题干"
         min-width="320"

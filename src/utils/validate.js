@@ -1,61 +1,34 @@
-/**
- * 验证条形码
- * @export
- * @param {*} value
- * @param {*} callback
- */
-export function validateBarcode(value, callback) {
-    if (!value) {
-        callback(new Error('请填写条形码'))
-    } else if (!Number.isInteger(value)) {
-        callback(new Error('条形码要求是数字'))
+export const validateSignupForm = function (form) {
+    for (const key in form) {
+        const value = form[key];
+        if (value === "") {
+            this.$message.error("输入值不能为空")
+            return false
+        }
+    }
+    if (!(/^\d{10}$/).test(form.sno)) {
+        this.$message.error("请输入正确格式的学号")
+        return false
+    }
+    if (form.password !== form.confirmPwd) {
+        this.$message.error("两次密码不相同")
+        return false
+    }
+    return true
+};
+
+export const validateSigninForm = function (form) {
+    if (!form.sno || !form.password) {
+        this.$message.error("输入值不能为空")
+        return false
+    } else if (!(/^\d{10}$/).test(form.sno)) {
+        this.$message.error("请输入正确格式的学号")
+        return false
     } else {
-        callback()
+        return true
     }
 }
 
-/**
- * 验证商品价格
- * @export
- * @param {*} value
- * @param {*} callback
- */
-export function validatePrice(value, callback) {
-    if (!value) {
-        callback(new Error('请填写商品价格'))
-    } else if (!Number.isInteger(value)) {
-        callback(new Error('商品价格要求是数字'))
-    } else {
-        callback()
-    }
-}
-
-/**
- * 验证商品规格
- * @export
- * @param {*} value
- * @param {*} callback
- */
-export function validateSpecs(value, callback) {
-    if (value && value != "") {
-        callback()
-    } else {
-        callback(new Error('请填写商品规格'))
-    }
-}
-
-
-/**
- * 判断值是否为空
- * @export
- * @param {*} value
- * @param {*} callback
- * @param {*} message
- */
-export function isEmpty(value, callback, message) {
-    if (value && value != "") {
-        callback()
-    } else {
-        callback(new Error(message))
-    }
+export const isSetAnswer = function (answerList) {
+    return answerList.some(val => val.key === 1)
 }
