@@ -6,21 +6,59 @@
       <el-table-column
         align="center"
         fixed
-        prop="date"
+        prop="title"
         label="试卷标题"
-        width="150"
+        min-width="120"
       >
       </el-table-column>
-      <el-table-column align="center" prop="name" label="出题人" width="120">
+      <el-table-column
+        align="center"
+        prop="classify"
+        label="分类"
+        min-width="80"
+      >
       </el-table-column>
-      <el-table-column align="center" prop="province" label="分类" width="120">
+      <el-table-column
+        align="center"
+        prop="timeLimit"
+        label="限制答题时间"
+        min-width="120"
+      >
       </el-table-column>
-      <el-table-column align="center" prop="city" label="创建时间" width="120">
+      <el-table-column align="center" prop="paperScore" label="总分" width="90">
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="user.userName"
+        label="出题人"
+        min-width="90"
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="createTime"
+        label="创建时间"
+        min-width="180"
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="startTime"
+        label="开始时间"
+        min-width="180"
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="endTime"
+        label="截止时间"
+        min-width="180"
+      >
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small"
-            >查看</el-button
+          <el-button @click="handleView(scope.row)" type="text" size="small"
+            >预览</el-button
           >
           <el-button type="text" size="small">编辑</el-button>
         </template>
@@ -33,8 +71,8 @@
         :current-page="pageConfig.page"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="pageConfig.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        layout="total, sizes, prev, pager, next"
+        :total="total"
       >
       </el-pagination>
     </div>
@@ -44,48 +82,36 @@
 <script>
 export default {
   methods: {
-    handleClick(row) {
+    handleView(row) {
       console.log(row);
-    }
+    },
+    handleSizeChange() {},
+    handleCurrentChange() {},
   },
 
   data() {
     return {
       tableData: [
         {
-          date: "2016-05-02",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333
+          paper_id: 1,
+          classify: "前端",
+          title: "前端第一次考核",
+          createTime: "2020/04/12 23:26:47",
+          timeLimit: null,
+          paperScore: 100,
+          startTime: "2020/04/15 00:00:00",
+          endTime: "2020/04/17 00:00:00",
+          user: {
+            userName: "潘炳名",
+          },
         },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1517 弄",
-          zip: 200333
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1519 弄",
-          zip: 200333
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1516 弄",
-          zip: 200333
-        }
-      ]
+      ],
+      pageConfig: {
+        page: 1,
+        limit: 10,
+      },
+      total: 10,
     };
-  }
+  },
 };
 </script>

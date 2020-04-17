@@ -12,6 +12,12 @@ body {
 </style>
 
 <style lang="less">
+* {
+  padding: 0;
+  text-decoration: none;
+  margin: 0;
+  box-sizing: border-box;
+}
 .hidden {
   display: none !important;
 }

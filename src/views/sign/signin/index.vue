@@ -1,7 +1,7 @@
 <template>
   <div class="signin-container">
     <fieldset class="validate-container">
-      <h1>用户登录</h1>
+      <h1 class="top-title">用户登录</h1>
       <ul>
         <li>
           <svg-icon icon-class="sno"></svg-icon>
@@ -17,7 +17,7 @@
         </li>
       </ul>
       <input class="signin-btn" type="button" @click="signin" value="登录" />
-      <p class="center">
+      <p class="center router-footer">
         <router-link class="router-link" :to="{ name: 'signup' }"
           >注册账号</router-link
         >
@@ -34,15 +34,15 @@ export default {
     return {
       signinForm: {
         sno: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
     signin() {
       const pass = validateSigninForm.call(this, this.signinForm);
       if (pass) {
-        signin(this.signinForm).then(res => {
+        signin(this.signinForm).then((res) => {
           if (res.code === 0) {
             this.$message.success("登录成功，页面跳转中。。。");
             if (res.power === 3) {
@@ -51,12 +51,16 @@ export default {
           }
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
+@btnColor: #50a840;
+input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px white inset;
+}
 .center {
   text-align: center;
 }
@@ -66,14 +70,21 @@ ul {
     list-style: none;
   }
 }
+.top-title {
+  margin-bottom: 20px;
+  color: @btnColor;
+}
 .signin-container {
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2),
+    -10px -10px 10px rgba(0, 0, 0, 0.2);
   position: absolute;
+  padding: 28px 0;
   width: 480px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 14px;
-  background-color: gray;
+  background-color: #fff;
   .validate-container {
     border: 0px solid #c0c0c0;
     margin: 0;
@@ -102,6 +113,9 @@ ul {
           border: 1px solid #e6e6e6;
           background: #fff !important;
           box-sizing: border-box;
+          &:focus {
+            border: 1px solid @btnColor;
+          }
         }
       }
     }
@@ -114,9 +128,10 @@ ul {
       font-size: 20px;
       border-radius: 100px;
       background-color: #57b846;
+      margin-bottom: 20px;
       color: #fff;
       &:hover {
-        background-color: #50a840;
+        background-color: @btnColor;
         cursor: pointer;
       }
     }

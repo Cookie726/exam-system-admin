@@ -22,14 +22,13 @@ module.exports = {
                 symbolId: 'icon-[name]'
             })
             .end()
+        config.resolve.alias.set("src", resolve('src'))
+            .set('components', resolve('src/components'))
+            .set('api', resolve('src/api'))
+            .set('utils', resolve('src/utils'))
+            .set('views', resolve('src/views'))
+            .set('store', resolve('src/store'))
+            .set('router', resolve('src/router'))
     },
-    publicPath: "",
-    configureWebpack: {
-        plugins: [
-            new webpack.ProvidePlugin({
-                'window.Quill': 'quill/dist/quill.js',
-                'Quill': 'quill/dist/quill.js'
-            }),
-        ]
-    }
+    publicPath: ""
 }

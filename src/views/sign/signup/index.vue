@@ -1,7 +1,7 @@
 <template>
   <div class="signup-container">
     <fieldset class="validate-container">
-      <h1>用户注册</h1>
+      <h1 class="top-title">用户注册</h1>
       <ul>
         <li>
           <svg-icon icon-class="username"></svg-icon>
@@ -19,6 +19,7 @@
             placeholder="学号"
             type="text"
             class="validate-input"
+            autocomplete="off"
           />
         </li>
         <li>
@@ -48,6 +49,7 @@
             placeholder="密码"
             type="password"
             class="validate-input"
+            autocomplete="new-password"
           />
         </li>
         <li>
@@ -57,6 +59,7 @@
             placeholder="确认密码"
             type="password"
             class="validate-input"
+            autocomplete="new-password"
           />
         </li>
       </ul>
@@ -80,21 +83,21 @@ export default {
         realName: "",
         sno: "",
         sex: "男",
-        password: ""
+        password: "",
       },
       confirmPwd: "",
-      content: ""
+      content: "",
     };
   },
   methods: {
     signup() {
       const pass = validateSignupForm.call(this, {
         ...this.signupForm,
-        confirmPwd: this.confirmPwd
+        confirmPwd: this.confirmPwd,
       });
       if (pass) {
         const enterTime = new Date().getTime();
-        signup(Object.assign({ enterTime }, this.signupForm)).then(res => {
+        signup(Object.assign({ enterTime }, this.signupForm)).then((res) => {
           if (res.code === 0) {
             this.$message.success(res.msg);
           } else {
@@ -102,12 +105,16 @@ export default {
           }
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
+@btnColor: #50a840;
+input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px white inset;
+}
 .center {
   text-align: center;
 }
@@ -117,14 +124,21 @@ ul {
     list-style: none;
   }
 }
+.top-title {
+  margin-bottom: 20px;
+  color: @btnColor;
+}
 .signup-container {
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2),
+    -10px -10px 10px rgba(0, 0, 0, 0.2);
   position: absolute;
   width: 480px;
   left: 50%;
+  padding: 28px 0;
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 14px;
-  background-color: gray;
+  background-color: #fff;
   .validate-container {
     border: 0px solid #c0c0c0;
     margin: 0;
@@ -153,9 +167,12 @@ ul {
           border: 1px solid #e6e6e6;
           background: #fff !important;
           box-sizing: border-box;
+          &:focus {
+            border: 1px solid @btnColor;
+          }
         }
         input[type="radio"]:checked + label {
-          background: #a9b3bf;
+          background: @btnColor;
           border: 1px solid #878f98;
           color: #fff;
         }
@@ -173,14 +190,14 @@ ul {
       }
     }
     .signup-btn {
-      background: #57b846;
       outline: none;
       border: none;
       width: 100%;
       height: 46px;
       font-size: 20px;
       border-radius: 100px;
-      background-color: #57b846;
+      background-color: @btnColor;
+      margin-bottom: 20px;
       color: #fff;
       &:hover {
         background-color: #50a840;
