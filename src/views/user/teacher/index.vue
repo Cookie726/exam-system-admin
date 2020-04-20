@@ -2,10 +2,10 @@
   <div>
     <el-button-group class="btn-group">
       <el-button @click="deleteUser(multipleSelection)" type="primary"
-        >批量删除</el-button
+        >批量禁用</el-button
       >
       <el-button @click="startUser(multipleSelection)" type="primary"
-        >批量恢复</el-button
+        >批量启用</el-button
       ></el-button-group
     >
     <el-table
@@ -39,11 +39,7 @@
           <p>{{ scope.row.status | getStatus }}</p>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="操作"
-        min-width="240"
-      >
+      <el-table-column align="center" label="操作" min-width="240">
         <template slot-scope="scope">
           <el-button
             @click="deleteUser(scope.row.sno)"
@@ -75,7 +71,7 @@ import {
   getUserList,
   updateUserPower,
   deleteUser,
-  startUser
+  startUser,
 } from "../../../api/userManage";
 export default {
   methods: {
@@ -87,7 +83,7 @@ export default {
         snoList = sno;
       }
       deleteUser({
-        snoList
+        snoList,
       });
     },
     startUser(sno) {
@@ -98,11 +94,11 @@ export default {
         snoList = sno;
       }
       startUser({
-        snoList
+        snoList,
       });
     },
     handleSelectionChange(val) {
-      const snoList = val.map(user => user.sno);
+      const snoList = val.map((user) => user.sno);
       this.multipleSelection = snoList;
     },
     async onPageChange(option) {
@@ -114,7 +110,7 @@ export default {
     async updatePower({ sno, id }) {
       const res = await updateUserPower({ sno, id });
       console.log(res);
-    }
+    },
   },
   async mounted() {
     const res = await getUserList(this.param);
@@ -125,19 +121,19 @@ export default {
     return {
       tableData: {
         list: [],
-        total: 0
+        total: 0,
       },
       param: {
         page: 1,
         limit: 20,
-        power: 2
+        power: 2,
       },
-      multipleSelection: []
+      multipleSelection: [],
     };
   },
   components: {
-    "v-page": VPage
-  }
+    "v-page": VPage,
+  },
 };
 </script>
 

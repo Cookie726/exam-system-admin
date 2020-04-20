@@ -1,5 +1,13 @@
 <template>
   <div>
+    <el-button-group class="btn-group">
+      <el-button @click="deleteUser(multipleSelection)" type="primary"
+        >批量禁用</el-button
+      >
+      <el-button @click="startUser(multipleSelection)" type="primary"
+        >批量启用</el-button
+      ></el-button-group
+    >
     <el-table
       :data="tableData.list"
       border
@@ -31,11 +39,7 @@
           <p>{{ scope.row.status | getStatus }}</p>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="操作"
-        min-width="240"
-      >
+      <el-table-column align="center" label="操作" min-width="240">
         <template slot-scope="scope">
           <el-button
             @click="handleDelete([scope.row.sno])"
@@ -69,7 +73,7 @@ import VPage from "../../../components/pager";
 import {
   getUserList,
   updateUserPower,
-  deleteUser
+  deleteUser,
 } from "../../../api/userManage";
 export default {
   methods: {
@@ -87,7 +91,7 @@ export default {
       const res = await getUserList(this.param);
       this.tableData.list = res.data;
       this.tableData.total = res.count;
-    }
+    },
   },
   async mounted() {
     const res = await getUserList(this.param);
@@ -98,19 +102,19 @@ export default {
     return {
       tableData: {
         list: [],
-        total: 0
+        total: 0,
       },
       param: {
         page: 1,
         limit: 20,
-        power: 1
+        power: 1,
       },
-      multipleSelection: []
+      multipleSelection: [],
     };
   },
   components: {
-    "v-page": VPage
-  }
+    "v-page": VPage,
+  },
 };
 </script>
 
@@ -124,5 +128,8 @@ export default {
 .block {
   text-align: center;
   margin-top: 20px;
+}
+.btn-group {
+  margin-bottom: 20px;
 }
 </style>
