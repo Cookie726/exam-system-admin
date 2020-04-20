@@ -10,6 +10,16 @@
       <p class="title">
         <input type="text" placeholder="请输入试卷名称" :value="title" />
       </p>
+      <div class="main-list">
+        <div v-for="ques in list" :key="ques.id">
+          <div class="content" v-html="ques.content">
+            {{ ques.content }}
+          </div>
+          <div class="answer">
+            
+          </div>
+        </div>
+      </div>
       <div class="add-question center">
         <div class="create center">创建新的题目</div>
         <div class="select center">
@@ -26,15 +36,18 @@
         </div>
       </div>
     </div>
-    <!-- <select-question :showDialog="showDialog"></select-question> -->
+    <select-question
+      @saveQuesList="handleSaveQues"
+      :showDialog.sync="showDialog"
+    ></select-question>
     <!-- <manual-addition :showDialog="showDialog"></manual-addition> -->
-    <add-question :dialogAddQuestion="showDialog"></add-question>
+    <!-- <add-question :dialogAddQuestion="showDialog"></add-question> -->
   </div>
 </template>
 
 <script>
-// import SelectQuestion from "./selectQuestion";
-import AddQuestion from "./addQuestion";
+import SelectQuestion from "./selectQuestion";
+// import AddQuestion from "./addQuestion";
 export default {
   props: {
     title: {
@@ -45,18 +58,67 @@ export default {
   data() {
     return {
       showDialog: false,
+      list: [
+        {
+          id: "10001",
+          content: "<p>这是单选题题目</p>",
+          analysis: "<p>这是单选题解析</p>",
+          qtype: "单选题",
+          key1: 0,
+          answer1: "<p>asdf</p>",
+          key2: 0,
+          answer2: "<p>asdf</p>",
+          key3: 1,
+          answer3: "<p>asdf</p>",
+          key4: 0,
+          answer4: "<p>asdf</p>",
+        },
+        {
+          id: "10002",
+          content: "<p>这是多选题题目</p>",
+          analysis: "<p>这是多选题解析</p>",
+          qtype: "多选题",
+          key1: 1,
+          answer1: "<p>as否是否df</p>",
+          key2: 0,
+          answer2: "<p>asd讲话稿f</p>",
+          key3: 1,
+          answer3: "<p>染发asdf</p>",
+          key4: 0,
+          answer4: "<p>as发斯蒂芬df</p>",
+        },
+        {
+          id: "10003",
+          content: "<p>这是判断题题目</p>",
+          analysis: "<p>这是判断题解析</p>",
+          qtype: "判断题",
+          key1: 1,
+          answer1: "<p>正确</p>",
+          key2: 0,
+          answer2: "<p>错误</p>",
+        },
+        {
+          id: "10004",
+          content: "<p>这是简答题题目</p>",
+          analysis: "<p>这是简答题解析</p>",
+          qtype: "简答题",
+          key1: 1,
+          answer1: "<p>这是简答题答案</p>",
+        },
+      ],
     };
   },
   methods: {
     goBack() {
       this.$emit("goBack", "first");
     },
-    handleAddQuestion() {
-      this.showDialog = true;
+    handleSaveQues(list) {
+      console.log(list);
     },
   },
   components: {
-    "add-question": AddQuestion,
+    // "add-question": AddQuestion,
+    "select-question": SelectQuestion,
   },
 };
 </script>
@@ -104,6 +166,11 @@ export default {
         border: none;
         outline: none;
       }
+    }
+    .main-list {
+      margin: 25px 20px 20px 20px;
+      border: @border;
+      border-radius: 4px;
     }
     .add-question {
       margin: 25px 20px 20px 20px;
