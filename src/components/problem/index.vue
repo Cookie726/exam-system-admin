@@ -1,7 +1,16 @@
 <template>
-  <div class="question-content">
+  <div :id="question.id" class="question-content">
+    <el-tooltip effect="dark" :content="tipContent" placement="top">
+      <div
+        @click="handleMark"
+        class="question-operation operation-icon"
+        :class="{ 'icon-marked': isMark, 'icon-mark': !isMark }"
+      >
+        <i class="icon el-icon-s-flag"></i>
+      </div>
+    </el-tooltip>
     <div class="exam-question">
-      <span class="question-index ellipsis">{{ question.index }}.</span>
+      <span class="question-index ellipsis">{{ index + 1 }}.</span>
       <div v-html="content">{{ content }}</div>
     </div>
     <div class="answers">
@@ -35,7 +44,12 @@
       </template>
       <template v-else>
         <div class="editor-container">
-          <editor :configMenus="configMenus" :value.sync="answer"></editor>
+          <editor
+            @save="handleSave"
+            :configMenus="configMenus"
+            :value.sync="answer"
+            :hasSaveBtn="true"
+          ></editor>
         </div>
       </template>
     </div>
@@ -43,7 +57,7 @@
 </template>
 
 <script>
-import { initAnswerType } from "utils/helpers";
+import { initAnswerType, isComplete } from "utils/helpers";
 import editor from "@/components/editor";
 export default {
   props: {
@@ -53,7 +67,6 @@ export default {
           type: "简答题",
           content: "<p>撒<b>地方1</b></p><p>撒地方<i>双方的给</i> 非观</p>",
           score: 10,
-          index: 1,
           optionList: [
             {
               answer: "正确",
@@ -66,6 +79,7 @@ export default {
       },
       type: Object,
     },
+    index: Number,
   },
   data() {
     return {
@@ -75,15 +89,35 @@ export default {
         "table", // 表格
         "code",
       ],
+      isMark: false,
     };
   },
   mounted() {
     this.answer = initAnswerType(this.question.type);
   },
   methods: {
+    handleMark() {
+      this.isMark = !this.isMark;
+      this.$store.commit("exercise/SET_MARK", {
+        index: this.index,
+        status: this.isMark,
+      });
+    },
     handleSelect(index) {
       const ref = `inputBtn${index}`;
       this.$refs[ref][0].click();
+    },
+    handleSave() {
+      console.log("save", this.answer);
+    },
+  },
+  watch: {
+    answer(newVal) {
+      const _isComplete = isComplete(this.question.type, newVal);
+      this.$store.commit("exercise/SET_DONE", {
+        index: this.index,
+        status: _isComplete,
+      });
     },
   },
   computed: {
@@ -122,6 +156,9 @@ export default {
       }
       return inputType;
     },
+    tipContent() {
+      return this.isMark ? "取消标记" : "标记本题";
+    },
   },
   components: {
     editor: editor,
@@ -143,8 +180,28 @@ label {
   font-weight: bold;
 }
 .question-content {
+  &:nth-child(n + 2) {
+    border-top: 1px solid #dedede;
+  }
+  margin-bottom: 50px;
   padding: 30px 75px 0 30px;
   position: relative;
+  .question-operation {
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+    position: absolute;
+    top: 30px;
+    right: -45px;
+    cursor: pointer;
+    color: #1a8cfe;
+    &.icon-mark {
+      color: #1a8cfe;
+    }
+    &.icon-marked {
+      color: red;
+    }
+  }
   .exam-question {
     font-size: 16px;
     line-height: 22px;

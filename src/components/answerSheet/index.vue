@@ -10,7 +10,8 @@
           <div
             v-for="(item, index) in list"
             :key="index"
-            class="box normal-box s1"
+            class="box normal-box"
+            :class="{ marked: flag[index], s1: !done[index], s3: done[index] }"
           >
             <a :href="'#' + item.id" class="iconBox">{{ index + 1 }}</a
             ><span class="box icon-box question_marked"></span>
@@ -72,6 +73,21 @@ export default {
           id: "100006",
         },
       ],
+    },
+  },
+  mounted() {},
+  computed: {
+    flag() {
+      return this.$store.state.exercise.flag;
+    },
+    done() {
+      return this.$store.state.exercise.done;
+    },
+  },
+  watch: {
+    done(newVal) {
+      console.log(newVal);
+      console.log("changed");
     },
   },
 };
@@ -160,7 +176,8 @@ export default {
               background: #ff0000;
             }
           }
-          &.s2 {
+          &.s2,
+          &.s3 {
             .iconBox {
               border-color: #1a8cfe;
               color: #fff;

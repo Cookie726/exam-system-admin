@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="editor">
-    <div ref="toolbar" class="toolbar"></div>
+    <div ref="toolbar" class="toolbar">
+      <div v-show="showSavaBtn" @click="save" class="toolbar-btn">保存</div>
+    </div>
     <div ref="editor" class="text"></div>
   </div>
 </template>
@@ -13,6 +15,7 @@ export default {
   data() {
     return {
       // uploadPath,
+      showSavaBtn: false,
       editor: null,
       info_: null,
     };
@@ -22,6 +25,10 @@ export default {
     event: "change",
   },
   props: {
+    hasSaveBtn: {
+      type: Boolean,
+      default: false,
+    },
     value: {
       type: String,
       default: "",
@@ -134,11 +141,23 @@ export default {
         this.$emit("update:value", this.info_); // 将内容同步到父组件中
       };
       this.editor.customConfig.onblur = (html) => {
+        if (this.hasSaveBtn) {
+          this.showSavaBtn = false;
+        }
         this.info_ = html; // 绑定当前逐渐地值
         this.$emit("update:value", this.info_);
+        this.$emit("save");
+      };
+      this.editor.customConfig.onfocus = () => {
+        if (this.hasSaveBtn) {
+          this.showSavaBtn = true;
+        }
       };
       // 创建富文本编辑器
       this.editor.create();
+    },
+    save() {
+      this.editor.onblur();
     },
   },
 };
@@ -154,6 +173,7 @@ export default {
 }
 .toolbar {
   border: 1px solid #ccc;
+  position: relative;
 }
 .text {
   border: 1px solid #ccc;
@@ -161,5 +181,22 @@ export default {
 }
 .w-e-toolbar {
   flex-wrap: wrap;
+}
+.toolbar-btn {
+  z-index: -1;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  padding: 0 8px;
+  text-align: center;
+  border-radius: 2px;
+  width: 44px;
+  height: 24px;
+  line-height: 24px;
+  background-color: #1a8cef;
+  color: #fff;
+  font-size: 12px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="exam-board-container">
-    <div class="nav">
+    <!-- <div class="nav">
       <ul class="menu-items">
         <li class="menu-item">
           <div class="item-label">姓名</div>
@@ -11,48 +11,94 @@
           <div class="item-data">10.0</div>
         </li>
       </ul>
-    </div>
+    </div> -->
     <div class="nav">
       <ul class="menu-items">
         <li class="menu-item menu-item-time">
           <div class="item-label">剩余时间</div>
-          <div class="item-data">00:59:22</div>
+          <div class="item-data">{{ countDownTime }}</div>
         </li>
         <li class="menu-item menu-item-process">
           <div class="item-label">当前进度</div>
           <div class="item-data">
-            <span id="commitCount">0</span>/<span id="totalCount">8</span>
+            <span id="commitCount">{{ process }}</span
+            >/<span id="totalCount">{{ done.length }}</span>
           </div>
           <div class="item-process">
             <div
               class="item-process-bar"
               id="commitProcess"
-              style="width: 12.5px;"
+              :style="'width:' + (process * 100) / done.length + 'px;'"
             ></div>
           </div>
         </li>
       </ul>
     </div>
-    <div class="btn btn-primary btn-nav">关闭</div>
-    <div class="nav nav-bottom">
+    <div @click="closeWindow" class="btn btn-primary btn-nav">关闭</div>
+    <!-- <div class="nav nav-bottom">
       <ul class="menu-items">
         <li class="menu-item disabled">
           <span class="item-label">上一人</span>
         </li>
         <li class="menu-item"><span class="item-label">下一人</span></li>
       </ul>
-    </div>
+    </div> -->
     <button
       type="button"
       class="btn btn-primary btn-nav btn-bottom position-left-0"
     >
       保存
     </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-nav btn-bottom position-left-0"
+    >
+      提交
+    </button>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      timeLimit: 3605,
+    };
+  },
+  mounted() {
+    setInterval(() => {
+      this.timeLimit--;
+    }, 1000);
+  },
+  methods: {
+    closeWindow() {
+      console.log("关闭当前窗口");
+    },
+  },
+  computed: {
+    done() {
+      return this.$store.state.exercise.done;
+    },
+    process() {
+      return this.done.filter((status) => status).length;
+    },
+    countDownTime() {
+      let h = Math.floor(this.timeLimit / 60 / 60);
+      if (h < 10) {
+        h = "0" + h;
+      }
+      let m = Math.floor((this.timeLimit - h * 60 * 60) / 60);
+      if (m < 10) {
+        m = "0" + m;
+      }
+      let s = this.timeLimit - h * 60 * 60 - m * 60;
+      if (s < 10) {
+        s = "0" + s;
+      }
+      return `${h}:${m}:${s}`;
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
