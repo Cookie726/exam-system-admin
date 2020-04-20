@@ -2,7 +2,7 @@ export default [{
     path: "addPaper",
     name: "addPaper",
     meta: {
-        name: "控制台"
+        name: "添加试卷"
     },
     component: resolve => require(["../../views/addPaper"], resolve)
 }]
