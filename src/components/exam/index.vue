@@ -1,7 +1,7 @@
 <template>
   <div class="exam-container">
     <div class="left">
-      <answer-sheet :list="sheetList"></answer-sheet>
+      <answer-sheet :isAnswer="isAnswer" :list="sheetList"></answer-sheet>
     </div>
     <div class="middle">
       <template v-for="(problem, index) in paperInfo"
@@ -9,7 +9,7 @@
       ></template>
     </div>
     <div class="right">
-      <exam-board></exam-board>
+      <exam-board :isAnswer="isAnswer"></exam-board>
     </div>
   </div>
 </template>
@@ -102,6 +102,10 @@ export default {
         list.push({ id: problem.id });
       });
       return list;
+    },
+    isAnswer() {
+      const isAnswer = this.$route.name === "examStart";
+      return isAnswer;
     },
   },
   mounted() {

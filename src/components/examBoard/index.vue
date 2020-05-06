@@ -1,6 +1,6 @@
 <template>
   <div class="exam-board-container">
-    <!-- <div class="nav">
+    <div class="nav" v-if="!isAnswer">
       <ul class="menu-items">
         <li class="menu-item">
           <div class="item-label">姓名</div>
@@ -11,8 +11,8 @@
           <div class="item-data">10.0</div>
         </li>
       </ul>
-    </div> -->
-    <div class="nav">
+    </div>
+    <div class="nav" v-if="isAnswer">
       <ul class="menu-items">
         <li class="menu-item menu-item-time">
           <div class="item-label">剩余时间</div>
@@ -34,22 +34,26 @@
         </li>
       </ul>
     </div>
-    <div @click="closeWindow" class="btn btn-primary btn-nav">关闭</div>
-    <!-- <div class="nav nav-bottom">
+    <div @click="closeWindow" v-if="!isAnswer" class="btn btn-primary btn-nav">
+      关闭
+    </div>
+    <div class="nav nav-bottom" v-if="!isAnswer">
       <ul class="menu-items">
         <li class="menu-item disabled">
           <span class="item-label">上一人</span>
         </li>
         <li class="menu-item"><span class="item-label">下一人</span></li>
       </ul>
-    </div> -->
+    </div>
     <button
+      v-if="!isAnswer"
       type="button"
       class="btn btn-primary btn-nav btn-bottom position-left-0"
     >
       保存
     </button>
     <button
+      v-if="isAnswer"
       type="button"
       class="btn btn-primary btn-nav btn-bottom position-left-0"
     >
@@ -64,6 +68,12 @@ export default {
     return {
       timeLimit: 3605,
     };
+  },
+  props: {
+    isAnswer: {
+      type: Boolean,
+      default: true,
+    },
   },
   mounted() {
     setInterval(() => {
@@ -106,7 +116,6 @@ export default {
   height: 80%;
   font-weight: 400;
   position: fixed;
-  top: 0;
   width: 120px;
   right: 90px;
   .nav {

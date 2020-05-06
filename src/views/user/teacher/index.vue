@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button-group class="btn-group">
-      <el-button @click="deleteUser(multipleSelection)" type="primary"
+      <el-button @click="handleDelete(multipleSelection)" type="primary"
         >批量禁用</el-button
       >
       <el-button @click="startUser(multipleSelection)" type="primary"
@@ -42,7 +42,11 @@
       <el-table-column align="center" label="操作" min-width="240">
         <template slot-scope="scope">
           <el-button
-            @click="deleteUser(scope.row.sno)"
+            @click="
+              scope.row.status === '1'
+                ? handleDelete([scope.row.sno])
+                : startUser([scope.row.sno])
+            "
             type="text"
             size="small"
           >
@@ -57,78 +61,52 @@
     </el-table>
     <div class="block">
       <v-page
-        :currentPage="param.page"
-        :pageSize="param.limit"
+        :currentPage.sync="param.page"
+        :pageSize.sync="param.limit"
         :total="tableData.total"
-        @pageChange="onPageChange"
       ></v-page>
     </div>
   </div>
 </template>
 <script>
-import VPage from "../../../components/pager";
+import VPage from "@/components/pager";
+import { userManageMixin } from "@/mixins";
 import {
   getUserList,
   updateUserPower,
   deleteUser,
   startUser,
-} from "../../../api/userManage";
+} from "@/api/userManage";
 export default {
+  mixins: [userManageMixin],
   methods: {
-    deleteUser(sno) {
-      let snoList = [];
-      if (typeof sno === "string") {
-        snoList.push(sno);
-      } else if (typeof sno === "object") {
-        snoList = sno;
-      }
+    handleDelete(snoList) {
       deleteUser({
         snoList,
       });
     },
-    startUser(sno) {
-      let snoList = [];
-      if (typeof sno === "string") {
-        snoList.push(sno);
-      } else if (typeof sno === "object") {
-        snoList = sno;
-      }
+    startUser(snoList) {
       startUser({
         snoList,
       });
-    },
-    handleSelectionChange(val) {
-      const snoList = val.map((user) => user.sno);
-      this.multipleSelection = snoList;
-    },
-    async onPageChange(option) {
-      Object.assign(this.param, option);
-      const res = await getUserList(this.param);
-      this.tableData.list = res.data;
-      this.tableData.total = res.count;
     },
     async updatePower({ sno, id }) {
       const res = await updateUserPower({ sno, id });
       console.log(res);
     },
-  },
-  async mounted() {
-    const res = await getUserList(this.param);
-    this.tableData.list = res.data;
-    this.tableData.total = res.count;
+    async loadData() {
+      const res = await getUserList(this.param);
+      this.tableData.list = res.data;
+      this.tableData.total = res.count;
+    },
   },
   data() {
     return {
-      tableData: {
-        list: [],
-        total: 0,
-      },
       param: {
         page: 1,
-        limit: 20,
+        limit: 10,
         power: 2,
       },
-      multipleSelection: [],
     };
   },
   components: {

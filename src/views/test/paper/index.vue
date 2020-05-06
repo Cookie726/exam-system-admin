@@ -84,6 +84,10 @@ export default {
   methods: {
     handleView(row) {
       console.log(row);
+      let routeData = this.$router.resolve({
+        name: "markExam",
+      });
+      window.open(routeData.href, "_blank");
     },
     handleSizeChange() {},
     handleCurrentChange() {},

@@ -84,11 +84,7 @@ export default {
   data() {
     return {
       answer: null,
-      configMenus: [
-        "image", // 插入图片
-        "table", // 表格
-        "code",
-      ],
+      configMenus: ["image", "table", "code"],
       isMark: false,
     };
   },

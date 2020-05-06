@@ -12,6 +12,11 @@ body {
 </style>
 
 <style lang="less">
+body,
+html,
+#app {
+  height: 100%;
+}
 * {
   padding: 0;
   text-decoration: none;

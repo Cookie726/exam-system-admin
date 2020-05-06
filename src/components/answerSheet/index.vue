@@ -75,7 +75,6 @@ export default {
       ],
     },
   },
-  mounted() {},
   computed: {
     flag() {
       return this.$store.state.exercise.flag;
@@ -86,8 +85,7 @@ export default {
   },
   watch: {
     done(newVal) {
-      console.log(newVal);
-      console.log("changed");
+      console.log("newVal", newVal);
     },
   },
 };
@@ -105,6 +103,7 @@ export default {
     overflow: auto;
     .title {
       margin-bottom: 15px;
+      margin-top: 20px;
       position: relative;
       text-align: left;
       margin-left: 20px;

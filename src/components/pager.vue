@@ -5,7 +5,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10, 20, 30, 40]"
+      :page-sizes="pageSizes"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
@@ -15,43 +15,31 @@
 
 <script>
 export default {
-  data() {
-    return {
-      page: {
-        pageSize: 100,
-        currentPage: 1
-      }
-    }
-  },
   props: {
     currentPage: {
       type: Number,
-      default: 1
+      default: 1,
     },
     total: {
-      type: Number
+      type: Number,
     },
     pageSize: {
       type: Number,
-      default: 100
-    }
+      default: 10,
+    },
+    pageSizes: {
+      type: Array,
+      default: () => [10, 20, 30, 40],
+    },
   },
   methods: {
     handleSizeChange(val) {
-      this.page.pageSize = val
-      this.$emit('pageChange', {
-        limit: this.page.pageSize,
-        page: this.page.currentPage
-      })
+      this.$emit("update:pageSize", val);
     },
     handleCurrentChange(val) {
-      this.page.currentPage = val
-      this.$emit('pageChange', {
-        limit: this.page.pageSize,
-        page: this.page.currentPage
-      })
-    }
-  }
+      this.$emit("update:currentPage", val);
+    },
+  },
 };
 </script>
 

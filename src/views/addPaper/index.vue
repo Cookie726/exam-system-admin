@@ -11,6 +11,7 @@
     ></first-stage
     ><second-stage
       :title="newPaper.title"
+      @toThirdStage="toThirdStage"
       @goBack="goBack"
       v-if="currentStage === 'second'"
     ></second-stage>
@@ -26,8 +27,8 @@ export default {
   data() {
     return {
       newPaper: {},
-      currentStage: "second",
-      active: 1
+      currentStage: "first",
+      active: 0,
     };
   },
   methods: {
@@ -38,13 +39,17 @@ export default {
     },
     goBack(currentStage) {
       this.currentStage = currentStage;
-    }
+    },
+    toThirdStage() {
+      this.currentStage = "third";
+      this.active++;
+    },
   },
   components: {
     "first-stage": FirstStage,
     "second-stage": SecondStage,
-    "third-stage": ThirdStage
-  }
+    "third-stage": ThirdStage,
+  },
 };
 </script>
 

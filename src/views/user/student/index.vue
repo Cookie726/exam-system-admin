@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button-group class="btn-group">
-      <el-button @click="deleteUser(multipleSelection)" type="primary"
+      <el-button @click="handleDelete(multipleSelection)" type="primary"
         >批量禁用</el-button
       >
       <el-button @click="startUser(multipleSelection)" type="primary"
@@ -42,16 +42,17 @@
       <el-table-column align="center" label="操作" min-width="240">
         <template slot-scope="scope">
           <el-button
-            @click="handleDelete([scope.row.sno])"
+            @click="
+              scope.row.status === '1'
+                ? handleDelete([scope.row.sno])
+                : startUser([scope.row.sno])
+            "
             type="text"
             size="small"
           >
             {{ scope.row.status | getStatusButton }}
           </el-button>
-          <el-button
-            type="text"
-            size="small"
-            @click="updatePower(scope.row.sno)"
+          <el-button type="text" size="small" @click="updatePower(scope.row)"
             >设置为老师</el-button
           >
           <el-button type="text" size="small">修改信息</el-button>
@@ -60,61 +61,57 @@
     </el-table>
     <div class="block">
       <v-page
-        :currentPage="param.page"
-        :pageSize="param.limit"
+        :currentPage.sync="param.page"
+        :pageSize.sync="param.limit"
         :total="tableData.total"
-        @pageChange="onPageChange"
       ></v-page>
     </div>
   </div>
 </template>
 <script>
-import VPage from "../../../components/pager";
+import VPage from "@/components/pager";
+import { userManageMixin } from "@/mixins";
 import {
   getUserList,
   updateUserPower,
   deleteUser,
-} from "../../../api/userManage";
+  startUser,
+} from "@/api/userManage";
 export default {
   methods: {
     handleDelete(snoList) {
-      deleteUser({ snoList });
+      deleteUser({
+        snoList,
+      });
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    startUser(snoList) {
+      startUser({
+        snoList,
+      });
     },
-    updatePower(sno) {
-      updateUserPower({ sno, power: 1 });
+    async updatePower({ sno, id }) {
+      const res = await updateUserPower({ sno, id });
+      console.log(res);
     },
-    async onPageChange(option) {
-      Object.assign(this.param, option);
+    async loadData() {
       const res = await getUserList(this.param);
       this.tableData.list = res.data;
       this.tableData.total = res.count;
     },
   },
-  async mounted() {
-    const res = await getUserList(this.param);
-    this.tableData.list = res.data;
-    this.tableData.total = res.count;
-  },
   data() {
     return {
-      tableData: {
-        list: [],
-        total: 0,
-      },
       param: {
         page: 1,
-        limit: 20,
+        limit: 10,
         power: 1,
       },
-      multipleSelection: [],
     };
   },
   components: {
     "v-page": VPage,
   },
+  mixins: [userManageMixin],
 };
 </script>
 

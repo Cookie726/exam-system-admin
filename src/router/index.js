@@ -5,11 +5,15 @@ import Sign from "../views/sign"
 import Signin from "../views/sign/signin"
 import Signup from "../views/sign/signup"
 import MarkExam from "../views/markExam"
+import ExamStart from "../views/examStart"
 
 import RouterConfig from './modules'
-console.log("RouterConfig", RouterConfig)
 Vue.use(VueRouter);
 const routes = [{
+  path: "/examStart",
+  name: "examStart",
+  component: ExamStart
+}, {
   path: "/markExam",
   name: "markExam",
   component: MarkExam

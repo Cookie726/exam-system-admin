@@ -73,6 +73,12 @@
       </div>
       <span>添加试卷</span>
     </el-menu-item>
+    <el-menu-item @click="gotoRoute('home')" index="home">
+      <div class="svg-container">
+        <svg-icon icon-class="sale"></svg-icon>
+      </div>
+      <span>考试中心</span>
+    </el-menu-item>
   </el-menu>
 </template>
 
@@ -84,13 +90,13 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["isSidebarNavCollapse", "currentMenu"])
+    ...mapState(["isSidebarNavCollapse", "currentMenu"]),
   },
   methods: {
     gotoRoute(name) {
       this.$router.push({ name });
-    }
-  }
+    },
+  },
 };
 </script>
 
