@@ -5,7 +5,7 @@
     </div>
     <div class="middle">
       <template v-for="(problem, index) in paperInfo"
-        ><problem :key="problem.id" :index="index" :question="problem"></problem
+        ><problem :key="problem.id" :index="index" :isAnswer="isAnswer" :question="problem"></problem
       ></template>
     </div>
     <div class="right">

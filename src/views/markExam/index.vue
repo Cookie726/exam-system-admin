@@ -7,11 +7,8 @@
 
 <script>
 import NavBar from "@/components/navbar";
-import Exam from "../../components/exam";
+import Exam from "@/components/exam";
 export default {
-  mounted() {
-    console.log(this.$route);
-  },
   components: {
     exam: Exam,
     "nav-bar": NavBar,
