@@ -1,11 +1,38 @@
 <template>
   <div>
     <el-table :data="tableData" border style="width: 100%">
-      <el-table-column align="center" type="selection" width="55">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="试卷标题">
+              <span>{{ props.row.title }}</span>
+            </el-form-item>
+            <el-form-item label="分类">
+              <span>{{ props.row.classify }}</span>
+            </el-form-item>
+            <el-form-item label="限制答题时间(秒)">
+              <span>{{ props.row.timeLimit }}</span>
+            </el-form-item>
+            <el-form-item label="总分">
+              <span>{{ props.row.paperScore }}</span>
+            </el-form-item>
+            <el-form-item label="出题人">
+              <span>{{ props.row.user.userName }}</span>
+            </el-form-item>
+            <el-form-item label="创建时间">
+              <span>{{ props.row.createTime }}</span>
+            </el-form-item>
+            <el-form-item label="开始时间">
+              <span>{{ props.row.startTime }}</span>
+            </el-form-item>
+            <el-form-item label="截止时间">
+              <span>{{ props.row.endTime }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
       </el-table-column>
       <el-table-column
         align="center"
-        fixed
         prop="title"
         label="试卷标题"
         min-width="120"
@@ -21,31 +48,8 @@
       <el-table-column
         align="center"
         prop="timeLimit"
-        label="限制答题时间"
-        min-width="120"
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="paperScore" label="总分" width="90">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="user.userName"
-        label="出题人"
-        min-width="90"
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="createTime"
-        label="创建时间"
-        min-width="180"
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="startTime"
-        label="开始时间"
-        min-width="180"
+        label="限制答题时间(秒)"
+        min-width="140"
       >
       </el-table-column>
       <el-table-column
@@ -55,12 +59,48 @@
         min-width="180"
       >
       </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作" width="100">
+      <el-table-column align="center" fixed="right" label="操作" width="200">
         <template slot-scope="scope">
-          <el-button @click="handleView(scope.row)" type="text" size="small"
-            >预览</el-button
-          >
-          <el-button type="text" size="small">编辑</el-button>
+          <el-tooltip content="预览" placement="top">
+            <el-button
+              @click="handleView(scope.row.id)"
+              type="text"
+              icon="el-icon-view"
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip content="批改" placement="top">
+            <el-button
+              @click="
+                showSubmitList = true;
+                currentPaperId = scope.row.id;
+              "
+              type="text"
+              icon="el-icon-edit"
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip content="提交列表" placement="top">
+            <el-button
+              @click="
+                showSubmitList = true;
+                currentPaperId = scope.row.id;
+              "
+              type="text"
+              icon="el-icon-s-data"
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip content="成绩分析" placement="top">
+            <el-button
+              @click="showMark = true"
+              type="text"
+              icon="el-icon-data-analysis"
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip content="修改" placement="top">
+            <el-button type="text" icon="el-icon-edit-outline"></el-button>
+          </el-tooltip>
+          <el-tooltip content="删除" placement="top">
+            <el-button type="text" icon="el-icon-delete"></el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -76,18 +116,27 @@
       >
       </el-pagination>
     </div>
+    <submit-list
+      :paperId="currentPaperId"
+      :dialogTableVisible.sync="showSubmitList"
+    ></submit-list>
+    <mark-dialog :showMarkDialog.sync="showMark"></mark-dialog>
   </div>
 </template>
 
 <script>
+import SubmitList from "@/components/submitList";
+import MarkDialog from "@/components/markDialog";
 export default {
   methods: {
-    handleView(row) {
-      console.log(row);
+    handleView(id) {
       let routeData = this.$router.resolve({
-        name: "markExam",
+        name: "examStart",
+        params: {
+          id,
+        },
       });
-      window.open(routeData.href, "_blank");
+      window.open(routeData.href, "view_window");
     },
     handleSizeChange() {},
     handleCurrentChange() {},
@@ -95,13 +144,15 @@ export default {
 
   data() {
     return {
+      showSubmitList: false,
+      showMark: false,
       tableData: [
         {
-          paper_id: 1,
+          id: 1,
           classify: "前端",
           title: "前端第一次考核",
           createTime: "2020/04/12 23:26:47",
-          timeLimit: null,
+          timeLimit: 600,
           paperScore: 100,
           startTime: "2020/04/15 00:00:00",
           endTime: "2020/04/17 00:00:00",
@@ -115,7 +166,27 @@ export default {
         limit: 10,
       },
       total: 10,
+      currentPaperId: null,
     };
+  },
+  components: {
+    SubmitList,
+    MarkDialog,
   },
 };
 </script>
+
+<style>
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 130px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+</style>

@@ -86,15 +86,18 @@ export default {
     seteditor() {
       this.editor = new E(this.$refs.toolbar, this.$refs.editor);
       this.editor.customConfig.uploadImgShowBase64 = false; // base 64 存储图片
-      this.editor.customConfig.uploadImgServer = ""; // 填写配置服务器端地址
-      this.editor.customConfig.uploadImgHeaders = {}; // 自定义 header
-      this.editor.customConfig.uploadFileName = "file"; // 后端接受上传文件的参数名
+      this.editor.customConfig.uploadImgServer =
+        "http://www.liskarm.xyz/AixinMarket/upload"; // 填写配置服务器端地址
+      this.editor.customConfig.uploadImgHeaders = {
+        Accept: "application/json, text/plain, */*",
+      }; // 自定义 header
+      this.editor.customConfig.uploadFileName = "imgFile"; // 后端接受上传文件的参数名
       this.editor.customConfig.uploadImgParams = {
         // 如果版本 <=v3.1.0 ，属性值会自动进行 encode ，此处无需 encode
         // 如果版本 >=v3.1.1 ，属性值不会自动 encode ，如有需要自己手动 encode
-        file_type: "img",
+        // file_type: "img",
       };
-      this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024; // 将图片大小限制为 2M
+      this.editor.customConfig.uploadImgMaxSize = 10 * 1024 * 1024; // 将图片大小限制为 2M
       this.editor.customConfig.uploadImgMaxLength = 6; // 限制一次最多上传 6 张图片
       this.editor.customConfig.uploadImgTimeout = 3 * 60 * 1000; // 设置超时时间
 
@@ -126,8 +129,8 @@ export default {
           //insertImg()为插入图片的函数
           //循环插入图片
           // for (let i = 0; i < 1; i++) {
-          if (result.code == 200) {
-            let url = result.data.image_url;
+          if (result.code == 0) {
+            let url = result.data.filepath;
             JSON.stringify(url);
             insertImg(url);
           } else {

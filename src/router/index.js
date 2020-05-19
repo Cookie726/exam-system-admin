@@ -10,11 +10,11 @@ import ExamStart from "../views/examStart"
 import RouterConfig from './modules'
 Vue.use(VueRouter);
 const routes = [{
-  path: "/examStart",
+  path: "/examStart/:id",
   name: "examStart",
   component: ExamStart
 }, {
-  path: "/markExam",
+  path: "/markExam/:id/:userId",
   name: "markExam",
   component: MarkExam
 }, {

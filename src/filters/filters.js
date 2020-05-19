@@ -33,3 +33,19 @@ export const getRoleName = power => {
         return "教师"
     }
 }
+
+export const getSubmitTag = isSubmit => {
+    if (isSubmit === 1) {
+        return "已提交"
+    } else {
+        return "未提交"
+    }
+}
+
+export const getMarkText = isMark => {
+    if (isMark === 1) {
+        return "已判卷"
+    } else {
+        return "判卷"
+    }
+}

@@ -30,7 +30,7 @@ export default {
     handleAnswer() {
       let routeData = this.$router.resolve({
         name: "examStart",
-        query: { id: this.paperItem.id },
+        params: { id: this.paperItem.id },
       });
       window.open(routeData.href, "_blank");
     },
