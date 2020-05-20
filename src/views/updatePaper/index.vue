@@ -5,12 +5,9 @@
 <script>
 import PaperInfo from "@/components/paperInfo";
 export default {
-  props: {
-    title: String,
-  },
   components: {
     PaperInfo,
-  }
+  },
 };
 </script>
 

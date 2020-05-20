@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import ManualAddition from "./manualAddition";
+import ManualAddition from "@/components/manualAddition";
 export default {
   props: {
     dialogAddQuestion: Boolean,

@@ -33,23 +33,28 @@
     </div>
     <div class="right">
       <p class="title">
-        <input type="text" placeholder="请输入试卷名称" :value="title" />
+        <input
+          type="text"
+          placeholder="请输入试卷名称"
+          @input="handleTitleChange($event)"
+          :value="title"
+        />
       </p>
       <div class="main-list">
         <div
           class="question-item"
-          :questionType="ques.qtype"
+          :questionType="ques.questionType"
           v-for="(ques, i) in formatList"
           :key="ques.id"
         >
           <dl>
             <dt v-html="ques.content">{{ ques.content }}</dt>
             <dd
-              :class="{ 'correct-answer': v.key === 1 }"
-              v-for="(v, index) in ques.answer"
+              :class="{ 'correct-answer': v.status === 1 }"
+              v-for="(v, index) in ques.optionList"
               :key="index"
             >
-              <template v-if="ques.qtype === '判断题'">
+              <template v-if="ques.questionType === '判断题'">
                 <em class="icon"
                   ><i
                     :class="{
@@ -61,7 +66,7 @@
               <template v-else>
                 <em class="icon">{{ index | numberToLetter }}</em>
               </template>
-              <div v-html="v.answer">{{ v.answer }}</div>
+              <div v-html="v.choice">{{ v.choice }}</div>
             </dd>
           </dl>
           <div class="answer">
@@ -80,9 +85,6 @@
             >分数<input name="per_score" v-model.number="ques.score" />分</span
           >
           <span class="tool-group">
-            <el-tooltip placement="top" content="编辑">
-              <i class="el-icon-edit"></i>
-            </el-tooltip>
             <el-tooltip placement="top" content="删除">
               <i @click="handleDelete(i)" class="el-icon-delete"></i>
             </el-tooltip>
@@ -100,35 +102,68 @@
         <div class="select center">
           <el-button
             style="margin: 0"
-            @click="showDialog = true"
+            @click="
+              showDialog = true;
+              currentQuestionType = '单选题';
+            "
             type="primary"
             plain
             >单选题</el-button
           >
-          <el-button style="margin: 0" type="primary" plain>多选题</el-button>
-          <el-button style="margin: 0" type="primary" plain>判断题</el-button>
-          <el-button style="margin: 0" type="primary" plain>简答题</el-button>
+          <el-button
+            style="margin: 0"
+            type="primary"
+            @click="
+              showDialog = true;
+              currentQuestionType = '多选题';
+            "
+            plain
+            >多选题</el-button
+          >
+          <el-button
+            style="margin: 0"
+            @click="
+              showDialog = true;
+              currentQuestionType = '判断题';
+            "
+            type="primary"
+            plain
+            >判断题</el-button
+          >
+          <el-button
+            style="margin: 0"
+            @click="
+              showDialog = true;
+              currentQuestionType = '简答题';
+            "
+            type="primary"
+            plain
+            >简答题</el-button
+          >
         </div>
       </div>
     </div>
     <select-question
       @saveQuesList="handleSaveQues"
+      v-if="showDialog"
+      :handleShowAddQuestion="handleShowAddQuestion"
       :showDialog.sync="showDialog"
+      :questionType="currentQuestionType"
     ></select-question>
     <!-- <manual-addition :showDialog="showDialog"></manual-addition> -->
-    <!-- <add-question :dialogAddQuestion="showDialog"></add-question> -->
+    <add-question
+      :handleCloseAddQuestion="handleCloseAddQuestion"
+      :dialogAddQuestion="showAddQuestionDialog"
+    ></add-question>
   </div>
 </template>
 
 <script>
 import SelectQuestion from "./selectQuestion";
-// import AddQuestion from "./addQuestion";
+import AddQuestion from "@/components/addQuestion";
 export default {
   props: {
-    title: {
-      type: String,
-      default: "测试",
-    },
+    title: String,
   },
   data() {
     return {
@@ -138,50 +173,52 @@ export default {
           id: "10001",
           content: "<p>撒<b>地方1</b></p>",
           analysis: "<p>这是单选题解析</p>",
-          qtype: "单选题",
-          answer: [
-            { key: 0, answer: "<p>asdf</p>" },
-            { key: 0, answer: "<p>asdf</p>" },
-            { key: 1, answer: "<p>asdf</p>" },
-            { key: 0, answer: "<p>asdf</p>" },
+          questionType: "单选题",
+          optionList: [
+            { status: 0, choice: "<p>asdf</p>" },
+            { status: 0, choice: "<p>asdf</p>" },
+            { status: 1, choice: "<p>asdf</p>" },
+            { status: 0, choice: "<p>asdf</p>" },
           ],
         },
         {
           id: "10002",
           content: "<p>这是多选题题目</p>",
           analysis: "<p>这是多选题解析</p>",
-          qtype: "多选题",
-          answer: [
-            { key: 1, answer: "<p>asdf</p>" },
-            { key: 0, answer: "<p>asdf</p>" },
-            { key: 1, answer: "<p>asdf</p>" },
-            { key: 0, answer: "<p>asdf</p>" },
+          questionType: "多选题",
+          optionList: [
+            { status: 1, choice: "<p>asdf</p>" },
+            { status: 0, choice: "<p>asdf</p>" },
+            { status: 1, choice: "<p>asdf</p>" },
+            { status: 0, choice: "<p>asdf</p>" },
           ],
         },
         {
           id: "10003",
           content: "<p>这是判断题题目</p>",
           analysis: "<p>这是判断题解析</p>",
-          qtype: "判断题",
-          answer: [
-            { key: 1, answer: "正确" },
-            { key: 0, answer: "错误" },
+          questionType: "判断题",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
           ],
         },
         {
           id: "10004",
           content: "<p>这是简答题题目</p>",
           analysis: "<p>这是简答题解析</p>",
-          qtype: "简答题",
-          answer: [
+          questionType: "简答题",
+          optionList: [
             {
-              key: 1,
-              answer:
+              status: 1,
+              choice:
                 "<p>这是简答题答案</p><p>这是简答题答案</p><p>这是简答题答案</p>",
             },
           ],
         },
       ],
+      currentQuestionType: "",
+      showAddQuestionDialog: false,
     };
   },
   computed: {
@@ -189,14 +226,14 @@ export default {
       const formatList = [];
       this.list.forEach((ques) => {
         let correctAns = "";
-        if (ques.qtype === "单选题" || ques.qtype === "多选题") {
-          ques.answer.forEach((v, i) => {
-            correctAns += v.key === 1 ? String.fromCharCode(i + 65) : "";
+        if (ques.questionType === "单选题" || ques.questionType === "多选题") {
+          ques.optionList.forEach((v, i) => {
+            correctAns += v.status === 1 ? String.fromCharCode(i + 65) : "";
           });
-        } else if (ques.qtype === "判断题") {
-          correctAns = ques.answer.filter((v) => v.key === 1)[0].answer;
-        } else if (ques.qtype === "简答题") {
-          correctAns = ques.answer[0].answer;
+        } else if (ques.questionType === "判断题") {
+          correctAns = ques.optionList.filter((v) => v.status === 1)[0].choice;
+        } else if (ques.questionType === "简答题") {
+          correctAns = ques.optionList[0].choice;
         }
         formatList.push(Object.assign({ correctAns, score: 0 }, ques));
       });
@@ -204,11 +241,18 @@ export default {
     },
   },
   methods: {
-    goBack() {
-      this.$emit("goBack", "first");
+    handleTitleChange(e) {
+      this.$emit("update:title", e.target.value);
     },
     handleSaveQues(list) {
-      console.log(list);
+      let newList = list.filter((que) => {
+        let hasSame = this.list.some((q) => que.id === q.id);
+        return !hasSame;
+      });
+      if (newList.length !== list.length) {
+        this.$message.info("已去除重复的题目");
+      }
+      this.list.push(...newList);
     },
     handleDelete(i) {
       this.list.splice(i, 1);
@@ -230,19 +274,23 @@ export default {
       }
     },
     nextStage() {
-      // let pass = !this.formatList.some((ques) => ques.score <= 0);
-      // if (!pass) {
-      //   this.$message.error("请设置符合规范的题目分数");
-      // } else {
-      //   this.$emit("toThirdStage")
-      // }
-
-      this.$emit("toThirdStage");
+      let pass = !this.formatList.some((ques) => ques.score <= 0);
+      if (!pass) {
+        this.$message.error("请设置符合规范的题目分数");
+      } else {
+        this.$emit("toThirdStage");
+      }
+    },
+    handleShowAddQuestion() {
+      this.showAddQuestionDialog = true;
+    },
+    handleCloseAddQuestion() {
+      this.showAddQuestionDialog = false;
     },
   },
   components: {
-    // "add-question": AddQuestion,
-    "select-question": SelectQuestion,
+    AddQuestion,
+    SelectQuestion,
   },
 };
 </script>

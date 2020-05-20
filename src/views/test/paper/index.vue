@@ -96,7 +96,14 @@
             ></el-button>
           </el-tooltip>
           <el-tooltip content="修改" placement="top">
-            <el-button type="text" icon="el-icon-edit-outline"></el-button>
+            <el-button
+              @click="
+                showPaperInfoDialog = true;
+                currentPaperId = scope.row.id;
+              "
+              type="text"
+              icon="el-icon-edit-outline"
+            ></el-button>
           </el-tooltip>
           <el-tooltip content="删除" placement="top">
             <el-button type="text" icon="el-icon-delete"></el-button>
@@ -121,12 +128,18 @@
       :dialogTableVisible.sync="showSubmitList"
     ></submit-list>
     <mark-dialog :showMarkDialog.sync="showMark"></mark-dialog>
+    <paper-info-dialog
+      v-if="showPaperInfoDialog"
+      :id="currentPaperId"
+      :showPaperInfoDialog.sync="showPaperInfoDialog"
+    ></paper-info-dialog>
   </div>
 </template>
 
 <script>
 import SubmitList from "@/components/submitList";
 import MarkDialog from "@/components/markDialog";
+import PaperInfoDialog from "@/components/paperInfoDialog";
 export default {
   methods: {
     handleView(id) {
@@ -140,10 +153,20 @@ export default {
     },
     handleSizeChange() {},
     handleCurrentChange() {},
+    handleEdit(paperId) {
+      const updatePaperData = this.$router.resolve({
+        name: "updatePaper",
+        params: {
+          id: paperId,
+        },
+      });
+      window.open(updatePaperData.href, "_blank");
+    },
   },
 
   data() {
     return {
+      showPaperInfoDialog: false,
       showSubmitList: false,
       showMark: false,
       tableData: [
@@ -172,6 +195,7 @@ export default {
   components: {
     SubmitList,
     MarkDialog,
+    PaperInfoDialog,
   },
 };
 </script>

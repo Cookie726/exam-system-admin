@@ -10,12 +10,15 @@
       @toTwoStage="toTwoStage"
     ></first-stage
     ><second-stage
-      :title="newPaper.title"
+      :title.sync="newPaper.title"
       @toThirdStage="toThirdStage"
       @goBack="goBack"
       v-if="currentStage === 'second'"
     ></second-stage>
-    <third-stage v-if="currentStage === 'third'"></third-stage>
+    <third-stage
+      :title="newPaper.title"
+      v-if="currentStage === 'third'"
+    ></third-stage>
   </div>
 </template>
 
@@ -27,13 +30,14 @@ export default {
   data() {
     return {
       newPaper: {},
-      currentStage: "first",
+      currentStage: "second",
       active: 0,
     };
   },
   methods: {
     toTwoStage(paperInfo) {
       Object.assign(this.newPaper, paperInfo);
+      console.log(this.newPaper);
       this.currentStage = "second";
       this.active++;
     },

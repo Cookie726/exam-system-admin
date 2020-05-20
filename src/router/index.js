@@ -6,10 +6,15 @@ import Signin from "../views/sign/signin"
 import Signup from "../views/sign/signup"
 import MarkExam from "../views/markExam"
 import ExamStart from "../views/examStart"
+import UpdatePaper from "../views/updatePaper"
 
 import RouterConfig from './modules'
 Vue.use(VueRouter);
 const routes = [{
+  path: "/updatePaper/:id",
+  name: "updatePaper",
+  component: UpdatePaper
+}, {
   path: "/examStart/:id",
   name: "examStart",
   component: ExamStart

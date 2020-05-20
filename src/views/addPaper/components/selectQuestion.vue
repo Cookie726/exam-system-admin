@@ -6,7 +6,10 @@
           <div class="modal-header">
             <h4 class="modal-title">选择试题</h4>
             <span class="add-quest"
-              ><el-button icon="el-icon-circle-plus-outline" type="text"
+              ><el-button
+                icon="el-icon-circle-plus-outline"
+                @click="handleAddQuestion"
+                type="text"
                 >添加试题</el-button
               ></span
             >
@@ -33,14 +36,14 @@
                   </el-table-column>
                   <el-table-column
                     align="center"
-                    prop="qtype"
+                    prop="questionType"
                     label="题型"
                     width="120"
                   >
                   </el-table-column>
                   <el-table-column
                     align="center"
-                    prop="author"
+                    prop="user.userName"
                     label="创建人"
                     width="120"
                   >
@@ -77,14 +80,14 @@
                   </el-table-column>
                   <el-table-column
                     align="center"
-                    prop="qtype"
+                    prop="questionType"
                     label="题型"
                     width="120"
                   >
                   </el-table-column>
                   <el-table-column
                     align="center"
-                    prop="author"
+                    prop="user.userName"
                     label="创建人"
                     width="120"
                   >
@@ -111,18 +114,6 @@
                     </template>
                   </el-table-column>
                 </el-table>
-                <div class="block">
-                  <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="pageConfig.page"
-                    :page-sizes="[10, 20, 30, 40]"
-                    :page-size="pageConfig.limit"
-                    layout="total, sizes, prev, pager, next"
-                    :total="400"
-                  >
-                  </el-pagination>
-                </div>
               </el-tab-pane>
             </el-tabs>
             <div class="modal-btn-group">
@@ -140,6 +131,11 @@
 export default {
   props: {
     showDialog: Boolean,
+    questionType: String,
+    handleShowAddQuestion: Function,
+  },
+  mounted() {
+    console.log(this.questionType);
   },
   data() {
     return {
@@ -148,184 +144,170 @@ export default {
         {
           id: "10001",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10002",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10003",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10004",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10005",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10006",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10007",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10008",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10009",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10010",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10011",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10012",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10013",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10014",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10015",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
         {
           id: "10016",
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
+          questionType: "单选题",
+          user: {
+            userName: "潘炳名",
+          },
           createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10017",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10018",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10019",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10020",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10021",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10022",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10023",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10024",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10025",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
-        },
-        {
-          id: "10026",
-          content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22",
+          analysis: "<p>这是判断题解析</p>",
+          optionList: [
+            { status: 1, choice: "正确" },
+            { status: 0, choice: "错误" },
+          ],
         },
       ],
       pageConfig: {
@@ -374,6 +356,10 @@ export default {
     },
     save() {
       this.$emit("saveQuesList", JSON.parse(JSON.stringify(this.list)));
+      this.handleClose();
+    },
+    handleAddQuestion() {
+      this.handleShowAddQuestion();
       this.handleClose();
     },
   },

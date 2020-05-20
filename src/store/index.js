@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import user from "./modules/user";
 import exercise from "./modules/exercise"
+import paper from "./modules/paper"
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -49,6 +50,7 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     user,
-    exercise
+    exercise,
+    paper
   }
 });

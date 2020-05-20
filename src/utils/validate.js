@@ -30,5 +30,5 @@ export const validateSigninForm = function (form) {
 }
 
 export const isSetAnswer = function (answerList) {
-    return answerList.some(val => val.key === 1)
+    return answerList.some(val => val.status === 1)
 }
