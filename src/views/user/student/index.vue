@@ -1,30 +1,39 @@
 <template>
   <div>
-    <el-button-group class="btn-group">
-      <el-button @click="handleDelete(multipleSelection)" type="primary"
-        >批量禁用</el-button
-      >
-      <el-button @click="startUser(multipleSelection)" type="primary"
-        >批量启用</el-button
-      ></el-button-group
-    >
+    <div>
+      <el-form :inline="true" :model="param" class="demo-form-inline">
+        <el-form-item label="姓名">
+          <el-input
+            v-model="param.userName"
+            placeholder="请输入姓名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="学号">
+          <el-input v-model="param.sno" placeholder="学号"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="resetForm">重置</el-button>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-table
-      :data="tableData.list"
+      :data="userList"
       border
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
       <el-table-column align="center" type="selection" width="55">
       </el-table-column>
-      <el-table-column align="center" prop="realName" label="姓名" width="180">
+      <el-table-column align="center" prop="userName" label="姓名" width="180">
       </el-table-column>
       <el-table-column align="center" prop="sno" label="学号" width="160">
       </el-table-column>
-      <el-table-column align="center" prop="sex" label="性别" width="120">
+      <el-table-column align="center" prop="gender" label="性别" width="120">
       </el-table-column>
       <el-table-column align="center" label="角色" width="100">
         <template slot-scope="scope">
-          <p>{{ scope.row.power | getRoleName }}</p>
+          <p>{{ scope.row.role | getRoleName }}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -43,19 +52,21 @@
         <template slot-scope="scope">
           <el-button
             @click="
-              scope.row.status === '1'
-                ? handleDelete([scope.row.sno])
-                : startUser([scope.row.sno])
+              scope.row.status === 1
+                ? handleDelete([scope.row.id])
+                : startUser([scope.row.id])
             "
             type="text"
             size="small"
           >
             {{ scope.row.status | getStatusButton }}
           </el-button>
-          <el-button type="text" size="small" @click="updatePower(scope.row)"
+          <el-button
+            type="text"
+            size="small"
+            @click="updatePower(scope.row.sno)"
             >设置为老师</el-button
           >
-          <el-button type="text" size="small">修改信息</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,23 +82,22 @@
 <script>
 import VPage from "@/components/pager";
 import { userManageMixin } from "@/mixins";
-import {
-  getUserList,
-  updateUserPower,
-  deleteUser,
-  startUser,
-} from "@/api/userManage";
+import { getUserList, updateUserPower } from "@/api/userManage";
 export default {
   methods: {
-    handleDelete(snoList) {
-      deleteUser({
-        snoList,
-      });
+    handleDelete(idList) {
+      const data = {
+        idList,
+        status: 2,
+      };
+      console.log(data);
     },
-    startUser(snoList) {
-      startUser({
-        snoList,
-      });
+    startUser(idList) {
+      const data = {
+        idList,
+        status: 1,
+      };
+      console.log(data);
     },
     async updatePower({ sno, id }) {
       const res = await updateUserPower({ sno, id });
@@ -98,14 +108,38 @@ export default {
       this.tableData.list = res.data;
       this.tableData.total = res.count;
     },
+    resetForm() {
+      this.param.userName = "";
+      this.param.sno = "";
+    },
+    handleSearch() {
+      if (!(this.param.userName || this.param.sno)) {
+        this.$message.warning("查询条件不能为空");
+        return;
+      }
+    },
   },
   data() {
     return {
       param: {
         page: 1,
         limit: 10,
-        power: 1,
+        role: 0,
+        userName: "",
+        sno: "",
       },
+      total: 10,
+      userList: [
+        {
+          userName: "潘炳名",
+          id: 1,
+          sno: "2018010280",
+          role: 0,
+          status: 1,
+          gender: "男",
+          enterTime: "2020-05-21 21:20:22",
+        },
+      ],
     };
   },
   components: {

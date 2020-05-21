@@ -1,5 +1,32 @@
 <template>
   <div>
+    <div>
+      <el-form :inline="true" :model="pageConfig" class="demo-form-inline">
+        <el-form-item label="试卷标题">
+          <el-input
+            v-model="pageConfig.title"
+            placeholder="请输入试卷标题"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="试卷分类">
+          <el-select v-model="pageConfig.classify" placeholder="请选择试卷分类">
+            <el-option
+              v-for="item in paperClassify"
+              :key="item.value"
+              :label="item.classify"
+              :value="item.classify"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="resetForm">重置</el-button>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div style="margin-bottom: 20px">
+      <el-button @click="handleAddPaper">添加试卷</el-button>
+    </div>
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column type="expand">
         <template slot-scope="props">
@@ -97,10 +124,7 @@
           </el-tooltip>
           <el-tooltip content="修改" placement="top">
             <el-button
-              @click="
-                showPaperInfoDialog = true;
-                currentPaperId = scope.row.id;
-              "
+              @click="handleEdit(scope.row.id)"
               type="text"
               icon="el-icon-edit-outline"
             ></el-button>
@@ -129,8 +153,8 @@
     ></submit-list>
     <mark-dialog :showMarkDialog.sync="showMark"></mark-dialog>
     <paper-info-dialog
-      v-if="showPaperInfoDialog"
-      :id="currentPaperId"
+      :changeData="changeData"
+      :paperInfo="paperInfo"
       :showPaperInfoDialog.sync="showPaperInfoDialog"
     ></paper-info-dialog>
   </div>
@@ -140,6 +164,7 @@
 import SubmitList from "@/components/submitList";
 import MarkDialog from "@/components/markDialog";
 import PaperInfoDialog from "@/components/paperInfoDialog";
+import { paperClassify } from "@/config/default";
 export default {
   methods: {
     handleView(id) {
@@ -154,13 +179,45 @@ export default {
     handleSizeChange() {},
     handleCurrentChange() {},
     handleEdit(paperId) {
-      const updatePaperData = this.$router.resolve({
-        name: "updatePaper",
-        params: {
-          id: paperId,
-        },
+      const loading = this.$loading({
+        lock: true,
+        text: "拼命加载中···",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
       });
-      window.open(updatePaperData.href, "_blank");
+      console.log(paperId);
+      setTimeout(() => {
+        this.paperInfo = {
+          title: "前端测试",
+          startTime: "2020-05-21 12:00:00",
+          endTime: "2020-05-28 12:00:00",
+          classify: "前端",
+          paperScore: 20,
+          studentIdList: ["2018010280"],
+          user: {
+            userName: "潘炳名",
+          },
+          questionList: [],
+        };
+        loading.close();
+        this.showPaperInfoDialog = true;
+      }, 1000);
+    },
+    resetForm() {
+      this.pageConfig.classify = "";
+      this.pageConfig.title = "";
+    },
+    handleSearch() {
+      if (!(this.pageConfig.classify || this.pageConfig.title)) {
+        this.$message.warning("查询条件不能为空");
+        return;
+      }
+    },
+    changeData(prop, e) {
+      this.paperInfo[prop] = e;
+    },
+    handleAddPaper() {
+      this.$router.push("/addPaper");
     },
   },
 
@@ -187,8 +244,12 @@ export default {
       pageConfig: {
         page: 1,
         limit: 10,
+        title: "",
+        classify: "",
       },
       total: 10,
+      paperClassify,
+      paperInfo: {},
       currentPaperId: null,
     };
   },

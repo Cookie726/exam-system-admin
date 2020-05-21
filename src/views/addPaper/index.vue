@@ -13,10 +13,14 @@
       :title.sync="newPaper.title"
       @toThirdStage="toThirdStage"
       @goBack="goBack"
+      :addQuestion="addQuestion"
       v-if="currentStage === 'second'"
     ></second-stage>
     <third-stage
       :title="newPaper.title"
+      :newPaper="newPaper"
+      :changeData="changeData"
+      :handleSubmit="handleSubmit"
       v-if="currentStage === 'third'"
     ></third-stage>
   </div>
@@ -29,10 +33,21 @@ import ThirdStage from "./components/thirdStage";
 export default {
   data() {
     return {
-      newPaper: {},
-      currentStage: "second",
+      newPaper: {
+        title: "",
+        classify: "",
+        paperScore: 0,
+        user: {},
+        startTime: "",
+        endTime: "",
+        studentIdList: [],
+      },
+      currentStage: "first",
       active: 0,
     };
+  },
+  mounted() {
+    this.newPaper.user = JSON.parse(localStorage.getItem("user"));
   },
   methods: {
     toTwoStage(paperInfo) {
@@ -47,6 +62,25 @@ export default {
     toThirdStage() {
       this.currentStage = "third";
       this.active++;
+    },
+    addQuestion(questionList) {
+      let paperScore = 0;
+      questionList.forEach((q) => (paperScore += q.score));
+      let list = questionList.map((q) => {
+        return {
+          id: q.id,
+          value: q.score,
+        };
+      });
+      this.newPaper.questionList = list;
+      this.newPaper.paperScore = paperScore;
+      console.log(this.newPaper);
+    },
+    changeData(prop, value) {
+      this.newPaper[prop] = value;
+    },
+    handleSubmit() {
+      console.log(this.newPaper);
     },
   },
   components: {

@@ -1,12 +1,50 @@
 <template>
   <div class="question-container">
+    <add-question
+      :handleCloseAddQuestion="handleCloseAddQuestion"
+      :dialogAddQuestion="dialogAddQuestion"
+    ></add-question>
+    <div>
+      <el-form :inline="true" :model="pageConfig" class="demo-form-inline">
+        <el-form-item label="题目">
+          <el-input
+            v-model="pageConfig.content"
+            placeholder="请输入题目"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="分类">
+          <el-select v-model="pageConfig.classify" placeholder="请选择题目分类">
+            <el-option
+              v-for="item in paperClassify"
+              :key="item.value"
+              :label="item.classify"
+              :value="item.classify"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="题目类型">
+          <el-select
+            v-model="pageConfig.questionType"
+            placeholder="请选择题目类型"
+          >
+            <el-option
+              v-for="item in questionType"
+              :key="item.index"
+              :label="item.type"
+              :value="item.type"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="resetForm">重置</el-button>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <div class="btn-group">
-      <el-button>添加试题</el-button>
-      <el-button>删除</el-button>
+      <el-button @click="handleAddQuestion">添加试题</el-button>
     </div>
     <el-table :data="tableData" border style="width: 100%">
-      <el-table-column align="center" type="selection" width="80">
-      </el-table-column>
       <el-table-column
         align="center"
         prop="content"
@@ -14,9 +52,19 @@
         min-width="320"
       >
       </el-table-column>
-      <el-table-column align="center" prop="qtype" label="题型" width="120">
+      <el-table-column
+        align="center"
+        prop="questionType"
+        label="题型"
+        width="120"
+      >
       </el-table-column>
-      <el-table-column align="center" prop="author" label="创建人" width="120">
+      <el-table-column
+        align="center"
+        prop="user.userName"
+        label="创建人"
+        width="120"
+      >
       </el-table-column>
       <el-table-column
         align="center"
@@ -32,10 +80,15 @@
         min-width="100"
       >
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small"
+          <el-button @click="handleClick(scope.row.id)" type="text" size="small"
             >查看</el-button
           >
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button
+            @click="handleDelete(scope.row.id)"
+            type="text"
+            size="small"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
       <div class="block">
@@ -51,35 +104,109 @@
         </el-pagination>
       </div>
     </el-table>
+    <el-dialog title="题目信息" :visible.sync="showQuestionDetail">
+      <question-detail :question="quesDetail"></question-detail>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { questionType, paperClassify } from "@/config/default";
+import AddQuestion from "@/components/addQuestion";
+import QuestionDetail from "@/components/questionDetail";
 export default {
   methods: {
-    handleClick(row) {
-      console.log(row);
+    handleClick(id) {
+      console.log(id);
+      const loading = this.$loading({
+        lock: true,
+        text: "拼命获取中···",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      setTimeout(() => {
+        loading.close();
+        this.showQuestionDetail = true;
+      }, 1000);
     },
     handleSizeChange() {},
-    handleCurrentChange() {}
+    handleCurrentChange() {},
+    handleAddQuestion() {
+      this.dialogAddQuestion = true;
+    },
+    handleCloseAddQuestion() {
+      this.dialogAddQuestion = false;
+    },
+    resetForm() {
+      this.pageConfig.classify = "";
+      this.pageConfig.questionType = "";
+      this.pageConfig.content = "";
+    },
+    handleSearch() {
+      if (
+        !(
+          this.pageConfig.content ||
+          this.pageConfig.classify ||
+          this.pageConfig.questionType
+        )
+      ) {
+        this.$message.warning("查询条件不能为空");
+        return;
+      }
+    },
+    handleDelete(id) {
+      console.log(id);
+    },
   },
 
   data() {
     return {
       tableData: [
         {
+          id: 1,
           content: "123123",
-          qtype: "选择题",
-          author: "潘炳名",
-          createTime: "2020/04/14 22:18:22"
-        }
+          questionType: "选择题",
+          user: {
+            userName: "潘炳名",
+          },
+          createTime: "2020/04/14 22:18:22",
+        },
       ],
       pageConfig: {
         limit: 10,
-        page: 1
-      }
+        page: 1,
+        content: "",
+        classify: "",
+        questionType: "",
+      },
+      dialogAddQuestion: false,
+      paperClassify,
+      questionType,
+      showQuestionDetail: false,
+      quesDetail: {
+        content: "<p>这是题目</p>",
+        questionType: "简答题",
+        classify: "前端",
+        createTime: "2020-05-21 18:05:23",
+        user: {
+          userName: "潘炳名",
+        },
+        analysis: "<p>这是解析</p>",
+        value: 10,
+        optionList: [
+          {
+            status: 1,
+            choice: "<p>这是第一个选项</p>",
+          },
+        ],
+      },
     };
-  }
+  },
+
+  components: {
+    AddQuestion,
+    QuestionDetail,
+  },
 };
 </script>
 

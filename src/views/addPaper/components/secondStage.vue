@@ -150,8 +150,8 @@
       :showDialog.sync="showDialog"
       :questionType="currentQuestionType"
     ></select-question>
-    <!-- <manual-addition :showDialog="showDialog"></manual-addition> -->
     <add-question
+      v-if="handleCloseAddQuestion"
       :handleCloseAddQuestion="handleCloseAddQuestion"
       :dialogAddQuestion="showAddQuestionDialog"
     ></add-question>
@@ -164,59 +164,12 @@ import AddQuestion from "@/components/addQuestion";
 export default {
   props: {
     title: String,
+    addQuestion: Function,
   },
   data() {
     return {
       showDialog: false,
-      list: [
-        {
-          id: "10001",
-          content: "<p>撒<b>地方1</b></p>",
-          analysis: "<p>这是单选题解析</p>",
-          questionType: "单选题",
-          optionList: [
-            { status: 0, choice: "<p>asdf</p>" },
-            { status: 0, choice: "<p>asdf</p>" },
-            { status: 1, choice: "<p>asdf</p>" },
-            { status: 0, choice: "<p>asdf</p>" },
-          ],
-        },
-        {
-          id: "10002",
-          content: "<p>这是多选题题目</p>",
-          analysis: "<p>这是多选题解析</p>",
-          questionType: "多选题",
-          optionList: [
-            { status: 1, choice: "<p>asdf</p>" },
-            { status: 0, choice: "<p>asdf</p>" },
-            { status: 1, choice: "<p>asdf</p>" },
-            { status: 0, choice: "<p>asdf</p>" },
-          ],
-        },
-        {
-          id: "10003",
-          content: "<p>这是判断题题目</p>",
-          analysis: "<p>这是判断题解析</p>",
-          questionType: "判断题",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10004",
-          content: "<p>这是简答题题目</p>",
-          analysis: "<p>这是简答题解析</p>",
-          questionType: "简答题",
-          optionList: [
-            {
-              status: 1,
-              choice:
-                "<p>这是简答题答案</p><p>这是简答题答案</p><p>这是简答题答案</p>",
-            },
-          ],
-        },
-      ],
+      list: [],
       currentQuestionType: "",
       showAddQuestionDialog: false,
     };
@@ -278,6 +231,7 @@ export default {
       if (!pass) {
         this.$message.error("请设置符合规范的题目分数");
       } else {
+        this.addQuestion(this.formatList);
         this.$emit("toThirdStage");
       }
     },

@@ -3,18 +3,18 @@ export const numberToLetter = num => {
 }
 
 export const getStatusButton = status => {
-    if (status === "1") {
+    if (status === 1) {
         return "禁用"
-    } else if (status === "0") {
+    } else if (status === 2) {
         return "启用"
     }
 }
 
 export const getStatus = status => {
-    if (status === "1") {
+    if (status === 1) {
         return "已启用"
-    } else if (status === "0") {
-        return "已禁用"
+    } else if (status === 2) {
+        return "已停用"
     }
 }
 
@@ -26,10 +26,10 @@ export const getTotalScore = list => {
     return score
 }
 
-export const getRoleName = power => {
-    if (power === 1) {
+export const getRoleName = role => {
+    if (role === 0) {
         return "学生"
-    } else if (power === 2) {
+    } else if (role === 1) {
         return "教师"
     }
 }

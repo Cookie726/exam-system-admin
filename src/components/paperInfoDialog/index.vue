@@ -6,7 +6,12 @@
     center
     :visible="showPaperInfoDialog"
   >
-    <paper-info @submit="handleUpdate"></paper-info>
+    <paper-info
+      :handleSubmit="handleSubmit"
+      :paperInfo="paperInfo"
+      :changeData="changeData"
+      @submit="handleUpdate"
+    ></paper-info>
   </el-dialog>
 </template>
 
@@ -19,10 +24,9 @@ export default {
       default: false,
       type: Boolean,
     },
-    id: Number
-  },
-  mounted() {
-    console.log("1");
+    id: Number,
+    paperInfo: Object,
+    changeData: Function,
   },
   methods: {
     handleBeforeClose(done) {
@@ -38,9 +42,12 @@ export default {
         startTime,
         endTime,
         studentIdList,
-        id: this.id
+        id: this.id,
       };
       console.log(data);
+    },
+    handleSubmit() {
+      console.log(this.paperInfo);
     },
   },
   components: {

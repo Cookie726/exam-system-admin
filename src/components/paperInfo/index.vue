@@ -3,14 +3,29 @@
     <div class="left">
       <el-form :model="paperForm" :ref="paperForm">
         <el-form-item label="考试名称">
-          <el-input style="width: 60%" v-model="paperForm.title"></el-input>
+          <el-input
+            style="width: 60%"
+            @input="handleChangeData('title', $event)"
+            :value="paperForm.title"
+          ></el-input>
         </el-form-item>
         <el-form-item label="考试分类" prop="classify">
-          <el-input style="width: 60%" v-model="paperForm.classify"></el-input>
+          <el-select
+            @change="handleChangeData('classify', $event)"
+            :value="paperForm.classify"
+          >
+            <el-option
+              v-for="item in paperClassify"
+              :value="item.classify"
+              :key="item.value"
+              :label="item.classify"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="答题时间" prop="during">
           <el-date-picker
-            v-model="paperForm.during"
+            :value="paperForm.during"
+            @input="handleChangeData('during', $event)"
             type="datetimerange"
             :picker-options="pickerOptions"
             range-separator="至"
@@ -21,7 +36,11 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="可考学员" prop="student">
-          <el-select multiple v-model="paperForm.studentIdList">
+          <el-select
+            multiple
+            @change="handleChangeData('studentIdList', $event)"
+            :value="paperForm.studentIdList"
+          >
             <el-option
               v-for="stu in studentList"
               :value="stu.sno"
@@ -53,7 +72,8 @@
             <span class="content">{{ paperForm.user.userName }}</span>
           </div>
           <div class="form-row">
-            <span class="title">题目数量：</span> <span class="content">1</span>
+            <span class="title">题目数量：</span>
+            <span class="content">{{ paperForm.questionList.length }}</span>
           </div>
         </el-card>
       </div>
@@ -62,19 +82,47 @@
 </template>
 
 <script>
-import store from "@/store";
+import { formatDate } from "@/utils/helpers";
+import { paperClassify } from "@/config/default";
 export default {
+  props: {
+    paperInfo: {
+      type: Object,
+      default: () => {
+        return {
+          title: "",
+          startTime: "",
+          endTime: "",
+          classify: "",
+          paperScore: 0,
+          studentIdList: [],
+          user: {},
+          questionList: [],
+        };
+      },
+    },
+    changeData: Function,
+    handleSubmit: Function,
+  },
+  computed: {
+    paperForm() {
+      const paperForm = {
+        title: this.paperInfo.title,
+        during: [
+          formatDate(this.paperInfo.startTime),
+          formatDate(this.paperInfo.endTime),
+        ],
+        classify: this.paperInfo.classify,
+        paperScore: this.paperInfo.paperScore,
+        user: this.paperInfo.user,
+        studentIdList: this.paperInfo.studentIdList,
+        questionList: this.paperInfo.questionList,
+      };
+      return paperForm;
+    },
+  },
   data() {
     return {
-      paperForm: {
-        title: "",
-        createTime: "",
-        during: [],
-        classify: "",
-        paperScore: 0,
-        studentIdList: [],
-        user: {},
-      },
       pickerOptions: {
         shortcuts: [
           {
@@ -82,7 +130,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() + 3600 * 1000 * 24 * 1);
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 1);
               picker.$emit("pick", [start, end]);
             },
           },
@@ -91,16 +139,16 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
               picker.$emit("pick", [start, end]);
             },
           },
           {
-            text: "未来一个月",
+            text: "未来30天",
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
               picker.$emit("pick", [start, end]);
             },
           },
@@ -124,19 +172,20 @@ export default {
           userName: "老王",
         },
       ],
+      paperClassify: paperClassify,
     };
-  },
-  mounted() {
-    const paper = store.state.paper;
-    this.paperForm.title = paper.title;
-    this.paperForm.classify = paper.classify;
-    this.paperForm.paperScore = paper.paperScore;
-    this.paperForm.user = paper.user;
-    this.paperForm.during = [paper.startTime, paper.endTime];
   },
   methods: {
     submit() {
-      this.$emit("submit", this.paperForm);
+      this.handleSubmit();
+    },
+    handleChangeData(prop, e) {
+      if (prop === "during") {
+        this.changeData("startTime", formatDate(e[0]));
+        this.changeData("endTime", formatDate(e[1]));
+      } else {
+        this.changeData(prop, e);
+      }
     },
   },
 };
