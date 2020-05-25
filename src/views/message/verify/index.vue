@@ -70,37 +70,39 @@
 <script>
 import {
   getNewUserList,
-  passNewUser,
-  refuseNewUser
+  // passNewUser,
+  // refuseNewUser,
 } from "../../../api/message";
 export default {
   methods: {
     handlePass(snoList) {
-      this.$confirm("是否要通过审核？").then(() => {
-        passNewUser({ snoList }).then(res => {
-          if (res.code === 0) {
-            this.setData(this.pageConfig);
-            this.$message.success(res.msg);
-          } else {
-            this.$message.error(res.msg);
-          }
-        });
-      });
+      console.log(snoList);
+      // this.$confirm("是否要通过审核？").then(() => {
+      //   passNewUser({ snoList }).then(res => {
+      //     if (res.code === 0) {
+      //       this.setData(this.pageConfig);
+      //       this.$message.success(res.msg);
+      //     } else {
+      //       this.$message.error(res.msg);
+      //     }
+      //   });
+      // });
     },
     handleRefuse(snoList) {
-      this.$confirm("是否要拒绝审核？").then(() => {
-        refuseNewUser({ snoList }).then(res => {
-          if (res.code === 0) {
-            this.setData(this.pageConfig);
-            this.$message.success(res.msg);
-          } else {
-            this.$message.error(res.msg);
-          }
-        });
-      });
+      console.log(snoList);
+      // this.$confirm("是否要拒绝审核？").then(() => {
+      //   refuseNewUser({ snoList }).then(res => {
+      //     if (res.code === 0) {
+      //       this.setData(this.pageConfig);
+      //       this.$message.success(res.msg);
+      //     } else {
+      //       this.$message.error(res.msg);
+      //     }
+      //   });
+      // });
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val.map(info => info.sno);
+      this.multipleSelection = val.map((info) => info.sno);
       console.log(this.multipleSelection);
     },
     handleSizeChange(val) {
@@ -112,13 +114,13 @@ export default {
       this.setData(this.pageConfig);
     },
     setData(param) {
-      getNewUserList(param).then(res => {
+      getNewUserList(param).then((res) => {
         if (res.code === 0) {
           this.tableData = res.data;
           this.total = res.count;
         }
       });
-    }
+    },
   },
   data() {
     return {
@@ -131,7 +133,7 @@ export default {
           sex: "女",
           enterTime: "2020/4/14 19:08:08",
           power: null,
-          status: null
+          status: null,
         },
         {
           id: null,
@@ -141,20 +143,20 @@ export default {
           sex: "女",
           enterTime: "2020/4/14 19:08:08",
           power: null,
-          status: null
-        }
+          status: null,
+        },
       ],
       multipleSelection: [],
       pageConfig: {
         limit: 10,
-        page: 1
+        page: 1,
       },
-      total: 0
+      total: 0,
     };
   },
   mounted() {
     this.setData(this.pageConfig);
-  }
+  },
 };
 </script>
 

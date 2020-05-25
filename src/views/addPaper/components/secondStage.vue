@@ -203,7 +203,7 @@ export default {
         return !hasSame;
       });
       if (newList.length !== list.length) {
-        this.$message.info("已去除重复的题目");
+        // this.$message.info("已去除重复的题目");
       }
       this.list.push(...newList);
     },
@@ -212,7 +212,8 @@ export default {
     },
     handleMoveUp(i) {
       if (i === 0) {
-        this.$message.error("无法上移");
+        console.log("无法上移")
+        // this.$message.error("无法上移");
       } else {
         [this.list[i], this.list[i - 1]] = [this.list[i - 1], this.list[i]];
         this.list = JSON.parse(JSON.stringify(this.list));
@@ -220,7 +221,8 @@ export default {
     },
     handleMoveDown(i) {
       if (i === this.list.length - 1) {
-        this.$message.error("无法下移");
+        // this.$message.error("无法下移");
+        console.log("无法上移")
       } else {
         [this.list[i + 1], this.list[i]] = [this.list[i], this.list[i + 1]];
         this.list = JSON.parse(JSON.stringify(this.list));
@@ -229,7 +231,8 @@ export default {
     nextStage() {
       let pass = !this.formatList.some((ques) => ques.score <= 0);
       if (!pass) {
-        this.$message.error("请设置符合规范的题目分数");
+        console.log("请设置符合规范的题目分数")
+        // this.$message.error("请设置符合规范的题目分数");
       } else {
         this.addQuestion(this.formatList);
         this.$emit("toThirdStage");

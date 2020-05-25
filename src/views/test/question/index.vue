@@ -150,7 +150,8 @@ export default {
           this.pageConfig.questionType
         )
       ) {
-        this.$message.warning("查询条件不能为空");
+        // this.$message.warning("查询条件不能为空");
+        console.log("查询条件不能为空")
         return;
       }
     },

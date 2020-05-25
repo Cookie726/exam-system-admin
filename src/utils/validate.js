@@ -32,3 +32,15 @@ export const validateSigninForm = function (form) {
 export const isSetAnswer = function (answerList) {
     return answerList.some(val => val.status === 1)
 }
+
+export const validateUpdatePaperInfo = function (updatePaperInfo) {
+    try {
+        if (!updatePaperInfo.title || !updatePaperInfo.classify || !updatePaperInfo.startTime || !updatePaperInfo.endTime || updatePaperInfo.studentIdList.length === 0) {
+            return false
+        } else {
+            return true
+        }
+    } catch {
+        return false
+    }
+}

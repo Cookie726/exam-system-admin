@@ -10,7 +10,6 @@
       :handleSubmit="handleSubmit"
       :paperInfo="paperInfo"
       :changeData="changeData"
-      @submit="handleUpdate"
     ></paper-info>
   </el-dialog>
 </template>
@@ -18,6 +17,8 @@
 <script>
 import { formatDate } from "@/utils/helpers";
 import PaperInfo from "@/components/paperInfo";
+import { validateUpdatePaperInfo } from "@/utils/validate";
+import { updatePaper } from "@/api/paperQuestionManage";
 export default {
   props: {
     showPaperInfoDialog: {
@@ -47,7 +48,25 @@ export default {
       console.log(data);
     },
     handleSubmit() {
-      console.log(this.paperInfo);
+      const data = {
+        title: this.paperInfo.title,
+        classify: this.paperInfo.classify,
+        startTime: this.paperInfo.startTime,
+        endTime: this.paperInfo.endTime,
+        studentIdList: this.paperInfo.studentIdList,
+      };
+      if (validateUpdatePaperInfo(data)) {
+        updatePaper(data).then((res) => {
+          if (res.code === 0) {
+            window.ELEMENT.Message.success("更新成功");
+            this.$emit("update:showPaperInfoDialog", false);
+          } else {
+            window.ELEMENT.Message.error("更新失败");
+          }
+        });
+      } else {
+        window.ELEMENT.Message.warning("请填写完整的信息");
+      }
     },
   },
   components: {

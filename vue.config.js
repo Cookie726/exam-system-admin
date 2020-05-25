@@ -30,5 +30,11 @@ module.exports = {
             .set('store', resolve('src/store'))
             .set('router', resolve('src/router'))
     },
-    publicPath: ""
+    publicPath: "",
+    configureWebpack: {
+        externals: {
+            'element-ui': 'ELEMENT',
+            vue: "Vue"
+        }
+    }
 }

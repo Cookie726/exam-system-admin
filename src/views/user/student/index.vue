@@ -114,7 +114,8 @@ export default {
     },
     handleSearch() {
       if (!(this.param.userName || this.param.sno)) {
-        this.$message.warning("查询条件不能为空");
+        // this.$message.warning("查询条件不能为空");
+        console.log("查询条件不能为空")
         return;
       }
     },

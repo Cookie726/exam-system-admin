@@ -308,7 +308,7 @@ export default {
     handleAddQuestion() {
       setTimeout(() => {
         if (!isSetAnswer(this.answerList)) {
-          this.$message.warning("请设置答案");
+          // this.$message.warning("请设置答案");
           return;
         }
         const param = {};

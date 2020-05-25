@@ -97,10 +97,7 @@
           </el-tooltip>
           <el-tooltip content="批改" placement="top">
             <el-button
-              @click="
-                showSubmitList = true;
-                currentPaperId = scope.row.id;
-              "
+              @click="showSubmitList = true"
               type="text"
               icon="el-icon-edit"
             ></el-button>
@@ -117,7 +114,10 @@
           </el-tooltip>
           <el-tooltip content="成绩分析" placement="top">
             <el-button
-              @click="showMark = true"
+              @click="
+                showMark = true;
+                currentPaperId = scope.row.id;
+              "
               type="text"
               icon="el-icon-data-analysis"
             ></el-button>
@@ -151,7 +151,10 @@
       :paperId="currentPaperId"
       :dialogTableVisible.sync="showSubmitList"
     ></submit-list>
-    <mark-dialog :showMarkDialog.sync="showMark"></mark-dialog>
+    <mark-dialog
+      :paperId="currentPaperId"
+      :showMarkDialog.sync="showMark"
+    ></mark-dialog>
     <paper-info-dialog
       :changeData="changeData"
       :paperInfo="paperInfo"
@@ -165,6 +168,7 @@ import SubmitList from "@/components/submitList";
 import MarkDialog from "@/components/markDialog";
 import PaperInfoDialog from "@/components/paperInfoDialog";
 import { paperClassify } from "@/config/default";
+import { getPaperList, getPaperDetail } from "@/api/paperQuestionManage";
 export default {
   methods: {
     handleView(id) {
@@ -176,8 +180,14 @@ export default {
       });
       window.open(routeData.href, "view_window");
     },
-    handleSizeChange() {},
-    handleCurrentChange() {},
+    handleSizeChange(pageSize) {
+      this.pageConfig.pageSize = pageSize;
+      this.setData();
+    },
+    handleCurrentChange(currentPage) {
+      this.pageConfig.currentPage = currentPage;
+      this.setData();
+    },
     handleEdit(paperId) {
       const loading = this.$loading({
         lock: true,
@@ -185,23 +195,19 @@ export default {
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)",
       });
-      console.log(paperId);
-      setTimeout(() => {
-        this.paperInfo = {
-          title: "前端测试",
-          startTime: "2020-05-21 12:00:00",
-          endTime: "2020-05-28 12:00:00",
-          classify: "前端",
-          paperScore: 20,
-          studentIdList: ["2018010280"],
-          user: {
-            userName: "潘炳名",
-          },
-          questionList: [],
-        };
-        loading.close();
-        this.showPaperInfoDialog = true;
-      }, 1000);
+      getPaperDetail(paperId)
+        .then((res) => {
+          loading.close();
+          if (res.code === 0) {
+            this.paperInfo = res.data;
+          } else {
+            throw new Error(res.msg);
+          }
+          this.showPaperInfoDialog = true;
+        })
+        .catch((e) => {
+          throw new Error(e);
+        });
     },
     resetForm() {
       this.pageConfig.classify = "";
@@ -209,8 +215,10 @@ export default {
     },
     handleSearch() {
       if (!(this.pageConfig.classify || this.pageConfig.title)) {
-        this.$message.warning("查询条件不能为空");
+        window.ELEMENT.Message.warning("查询条件不能为空");
         return;
+      } else {
+        this.setData();
       }
     },
     changeData(prop, e) {
@@ -219,8 +227,32 @@ export default {
     handleAddPaper() {
       this.$router.push("/addPaper");
     },
+    setData() {
+      const loading = this.$loading({
+        lock: true,
+        text: "加载中",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      getPaperList(this.pageConfig)
+        .then((res) => {
+          loading.close();
+          if (res.code === 0) {
+            this.total = res.data.total;
+            this.tableData = res.data.paperList;
+          } else {
+            throw new Error(res.msg);
+          }
+        })
+        .catch((e) => {
+          loading.close();
+          throw new Error(e);
+        });
+    },
   },
-
+  mounted() {
+    this.setData();
+  },
   data() {
     return {
       showPaperInfoDialog: false,

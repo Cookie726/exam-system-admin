@@ -44,7 +44,8 @@ export default {
       if (pass) {
         signin(this.signinForm).then((res) => {
           if (res.code === 0) {
-            this.$message.success("登录成功，页面跳转中。。。");
+            console.log("登录成功，页面跳转中。。。")
+            // this.$message.success("登录成功，页面跳转中。。。");
             if (res.power === 3) {
               this.$router.replace({ name: "control" });
             }

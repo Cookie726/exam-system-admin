@@ -99,9 +99,11 @@ export default {
         const enterTime = new Date().getTime();
         signup(Object.assign({ enterTime }, this.signupForm)).then((res) => {
           if (res.code === 0) {
-            this.$message.success(res.msg);
+            // this.$message.success(res.msg);
+            console.log(res.msg)
           } else {
-            this.$message.error(res.msg);
+            // this.$message.error(res.msg);
+            console.log(res.msg)
           }
         });
       }

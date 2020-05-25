@@ -34,14 +34,6 @@
             <el-table-column align="center" label="分数" prop="score">
             </el-table-column>
           </el-table>
-          <el-pagination
-            style="text-align: center"
-            :current-page="1"
-            :page-size="10"
-            layout="prev, pager, next"
-            :total="400"
-          >
-          </el-pagination>
         </el-tab-pane>
         <el-tab-pane label="成绩统计">
           <div class="row">
@@ -91,6 +83,7 @@
 </template>
 
 <script>
+import { getGrades } from "@/api/paperQuestionManage";
 export default {
   props: {
     showMarkDialog: {
@@ -108,9 +101,12 @@ export default {
   watch: {
     showMarkDialog(newVal) {
       if (newVal === true) {
-        setTimeout(() => {
-          console.log("加载数据");
-        }, 2000);
+        getGrades(this.paperId).then((res) => {
+          if (res.code === 0) {
+            this.paper = res.data.paper;
+            this.studentList = res.data.studentList;
+          }
+        });
       }
     },
   },

@@ -45,20 +45,12 @@
           </template></el-table-column
         >
       </el-table>
-
-      <el-pagination
-        style="text-align: center"
-        :current-page="1"
-        :page-size="10"
-        layout="prev, pager, next"
-        :total="400"
-      >
-      </el-pagination>
     </div>
   </el-dialog>
 </template>
 
 <script>
+import { getSubmitList } from "@/api/paperQuestionManage";
 export default {
   props: {
     dialogTableVisible: {
@@ -100,61 +92,31 @@ export default {
   watch: {
     dialogTableVisible(newVal) {
       if (newVal === true) {
-        setTimeout(() => {
-          console.log("加载数据");
-        }, 2000);
+        const loading = this.$loading({
+          lock: true,
+          text: "加载中",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        getSubmitList(this.paperId)
+          .then((res) => {
+            loading.close();
+            if (res.code === 0) {
+              this.gridData = res.data;
+            } else {
+              throw new Error(res.msg);
+            }
+          })
+          .catch((e) => {
+            loading.close();
+            throw new Error(e);
+          });
       }
     },
   },
   data() {
     return {
-      gridData: [
-        {
-          user: {
-            id: 1,
-            userName: "潘炳名",
-          },
-          isSubmit: 1,
-          submitTime: "2020/05/19 21:02",
-          isMark: 1,
-        },
-        {
-          user: {
-            id: 1,
-            userName: "潘炳名",
-          },
-          isSubmit: 1,
-          submitTime: "2020/05/19 21:02",
-          isMark: 0,
-        },
-        {
-          user: {
-            id: 1,
-            userName: "潘炳名",
-          },
-          isSubmit: 0,
-          submitTime: "2020/05/19 21:02",
-          isMark: 0,
-        },
-        {
-          user: {
-            id: 1,
-            userName: "潘炳名",
-          },
-          isSubmit: 1,
-          submitTime: "2020/05/19 21:02",
-          isMark: 1,
-        },
-        {
-          user: {
-            id: 1,
-            userName: "潘炳名",
-          },
-          isSubmit: 1,
-          submitTime: "2020/05/19 21:02",
-          isMark: 0,
-        },
-      ],
+      gridData: [],
     };
   },
 };
