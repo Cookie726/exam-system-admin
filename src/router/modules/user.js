@@ -8,14 +8,16 @@ export default [{
     component: User,
     redirect: "userTeacher",
     meta: {
-        name: "用户管理"
+        name: "用户管理",
+        role: ["admin"]
     },
     children: [{
             path: "teacher",
             name: "userTeacher",
             component: UserTeacher,
             meta: {
-                name: "教师管理"
+                name: "教师管理",
+                role: ["admin"]
             }
         },
         {
@@ -23,7 +25,8 @@ export default [{
             component: UserStudent,
             name: "userStudent",
             meta: {
-                name: "学生管理"
+                name: "学生管理",
+                role: ["admin"]
             }
         }
     ]

@@ -30,3 +30,32 @@ export const formatDate = function (time) {
     let ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
     return YY + MM + DD + " " + hh + mm + ss;
 }
+
+
+export const hasPermission = (role, route) => {
+    if (route.meta && route.meta.role) {
+        return route.meta.role.includes(role)
+    } else {
+        return true
+    }
+}
+
+export const getRoutes = (role, dynamicRoutes) => {
+    let roleName
+    if (role === 0) {
+        roleName = "student"
+    } else if (role === 1) {
+        roleName = "teacher"
+    } else if (role === 2) {
+        roleName = "admin"
+    }
+    const addRoutes = dynamicRoutes.filter(v => {
+        return hasPermission(roleName, v)
+    })
+    addRoutes.forEach(v => {
+        if (v.children && v.children.length > 0) {
+            v.children = getRoutes(role, v.children)
+        }
+    })
+    return addRoutes
+}

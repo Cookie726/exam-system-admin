@@ -6,7 +6,7 @@ import axios from "axios"
 // axios.defaults.baseURL = 'http://182.92.4.123/examSystem'
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 const service = axios.create({
-    baseURL: "http://182.92.4.123/examSystem",
+    baseURL: "http://localhost:9527",
     timeout: 5000,
     withCredentials: true,
     headers: {

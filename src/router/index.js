@@ -7,7 +7,21 @@ import Signup from "../views/sign/signup"
 import MarkExam from "../views/markExam"
 import ExamStart from "../views/examStart"
 import UpdatePaper from "../views/updatePaper"
-
+export const asyncRoute = [{
+  path: "",
+  name: "layout",
+  component: Layout,
+  meta: {
+    name: 'layout',
+    role: ["admin", "teacher", "student"]
+  },
+  children: RouterConfig
+}]
+export const dynamicRoute = [{
+  path: "/updatePaper/:id",
+  name: "updatePaper",
+  component: UpdatePaper
+}]
 import RouterConfig from './modules'
 Vue.use(VueRouter);
 const routes = [{

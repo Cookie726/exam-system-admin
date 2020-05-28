@@ -4,7 +4,8 @@ export default [{
     path: "control",
     name: "control",
     meta: {
-        name: "控制台"
+        name: "控制台",
+        role: ["admin", "teacher"]
     },
     component: Control
 }]

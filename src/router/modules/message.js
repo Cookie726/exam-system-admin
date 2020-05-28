@@ -7,14 +7,16 @@ export default [{
     component: Message,
     redirect: "messageVerify",
     meta: {
-        name: "消息中心"
+        name: "消息中心",
+        role: ["admin"]
     },
     children: [{
             path: "verify",
             component: MessageVerify,
             name: "messageVerify",
             meta: {
-                name: "注册审核"
+                name: "注册审核",
+                role: ["admin"]
             }
         }
     ]

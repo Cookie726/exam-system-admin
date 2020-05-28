@@ -6,7 +6,8 @@ export default [{
     path: "test",
     name: "test",
     meta: {
-        name: "卷题管理"
+        name: "卷题管理",
+        role: ["admin", "teacher"]
     },
     redirect: "testPaper",
     component: Test,
@@ -15,7 +16,8 @@ export default [{
             name: "testPaper",
             component: TestPaper,
             meta: {
-                name: "试卷管理"
+                name: "试卷管理",
+                role: ["admin", "teacher"]
             }
         },
         {
@@ -23,7 +25,8 @@ export default [{
             name: "testQuestion",
             component: TestQuestion,
             meta: {
-                name: "题库管理"
+                name: "题库管理",
+                role: ["admin", "teacher"]
             }
         }
     ]
