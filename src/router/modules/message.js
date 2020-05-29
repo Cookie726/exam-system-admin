@@ -8,7 +8,8 @@ export default [{
     redirect: "messageVerify",
     meta: {
         name: "消息中心",
-        role: ["admin"]
+        role: ["admin"],
+        icon: "1"
     },
     children: [{
             path: "verify",
@@ -16,7 +17,8 @@ export default [{
             name: "messageVerify",
             meta: {
                 name: "注册审核",
-                role: ["admin"]
+                role: ["admin"],
+                icon: "1"
             }
         }
     ]

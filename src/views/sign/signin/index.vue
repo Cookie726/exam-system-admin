@@ -44,10 +44,17 @@ export default {
     signin() {
       // const pass = validateSigninForm.call(this, this.signinForm);
       // if (pass) {
-      signin(this.signinForm).then(() => {
+      signin(this.signinForm).then((res) => {
         // console.log(res);
         console.log(asyncRoute);
         console.log(getRoutes(0, asyncRoute));
+        // console.log(this.$store);
+        if (res.code === 0) {
+          this.$store.commit("user/SIGNIN", res.data.user);
+          this.$router.push({
+            name: "control",
+          });
+        }
         // if (res.code === 0) {
         //   // this.$router.addRoutes(dynamicRoute);
         //   console.log(dynamicRoute);

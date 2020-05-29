@@ -9,7 +9,8 @@ export default [{
     redirect: "userTeacher",
     meta: {
         name: "用户管理",
-        role: ["admin"]
+        role: ["admin"],
+        icon: "1"
     },
     children: [{
             path: "teacher",
@@ -17,7 +18,8 @@ export default [{
             component: UserTeacher,
             meta: {
                 name: "教师管理",
-                role: ["admin"]
+                role: ["admin"],
+                icon: "1"
             }
         },
         {
@@ -26,7 +28,8 @@ export default [{
             name: "userStudent",
             meta: {
                 name: "学生管理",
-                role: ["admin"]
+                role: ["admin"],
+                icon: "1"
             }
         }
     ]

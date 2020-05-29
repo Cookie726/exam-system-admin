@@ -31,7 +31,6 @@ export const formatDate = function (time) {
     return YY + MM + DD + " " + hh + mm + ss;
 }
 
-
 export const hasPermission = (role, route) => {
     if (route.meta && route.meta.role) {
         return route.meta.role.includes(role)
@@ -49,13 +48,33 @@ export const getRoutes = (role, dynamicRoutes) => {
     } else if (role === 2) {
         roleName = "admin"
     }
-    const addRoutes = dynamicRoutes.filter(v => {
-        return hasPermission(roleName, v)
-    })
-    addRoutes.forEach(v => {
-        if (v.children && v.children.length > 0) {
-            v.children = getRoutes(role, v.children)
+    const res = []
+    dynamicRoutes.forEach(route => {
+        const temp = {
+            ...route
+        }
+        if (hasPermission(roleName, temp)) {
+            if (temp.children) {
+                temp.children = getRoutes(role, route.children)
+            }
+            res.push(temp)
         }
     })
-    return addRoutes
+    return res
+}
+
+export const getSidebarList = (routerList) => {
+    const res = []
+    routerList.forEach(route => {
+        const item = {
+            name: route.meta.name,
+            icon: route.meta.icon,
+            moduleName: route.name
+        }
+        if (route.children) {
+            item.children = getSidebarList(route.children)
+        }
+        res.push(item)
+    })
+    return res
 }

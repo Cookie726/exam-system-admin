@@ -7,7 +7,8 @@ export default [{
     name: "test",
     meta: {
         name: "卷题管理",
-        role: ["admin", "teacher"]
+        role: ["admin", "teacher"],
+        icon: "1"
     },
     redirect: "testPaper",
     component: Test,
@@ -17,7 +18,8 @@ export default [{
             component: TestPaper,
             meta: {
                 name: "试卷管理",
-                role: ["admin", "teacher"]
+                role: ["admin", "teacher"],
+                icon: "1"
             }
         },
         {
@@ -26,7 +28,8 @@ export default [{
             component: TestQuestion,
             meta: {
                 name: "题库管理",
-                role: ["admin", "teacher"]
+                role: ["admin", "teacher"],
+                icon: "1"
             }
         }
     ]

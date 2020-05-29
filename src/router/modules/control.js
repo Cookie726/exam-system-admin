@@ -5,7 +5,8 @@ export default [{
     name: "control",
     meta: {
         name: "控制台",
-        role: ["admin", "teacher"]
+        role: ["admin", "teacher"],
+        icon: "1"
     },
     component: Control
 }]
