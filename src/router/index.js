@@ -24,11 +24,6 @@ export const asyncRoute = [{
     redirect: "/404"
   }
 ]
-export const dynamicRoute = [{
-  path: "/updatePaper/:id",
-  name: "updatePaper",
-  component: UpdatePaper
-}]
 Vue.use(VueRouter);
 const routes = [{
     path: "/updatePaper/:id",

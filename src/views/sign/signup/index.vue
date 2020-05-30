@@ -102,8 +102,7 @@ export default {
             // this.$message.success(res.msg);
             console.log(res.msg)
           } else {
-            // this.$message.error(res.msg);
-            console.log(res.msg)
+            window.ELEMENT.Message.error(res.msg);
           }
         });
       }

@@ -28,9 +28,7 @@
 
 <script>
 // import { validateSigninForm } from "../../../utils/validate";
-import { asyncRoute } from "@/router";
 import { signin } from "../../../api/sign";
-import { getRoutes } from "@/utils/helpers";
 export default {
   data() {
     return {
@@ -45,15 +43,16 @@ export default {
       // const pass = validateSigninForm.call(this, this.signinForm);
       // if (pass) {
       signin(this.signinForm).then((res) => {
-        // console.log(res);
-        console.log(asyncRoute);
-        console.log(getRoutes(0, asyncRoute));
-        // console.log(this.$store);
         if (res.code === 0) {
           this.$store.commit("user/SIGNIN", res.data.user);
-          this.$router.push({
-            name: "control",
+          const role = this.$store.state.user.user.role;
+          this.$store.dispatch("router/GenerateRoutes", role).then(() => {
+            this.$store.commit(
+              "SET_SIDEBAR_LIST",
+              this.$store.state.router.dynamicRoutes
+            );
           });
+          this.$router.push("/");
         }
         // if (res.code === 0) {
         //   // this.$router.addRoutes(dynamicRoute);
@@ -64,13 +63,6 @@ export default {
         //       id: 1,
         //     },
         //   });
-        // }
-        // if (res.code === 0) {
-        //   console.log("登录成功，页面跳转中。。。")
-        //   // this.$message.success("登录成功，页面跳转中。。。");
-        //   if (res.power === 3) {
-        //     this.$router.replace({ name: "control" });
-        //   }
         // }
       });
       // }

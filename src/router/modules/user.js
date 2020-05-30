@@ -1,35 +1,31 @@
-import User from "../../views/user"
-import UserStudent from "../../views/user/student"
-import UserTeacher from "../../views/user/teacher"
-
 export default [{
     path: "user",
     name: "user",
-    component: User,
+    component: resolve => require(["@/views/user"], resolve),
     redirect: "userTeacher",
     meta: {
         name: "用户管理",
         role: ["admin"],
-        icon: "1"
+        icon: "user-manage"
     },
     children: [{
             path: "teacher",
             name: "userTeacher",
-            component: UserTeacher,
+            component: resolve => require(["@/views/user/teacher"], resolve),
             meta: {
                 name: "教师管理",
                 role: ["admin"],
-                icon: "1"
+                icon: "teacher"
             }
         },
         {
             path: "student",
-            component: UserStudent,
+            component: resolve => require(["@/views/user/student"], resolve),
             name: "userStudent",
             meta: {
                 name: "学生管理",
                 role: ["admin"],
-                icon: "1"
+                icon: "student"
             }
         }
     ]

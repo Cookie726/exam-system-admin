@@ -1,9 +1,8 @@
-const files = require.context(".", false, /\.js$/)
-
-let configRouter = []
-
-files.keys().forEach(key => {
-    if (key === "./index.js") return
-    configRouter = configRouter.concat(files(key).default)
-})
+import control from "./control"
+import test from "./test"
+import user from "./user"
+import message from "./message"
+import addPaper from "./addPaper"
+import home from "./home"
+const configRouter = [...control, ...test, ...user, ...message, ...addPaper, ...home]
 export default configRouter

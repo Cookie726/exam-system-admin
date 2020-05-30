@@ -7,28 +7,36 @@ import * as filters from "./filters/filters"
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
-router.beforeEach((to, _, next) => {
-  if (store.state.user.user) {
-    if (store.state.router.dynamicRoutes.length === 0) {
-      const role = store.state.user.user.role
-      store.dispatch("router/GenerateRoutes", role).then(() => {
-        router.addRoutes(store.state.router.dynamicRoutes)
-        store.commit("SET_SIDEBAR_LIST", store.state.router.dynamicRoutes)
-        next({
-          ...to,
-          replace: true
-        })
+router.beforeEach((to, from, next) => {
+  if (store.state.user.user) { // 判断是否登录
+    if (to.name === "signin") { // 登录状态下禁止进入登录页面
+      const name = from.name ? from.name : 'layout'
+      next({
+        name
       })
+      window.ELEMENT.Message.warning("请先退出该账号")
     } else {
-      next()
+      if (store.state.router.dynamicRoutes.length === 0) { // 判断是否已添加动态路由
+        const role = store.state.user.user.role
+        store.dispatch("router/GenerateRoutes", role).then(() => {
+          router.addRoutes(store.state.router.dynamicRoutes)
+          store.commit("SET_SIDEBAR_LIST", store.state.router.dynamicRoutes) // 设置侧边栏菜单
+          next({
+            ...to,
+            replace: true
+          }) // 确保addRoutes已完成
+        })
+      } else {
+        next()
+      }
     }
   } else {
-    if (to.name === "signin") {
+    if (to.name === "signin" || to.name === 'signup') {
       next()
     } else {
       next({
         path: "/sign/signin"
-      })
+      }) // 直接进入，不再执行钩子函数，防止出现死循环导致栈溢出
     }
   }
 })

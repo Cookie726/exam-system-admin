@@ -60,6 +60,14 @@ export const getRoutes = (role, dynamicRoutes) => {
             res.push(temp)
         }
     })
+    res.forEach(item => {
+        if (item.name === "layout") {
+            item.redirect = {
+                name: item.children[0].name
+            }
+            return
+        }
+    })
     return res
 }
 

@@ -1,12 +1,10 @@
-import Control from "../../views/control"
-
 export default [{
     path: "control",
     name: "control",
     meta: {
         name: "控制台",
-        role: ["admin", "teacher"],
+        role: ["admin", "teacher", "student"],
         icon: "1"
     },
-    component: Control
+    component: resolve => require(["@/views/control"], resolve)
 }]

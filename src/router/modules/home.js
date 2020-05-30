@@ -4,7 +4,7 @@ export default [{
     meta: {
         name: "考试中心",
         role: ["student"],
-        icon: "1"
+        icon: "home"
     },
     component: resolve => require(["@/views/home"], resolve)
 }]
