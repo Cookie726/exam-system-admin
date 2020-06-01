@@ -97,7 +97,10 @@
           </el-tooltip>
           <el-tooltip content="批改" placement="top">
             <el-button
-              @click="showSubmitList = true"
+              @click="
+                showSubmitList = true;
+                currentPaperId = scope.row.id;
+              "
               type="text"
               icon="el-icon-edit"
             ></el-button>
@@ -303,7 +306,7 @@ export default {
 }
 .demo-table-expand .el-form-item {
   margin-right: 0;
-  margin-bottom: 0;
+  margin-bottom: 0; 
   width: 50%;
 }
 </style>

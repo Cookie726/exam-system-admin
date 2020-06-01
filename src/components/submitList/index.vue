@@ -65,6 +65,7 @@ export default {
       done();
     },
     handleCorrect(isMark, userId) {
+      console.log(this.paperId);
       if (isMark === 1) {
         this.$message({
           message: "该学生的试卷已经被批改",

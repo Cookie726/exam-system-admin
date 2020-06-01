@@ -34,9 +34,6 @@
         </li>
       </ul>
     </div>
-    <div @click="closeWindow" v-if="!isAnswer" class="btn btn-primary btn-nav">
-      关闭
-    </div>
     <div class="nav nav-bottom" v-if="!isAnswer">
       <ul class="menu-items">
         <li class="menu-item disabled">
@@ -49,6 +46,7 @@
       v-if="!isAnswer"
       type="button"
       class="btn btn-primary btn-nav btn-bottom position-left-0"
+      @click="handleMarkPaper"
     >
       保存
     </button>
@@ -81,8 +79,20 @@ export default {
     }, 1000);
   },
   methods: {
-    closeWindow() {
-      console.log("关闭当前窗口");
+    handleMarkPaper() {
+      this.$store
+        .dispatch("markPaper/SUBMIT")
+        .then((res) => {
+          console.log(res);
+          if (res.code === 0) {
+            window.ELEMENT.Message.success("批改成功");
+          } else {
+            window.ELEMENT.Message.error(res.msg);
+          }
+        })
+        .catch((e) => {
+          window.ELEMENT.Message.error(e);
+        });
     },
   },
   computed: {

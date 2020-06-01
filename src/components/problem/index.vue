@@ -1,7 +1,11 @@
 <template>
   <div :id="question.id" class="question-content">
     <mark-flag v-if="isAnswer" :isMark.sync="isMark" :index="index"></mark-flag>
-    <set-score :maxScore="question.score" v-else></set-score>
+    <set-score
+      :questionId="question.id"
+      :maxScore="question.score"
+      v-else
+    ></set-score>
     <div class="exam-question">
       <span class="question-index ellipsis">{{ index + 1 }}.</span>
       <div v-html="content">{{ content }}</div>
@@ -129,6 +133,7 @@ export default {
     question: {
       default() {
         return {
+          id: 1,
           type: "简答题",
           content: "<p>撒<b>地方1</b></p><p>撒地方<i>双方的给</i> 非观</p>",
           score: 10,

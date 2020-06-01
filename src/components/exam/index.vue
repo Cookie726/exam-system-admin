@@ -5,7 +5,12 @@
     </div>
     <div class="middle">
       <template v-for="(problem, index) in paperInfo"
-        ><problem :key="problem.id" :index="index" :isAnswer="isAnswer" :question="problem"></problem
+        ><problem
+          :key="problem.id"
+          :index="index"
+          :isAnswer="isAnswer"
+          :question="problem"
+        ></problem
       ></template>
     </div>
     <div class="right">
@@ -111,6 +116,7 @@ export default {
   mounted() {
     this._init_flag();
     this._init_done();
+    this._init_store();
   },
   methods: {
     _init_flag() {
@@ -118,6 +124,14 @@ export default {
     },
     _init_done() {
       this.$store.commit("exercise/INIT_DONE", this.paperInfo.length);
+    },
+    _init_store() {
+      if (!this.isAnswer) {
+        const data = {};
+        data.paperId = this.$route.params.id;
+        data.questionIdList = this.paperInfo.map((paperItem) => paperItem.id);
+        this.$store.commit("markPaper/INIT", data);
+      }
     },
   },
 };

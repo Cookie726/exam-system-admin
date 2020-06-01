@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import user from "./modules/user";
 import exercise from "./modules/exercise"
 import router from "./modules/router"
+import markPaper from "./modules/markPaper"
 import {
   getSidebarList
 } from "@/utils/helpers"
@@ -61,6 +62,7 @@ export default new Vuex.Store({
   modules: {
     user,
     exercise,
-    router
+    router,
+    markPaper
   }
 });

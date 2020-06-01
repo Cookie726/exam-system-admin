@@ -23,6 +23,9 @@ export default {
   },
   mounted() {
     console.log(this.isMark, this.index);
+    this.$on("setScore", (data) => {
+      console.log("设置分数", data);
+    });
   },
   methods: {
     handleMark() {

@@ -27,6 +27,7 @@
 export default {
   props: {
     maxScore: Number,
+    questionId: Number,
   },
   data() {
     return {
@@ -40,6 +41,15 @@ export default {
       } else if (newval < 0) {
         this.score = 0;
       }
+      this.setScore();
+    },
+  },
+  methods: {
+    setScore() {
+      this.$store.commit("markPaper/SET_SCORE", {
+        questionId: this.questionId,
+        score: +this.score,
+      });
     },
   },
 };
