@@ -1,7 +1,7 @@
 <template>
   <div class="mark-exam-container">
     <nav-bar></nav-bar>
-    <exam></exam>
+    <exam :paperId="paperId"></exam>
   </div>
 </template>
 
@@ -9,12 +9,14 @@
 import NavBar from "@/components/navbar";
 import Exam from "../../components/exam";
 export default {
-  mounted() {
-    console.log(this.$route);
-  },
   components: {
     exam: Exam,
     "nav-bar": NavBar,
+  },
+  computed: {
+    paperId() {
+      return this.$route.params.id;
+    },
   },
 };
 </script>

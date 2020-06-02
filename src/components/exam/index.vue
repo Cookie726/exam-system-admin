@@ -10,11 +10,12 @@
           :index="index"
           :isAnswer="isAnswer"
           :question="problem"
+          :paperId="paperId"
         ></problem
       ></template>
     </div>
     <div class="right">
-      <exam-board :isAnswer="isAnswer"></exam-board>
+      <exam-board :paperId="paperId" :isAnswer="isAnswer"></exam-board>
     </div>
   </div>
 </template>
@@ -28,6 +29,9 @@ export default {
     problem: Problem,
     "answer-sheet": AnswerSheet,
     "exam-board": ExamBoard,
+  },
+  props: {
+    paperId: Number,
   },
   data() {
     return {
@@ -48,10 +52,12 @@ export default {
           index: 1,
           optionList: [
             {
-              answer: "正确",
+              choice: "正确",
+              id: 1,
             },
             {
-              answer: "错误",
+              choice: "错误",
+              id: 2,
             },
           ],
         },
@@ -63,16 +69,20 @@ export default {
           index: 1,
           optionList: [
             {
-              answer: "<p>阀手动阀撒地方</p>",
+              choice: "<p>阀手动阀撒地方</p>",
+              id: 1,
             },
             {
-              answer: "<p>阀手动阀撒暗室逢灯地方</p>",
+              choice: "<p>阀手动阀撒暗室逢灯地方</p>",
+              id: 2,
             },
             {
-              answer: "<p>阀手嘎嘎嘎动阀撒地方</p>",
+              choice: "<p>阀手嘎嘎嘎动阀撒地方</p>",
+              id: 3,
             },
             {
-              answer: "<p>阀手动阀华国锋撒地方</p>",
+              choice: "<p>阀手动阀华国锋撒地方</p>",
+              id: 4,
             },
           ],
         },
@@ -84,16 +94,20 @@ export default {
           index: 1,
           optionList: [
             {
-              answer: "<p>阀手动阀撒地方</p>",
+              choice: "<p>阀手动阀撒地方</p>",
+              id: 1,
             },
             {
-              answer: "<p>阀手动阀撒暗室逢灯地方</p>",
+              choice: "<p>阀手动阀撒暗室逢灯地方</p>",
+              id: 2,
             },
             {
-              answer: "<p>撒地方阀手嘎嘎嘎动阀撒地方</p>",
+              choice: "<p>撒地方阀手嘎嘎嘎动阀撒地方</p>",
+              id: 3,
             },
             {
-              answer: "<p>阀手动阀华国锋撒地方</p>",
+              choice: "<p>阀手动阀华国锋撒地方</p>",
+              id: 4,
             },
           ],
         },

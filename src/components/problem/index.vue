@@ -22,9 +22,9 @@
             :ref="'inputBtn' + index"
             :type="inputType"
             class="radioOrCheck hidden"
-            :value="'key' + (index + 1)"
+            :value="option.id"
             v-model="answer"
-            name="keyChk_questions_5e94993d57aad24951289727_1"
+            :name="'keyChk_questions_' + question.id"
           />
           <label @click="handleSelect(index)">
             <span class="select-icon">
@@ -34,7 +34,7 @@
               ><span class="words-option" v-if="question.type !== '判断题'"
                 >{{ index | numberToLetter }}.
               </span>
-              <span v-html="option.answer"> {{ option.answer }}</span>
+              <span v-html="option.choice">G</span>
             </span>
           </label>
         </div>
@@ -60,9 +60,6 @@
           :file-list="fileList"
         >
           <el-button size="small" type="primary">上传附件</el-button>
-          <div slot="tip" class="el-upload__tip">
-            只能上传jpg/png文件，且不超过500kb
-          </div>
         </el-upload>
       </template>
     </div>
@@ -78,7 +75,7 @@
             :ref="'inputBtn' + index"
             :type="inputType"
             class="radioOrCheck hidden"
-            :value="'key' + (index + 1)"
+            :value="option.id"
             disabled
             v-model="answer"
             name="keyChk_questions_5e94993d57aad24951289727_1"
@@ -91,7 +88,7 @@
               ><span class="words-option" v-if="question.type !== '判断题'"
                 >{{ index | numberToLetter }}.
               </span>
-              <span v-html="option.answer"> {{ option.answer }}</span>
+              <span v-html="option.choice"></span>
             </span>
           </label>
         </div>
@@ -125,6 +122,7 @@
 
 <script>
 import { initAnswerType, isComplete } from "utils/helpers";
+import { putAnswer, putShortAnswer } from "@/api/paperHome";
 import editor from "@/components/editor";
 import MarkFlag from "@/components/markFlag";
 import SetScore from "@/components/setScore";
@@ -132,25 +130,13 @@ export default {
   props: {
     question: {
       default() {
-        return {
-          id: 1,
-          type: "简答题",
-          content: "<p>撒<b>地方1</b></p><p>撒地方<i>双方的给</i> 非观</p>",
-          score: 10,
-          optionList: [
-            {
-              answer: "正确",
-            },
-            {
-              answer: "错误",
-            },
-          ],
-        };
+        return {};
       },
       type: Object,
     },
     index: Number,
     isAnswer: Boolean,
+    paperId: Number,
   },
   data() {
     return {
@@ -158,18 +144,45 @@ export default {
       configMenus: ["image", "table", "code"],
       isMark: false,
       fileList: [],
+      annexPath: "",
     };
   },
   mounted() {
     this.answer = initAnswerType(this.question.type);
   },
   methods: {
-    handleSelect(index) {
+    async handleSelect(index) {
       const ref = `inputBtn${index}`;
       this.$refs[ref][0].click();
+      const data = {
+        id: this.paperId,
+        questionId: this.question.id,
+        optionIdList: Array.isArray(this.answer) ? this.answer : [this.answer],
+      };
+      try {
+        const res = await putAnswer(data);
+        if (res.code !== 0) {
+          window.ELEMENT.Message.error(res.msg);
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
     },
-    handleSave() {
-      console.log("save", this.answer);
+    async handleSave() {
+      const data = {
+        id: this.paperId,
+        questionId: this.question.id,
+        annexPath: this.annexPath,
+        content: this.answer,
+      };
+      try {
+        const res = await putShortAnswer(data);
+        if (res.code !== 0) {
+          window.ELEMENT.Message.error(res.msg);
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);

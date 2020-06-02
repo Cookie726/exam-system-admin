@@ -4,5 +4,6 @@ import user from "./user"
 import message from "./message"
 import addPaper from "./addPaper"
 import home from "./home"
-const configRouter = [...control, ...test, ...user, ...message, ...addPaper, ...home]
+import wrongBook from "./wrongBook"
+const configRouter = [...control, ...test, ...user, ...message, ...addPaper, ...home, ...wrongBook]
 export default configRouter

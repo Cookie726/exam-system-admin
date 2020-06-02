@@ -53,6 +53,7 @@
     <button
       v-if="isAnswer"
       type="button"
+      @click="handleSubmitAnswer"
       class="btn btn-primary btn-nav btn-bottom position-left-0"
     >
       提交
@@ -61,6 +62,7 @@
 </template>
 
 <script>
+import { submitAnswer } from "@/api/paperHome";
 export default {
   data() {
     return {
@@ -72,6 +74,7 @@ export default {
       type: Boolean,
       default: true,
     },
+    paperId: Number,
   },
   mounted() {
     setInterval(() => {
@@ -93,6 +96,16 @@ export default {
         .catch((e) => {
           window.ELEMENT.Message.error(e);
         });
+    },
+    async handleSubmitAnswer() {
+      try {
+        const res = await submitAnswer(this.paperId);
+        if (res.code !== 0) {
+          window.ELEMENT.Message.error(res.msg);
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
     },
   },
   computed: {
