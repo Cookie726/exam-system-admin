@@ -1,3 +1,7 @@
+import {
+    put
+} from "@/utils/request"
+
 export const getExamList = (data) => {
     console.log(data)
     return Promise.resolve({
@@ -7,11 +11,7 @@ export const getExamList = (data) => {
 }
 
 export const putAnswer = (data) => {
-    console.log(data)
-    return Promise.resolve({
-        code: 0,
-        msg: ""
-    })
+    return put("/exam/conserve", data)
 }
 
 export const putShortAnswer = data => {

@@ -33,6 +33,9 @@
                     label="题干"
                     min-width="320"
                   >
+                    <template slot-scope="scope">
+                      {{ scope.row.content | getText }}
+                    </template>
                   </el-table-column>
                   <el-table-column
                     align="center"
@@ -60,11 +63,11 @@
                   <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="pageConfig.page"
+                    :current-page="pageConfig.currentPage"
                     :page-sizes="[10, 20, 30, 40]"
                     :page-size="pageConfig.limit"
                     layout="total, sizes, prev, pager, next"
-                    :total="400"
+                    :total="total"
                   >
                   </el-pagination>
                 </div>
@@ -128,6 +131,7 @@
 </template>
 
 <script>
+import { getQuestionList } from "@/api/paperQuestionManage";
 export default {
   props: {
     showDialog: Boolean,
@@ -135,195 +139,43 @@ export default {
     handleShowAddQuestion: Function,
   },
   mounted() {
-    console.log(this.questionType);
+    this.setData();
   },
   data() {
     return {
       activeName: "first",
-      tableData: [
-        {
-          id: "10001",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10006",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10007",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10008",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10009",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10010",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10011",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10012",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10013",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10014",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10015",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-        {
-          id: "10016",
-          content: "123123",
-          questionType: "单选题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-          analysis: "<p>这是判断题解析</p>",
-          optionList: [
-            { status: 1, choice: "正确" },
-            { status: 0, choice: "错误" },
-          ],
-        },
-      ],
+      tableData: [],
       pageConfig: {
         limit: 10,
-        page: 1,
+        currentPage: 1,
+        classify: "",
+        content: "",
+        questionType: "",
       },
       selectQuesList: [],
       list: [],
+      total: 0,
     };
   },
   methods: {
+    setData() {
+      getQuestionList({
+        ...this.pageConfig,
+        questionType: this.questionType,
+      }).then((res) => {
+        if (res.code === 0) {
+          this.tableData = res.data.questionList;
+          this.total = res.data.total;
+        }
+      });
+    },
     handleSizeChange(val) {
       this.pageConfig.limit = val;
+      this.setData();
     },
     handleCurrentChange(val) {
-      this.pageConfig.page = val;
+      this.pageConfig.currentPage = val;
+      this.setData();
     },
     handleSelectionChange(_, a) {
       const index = this.selectQuesList.indexOf(a);
@@ -365,7 +217,6 @@ export default {
   },
   watch: {
     selectQuesList(newVal, oldVal) {
-      console.log("changed", newVal);
       const diffArr = newVal.concat(oldVal).filter(function(v, i, arr) {
         return arr.indexOf(v) === arr.lastIndexOf(v);
       });

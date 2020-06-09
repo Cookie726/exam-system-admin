@@ -1,21 +1,26 @@
 <template>
   <div class="exam-container">
     <div class="left">
-      <answer-sheet :isAnswer="isAnswer" :list="sheetList"></answer-sheet>
+      <answer-sheet :pageName="pageName" :list="sheetList"></answer-sheet>
     </div>
     <div class="middle">
-      <template v-for="(problem, index) in paperInfo"
+      <template v-for="(problem, index) in questionList"
         ><problem
           :key="problem.id"
           :index="index"
-          :isAnswer="isAnswer"
+          :pageName="pageName"
           :question="problem"
           :paperId="paperId"
         ></problem
       ></template>
     </div>
     <div class="right">
-      <exam-board :paperId="paperId" :isAnswer="isAnswer"></exam-board>
+      <exam-board
+        :timeLimit="timeLimit"
+        :paperId="paperId"
+        :isAnswer="isAnswer"
+        :pageName="pageName"
+      ></exam-board>
     </div>
   </div>
 </template>
@@ -32,99 +37,35 @@ export default {
   },
   props: {
     paperId: Number,
+    questionList: Array,
+    timeLimit: Number,
   },
   data() {
-    return {
-      paperInfo: [
-        {
-          id: "10001",
-          type: "简答题",
-          content: "<p>撒<b>地方1</b></p><p>撒地方<i>双方的给</i> 非观</p>",
-          score: 10,
-          index: 1,
-          optionList: [],
-        },
-        {
-          id: "10002",
-          type: "判断题",
-          content: "<p>撒<b>地方1</b></p><p>撒地方<i>双方的给</i> 非观</p>",
-          score: 10,
-          index: 1,
-          optionList: [
-            {
-              choice: "正确",
-              id: 1,
-            },
-            {
-              choice: "错误",
-              id: 2,
-            },
-          ],
-        },
-        {
-          id: "10003",
-          type: "单选题",
-          content: "<p>撒<b>地方1</b></p><p>撒地方<i>双方的给</i> 非观</p>",
-          score: 10,
-          index: 1,
-          optionList: [
-            {
-              choice: "<p>阀手动阀撒地方</p>",
-              id: 1,
-            },
-            {
-              choice: "<p>阀手动阀撒暗室逢灯地方</p>",
-              id: 2,
-            },
-            {
-              choice: "<p>阀手嘎嘎嘎动阀撒地方</p>",
-              id: 3,
-            },
-            {
-              choice: "<p>阀手动阀华国锋撒地方</p>",
-              id: 4,
-            },
-          ],
-        },
-        {
-          id: "10004",
-          type: "多选题",
-          content: "<p>撒<b>地方1</b></p><p>撒地方<i>双方的给</i> 非观</p>",
-          score: 10,
-          index: 1,
-          optionList: [
-            {
-              choice: "<p>阀手动阀撒地方</p>",
-              id: 1,
-            },
-            {
-              choice: "<p>阀手动阀撒暗室逢灯地方</p>",
-              id: 2,
-            },
-            {
-              choice: "<p>撒地方阀手嘎嘎嘎动阀撒地方</p>",
-              id: 3,
-            },
-            {
-              choice: "<p>阀手动阀华国锋撒地方</p>",
-              id: 4,
-            },
-          ],
-        },
-      ],
-    };
+    return {};
   },
   computed: {
     sheetList() {
       const list = [];
-      this.paperInfo.forEach((problem) => {
-        list.push({ id: problem.id });
+      this.questionList.forEach((problem) => {
+        if (this.pageName === "examStart" || this.pageName === "paperPreview") {
+          list.push({
+            id: problem.id,
+          });
+        } else {
+          list.push({
+            id: problem.id,
+            isRight: problem.value === problem.score,
+          });
+        }
       });
       return list;
     },
     isAnswer() {
       const isAnswer = this.$route.name === "examStart";
       return isAnswer;
+    },
+    pageName() {
+      return this.$route.name;
     },
   },
   mounted() {
@@ -134,16 +75,24 @@ export default {
   },
   methods: {
     _init_flag() {
-      this.$store.commit("exercise/INIT_FLAG", this.paperInfo.length);
+      if (this.pageName === "examStart" || this.pageName === "paperPreview") {
+        this.$store.commit("exercise/INIT_FLAG", this.questionList.length);
+      }
     },
     _init_done() {
-      this.$store.commit("exercise/INIT_DONE", this.paperInfo.length);
+      if (this.pageName === "examStart" || this.pageName === "paperPreview") {
+        this.$store.commit("exercise/INIT_DONE", this.questionList.length);
+      }
     },
     _init_store() {
-      if (!this.isAnswer) {
+      if (this.pageName === "markExam") {
         const data = {};
         data.paperId = this.$route.params.id;
-        data.questionIdList = this.paperInfo.map((paperItem) => paperItem.id);
+        data.userId = this.$route.params.userId;
+        data.questionIdList = [];
+        this.questionList.forEach((ques) => {
+          data.questionIdList.push(ques.id);
+        });
         this.$store.commit("markPaper/INIT", data);
       }
     },

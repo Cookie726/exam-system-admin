@@ -30,6 +30,7 @@
 import FirstStage from "./components/firstStage";
 import SecondStage from "./components/secondStage";
 import ThirdStage from "./components/thirdStage";
+import { addPaper } from "@/api/paperQuestionManage";
 export default {
   data() {
     return {
@@ -41,6 +42,7 @@ export default {
         startTime: "",
         endTime: "",
         studentIdList: [],
+        timeLimit: null,
       },
       currentStage: "first",
       active: 0,
@@ -80,7 +82,38 @@ export default {
       this.newPaper[prop] = value;
     },
     handleSubmit() {
-      console.log(this.newPaper);
+      const {
+        title,
+        startTime,
+        endTime,
+        timeLimit,
+        paperScore,
+        classify,
+        studentIdList,
+        questionList,
+      } = this.newPaper;
+      questionList.forEach((ques) => {
+        ques.questionId = ques.id;
+        delete ques.id;
+      });
+      const params = {
+        paper: { title, startTime, endTime, timeLimit, paperScore, classify },
+        studentIdList,
+        questionList,
+      };
+      addPaper(params)
+        .then((res) => {
+          if (res.code === 0) {
+            window.ELEMENT.Message.success("试卷添加成功");
+            window.location.reload();
+          } else {
+            window.ELEMENT.Message.error(res.msg);
+            throw new Error(res.msg);
+          }
+        })
+        .catch((e) => {
+          throw new Error(e);
+        });
     },
   },
   components: {

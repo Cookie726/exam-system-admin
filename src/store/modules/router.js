@@ -20,7 +20,6 @@ export default {
         }, role) {
             return new Promise(resolve => {
                 const accessedRouters = getRoutes(role, asyncRoute)
-                console.log("accessedRouters", accessedRouters)
                 commit('SET_ROUTERS', accessedRouters);
                 resolve()
             })

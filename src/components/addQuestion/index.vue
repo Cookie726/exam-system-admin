@@ -8,7 +8,7 @@
     :center="true"
   >
     <div class="el-dialog-div">
-      <manual-addition></manual-addition>
+      <manual-addition :handleCloseAddQuestion="handleCloseAddQuestion"></manual-addition>
     </div>
   </el-dialog>
 </template>
@@ -28,12 +28,6 @@ export default {
   methods: {
     close() {
       this.handleCloseAddQuestion();
-    },
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
-    handleConfirm() {
-      this.close();
     },
   },
   components: {

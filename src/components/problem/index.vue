@@ -1,17 +1,28 @@
 <template>
   <div :id="question.id" class="question-content">
-    <mark-flag v-if="isAnswer" :isMark.sync="isMark" :index="index"></mark-flag>
+    <!-- 答题、预览：标记题目 -->
+    <mark-flag
+      v-if="pageName === 'examStart' || pageName === 'paperPreview'"
+      :isMark.sync="isMark"
+      :index="index"
+    ></mark-flag>
+    <!-- 批改：设置分数输入框 -->
     <set-score
       :questionId="question.id"
-      :maxScore="question.score"
-      v-else
+      :maxScore="question.value"
+      v-if="pageName === 'markExam'"
     ></set-score>
+    <!-- 题目 -->
     <div class="exam-question">
       <span class="question-index ellipsis">{{ index + 1 }}.</span>
       <div v-html="content">{{ content }}</div>
     </div>
-    <div class="answers" v-if="isAnswer">
-      <template v-if="question.type !== '简答题'">
+    <!-- 选项 -->
+    <div
+      class="answers"
+      v-if="pageName === 'examStart' || pageName === 'paperPreview'"
+    >
+      <template v-if="question.questionType !== '简答题'">
         <div
           class="select"
           :class="typeClass"
@@ -31,7 +42,9 @@
               <i class="icon el-icon-check"></i>
             </span>
             <span class="words"
-              ><span class="words-option" v-if="question.type !== '判断题'"
+              ><span
+                class="words-option"
+                v-if="question.questionType !== '判断题'"
                 >{{ index | numberToLetter }}.
               </span>
               <span v-html="option.choice">G</span>
@@ -49,11 +62,13 @@
           ></editor>
         </div>
         <el-upload
-          v-if="isAnswer"
+          v-if="pageName === 'examStart' || pageName === 'paperPreview'"
           class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://192.144.227.168:8086/upload/annex"
           :on-remove="handleRemove"
+          :on-success="handleSuccess"
           :before-remove="beforeRemove"
+          name="annex"
           multiple
           :limit="1"
           :on-exceed="handleExceed"
@@ -63,8 +78,12 @@
         </el-upload>
       </template>
     </div>
-    <div class="answers" v-else>
-      <template v-if="question.type !== '简答题'">
+    <!-- 非答题题目面板 -->
+    <div
+      class="answers"
+      v-if="pageName !== 'examStart' && pageName !== 'paperPreview'"
+    >
+      <template v-if="question.questionType !== '简答题'">
         <div
           class="select"
           :class="typeClass"
@@ -77,15 +96,16 @@
             class="radioOrCheck hidden"
             :value="option.id"
             disabled
-            v-model="answer"
-            name="keyChk_questions_5e94993d57aad24951289727_1"
+            :name="'keyChk_questions_' + question.id"
           />
           <label>
             <span class="select-icon">
               <i class="icon el-icon-check"></i>
             </span>
             <span class="words"
-              ><span class="words-option" v-if="question.type !== '判断题'"
+              ><span
+                class="words-option"
+                v-if="question.questionType !== '判断题'"
                 >{{ index | numberToLetter }}.
               </span>
               <span v-html="option.choice"></span>
@@ -95,25 +115,44 @@
       </template>
       <template v-else>
         <div class="editor-container">
-          <div class="content"></div>
+          <div class="content" v-html="studentAnswer"></div>
         </div>
+        <a href="http://192.144.227.168:8090/annex/nY9Nn2KPXNi测试.txt">下载</a>
+        <el-button
+          @click="handleFileDownload"
+          style="margin-top: 6px"
+          size="mini"
+          >下载附件</el-button
+        >
       </template>
+      <!-- 解析及答案 -->
       <div class="analysis">
+        <div class="analysis-row" v-if="pageName === 'recordDetail'">
+          <div class="analysis-title">学员得分：</div>
+          <div class="analysis-content question-com-answer error">
+            {{ question.score }}
+          </div>
+        </div>
         <div class="analysis-row">
           <div class="analysis-title">学员答案：</div>
-          <div class="analysis-content question-com-answer error">C</div>
+          <div
+            class="analysis-content question-com-answer error"
+            v-html="studentAnswer"
+          ></div>
         </div>
         <div class="analysis-row">
           <div class="analysis-title">正确答案：</div>
-          <div class="analysis-content question-ans-right">D</div>
+          <div
+            class="analysis-content question-ans-right"
+            v-html="rightAnswer"
+          ></div>
         </div>
         <div class="analysis-row">
-          <div class="analysis-title">解释说明：</div>
+          <div class="analysis-title">答案解析：</div>
           <div
             class="analysis-content question-analysis textalign-justify display-block"
-          >
-            阿斯蒂芬
-          </div>
+            v-html="question.analysis"
+          ></div>
         </div>
       </div>
     </div>
@@ -121,8 +160,9 @@
 </template>
 
 <script>
-import { initAnswerType, isComplete } from "utils/helpers";
-import { putAnswer, putShortAnswer } from "@/api/paperHome";
+import { isComplete } from "utils/helpers";
+import { putAnswer } from "@/api/paperHome";
+// import { download } from "@/api/fileUpload";
 import editor from "@/components/editor";
 import MarkFlag from "@/components/markFlag";
 import SetScore from "@/components/setScore";
@@ -135,53 +175,56 @@ export default {
       type: Object,
     },
     index: Number,
-    isAnswer: Boolean,
     paperId: Number,
+    pageName: String,
   },
   data() {
     return {
-      answer: null,
+      answer: [],
       configMenus: ["image", "table", "code"],
       isMark: false,
       fileList: [],
       annexPath: "",
     };
   },
-  mounted() {
-    this.answer = initAnswerType(this.question.type);
-  },
   methods: {
     async handleSelect(index) {
       const ref = `inputBtn${index}`;
       this.$refs[ref][0].click();
-      const data = {
-        id: this.paperId,
-        questionId: this.question.id,
-        optionIdList: Array.isArray(this.answer) ? this.answer : [this.answer],
-      };
-      try {
-        const res = await putAnswer(data);
-        if (res.code !== 0) {
-          window.ELEMENT.Message.error(res.msg);
+      if (this.pageName === "examStart") {
+        const data = {
+          paperId: this.paperId,
+          questionId: this.question.id,
+          optionIdList: Array.isArray(this.answer)
+            ? this.answer
+            : [this.answer],
+        };
+        try {
+          const res = await putAnswer(data);
+          if (res.code !== 0) {
+            window.ELEMENT.Message.error(res.msg);
+          }
+        } catch (e) {
+          throw new Error(e);
         }
-      } catch (e) {
-        throw new Error(e);
       }
     },
     async handleSave() {
-      const data = {
-        id: this.paperId,
-        questionId: this.question.id,
-        annexPath: this.annexPath,
-        content: this.answer,
-      };
-      try {
-        const res = await putShortAnswer(data);
-        if (res.code !== 0) {
-          window.ELEMENT.Message.error(res.msg);
+      if (this.pageName === "examStart") {
+        const data = {
+          paperId: this.paperId,
+          questionId: this.question.id,
+          annexPath: this.annexPath,
+          studentAnswer: this.answer,
+        };
+        try {
+          const res = await putAnswer(data);
+          if (res.code !== 0) {
+            window.ELEMENT.Message.error(res.msg);
+          }
+        } catch (e) {
+          throw new Error(e);
         }
-      } catch (e) {
-        throw new Error(e);
       }
     },
     handleRemove(file, fileList) {
@@ -197,10 +240,74 @@ export default {
     beforeRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
+    handleSuccess(response) {
+      if (response.code === 0) {
+        window.ELEMENT.Message.success("上传成功");
+        this.annexPath = response.data;
+      }
+    },
+    getStudentAnswer() {
+      let answer = "";
+      console.log("quesss", this.question);
+      if (this.question.questionType === "简答题") {
+        answer = this.question.studentAnswer;
+      } else if (this.question.questionType === "判断题") {
+        console.log(this.question.optionList);
+        answer = this.question.optionList.find((option) => {
+          return option.id === this.question.studentOptionList[0].id;
+        }).choice;
+      } else if (this.question.questionType === "单选题") {
+        answer = String.fromCharCode(
+          this.question.optionList.findIndex((option) => {
+            return option.id === this.question.studentOptionList[0].id;
+          }) + 65
+        );
+      } else if (this.question.questionType === "多选题") {
+        this.question.optionList.forEach((option, index) => {
+          if (
+            this.question.studentOptionList.some((op) => op.id === option.id)
+          ) {
+            answer += String.fromCharCode(index + 65);
+          }
+        });
+      }
+      return answer;
+    },
+    getRightAnswer() {
+      let rightAnswer = "";
+      if (
+        this.question.questionType === "简答题" ||
+        this.question.questionType === "判断题"
+      ) {
+        rightAnswer = this.question.optionList.find(
+          (option) => option.status === 1
+        ).choice;
+      } else if (
+        this.question.questionType === "单选题" ||
+        this.question.questionType === "多选题"
+      ) {
+        this.question.optionList.forEach((option, index) => {
+          if (option.status === 1) {
+            rightAnswer += String.fromCharCode(index + 65);
+          }
+        });
+      }
+      return rightAnswer;
+    },
+    handleFileDownload() {
+      let a = document.createElement("a");
+      a.style.display = "none";
+      a.href = "http://192.144.227.168:8090/annex/nY9Nn2KPXNi测试.txt";
+      a.setAttribute("download", "测试");
+      document.body.appendChild(a);
+      a.click(); //执行下载
+      window.URL.revokeObjectURL(a.href); //释放url
+      document.body.removeChild(a); //释放标签
+    },
   },
   watch: {
     answer(newVal) {
-      const _isComplete = isComplete(this.question.type, newVal);
+      const _isComplete = isComplete(this.question.questionType, newVal);
       this.$store.commit("exercise/SET_DONE", {
         index: this.index,
         status: _isComplete,
@@ -215,11 +322,12 @@ export default {
   },
   computed: {
     content() {
-      return `${this.question.content}(${this.question.score.toFixed(1)}分)`;
+      // return `${this.question.content}(${this.question.score.toFixed(1)}分)`;
+      return `${this.question.content}`;
     },
     typeClass() {
       let className;
-      switch (this.question.type) {
+      switch (this.question.questionType) {
         case "单选题":
           className = "single-select";
           break;
@@ -236,7 +344,7 @@ export default {
     },
     inputType() {
       let inputType;
-      switch (this.question.type) {
+      switch (this.question.questionType) {
         case "判断题":
         case "单选题":
           inputType = "radio";
@@ -248,6 +356,18 @@ export default {
           break;
       }
       return inputType;
+    },
+    studentAnswer() {
+      if (this.pageName === "paperPreview" || this.pageName === "examStart") {
+        return null;
+      }
+      return this.getStudentAnswer();
+    },
+    rightAnswer() {
+      if (this.pageName === "paperPreview" || this.pageName === "examStart") {
+        return null;
+      }
+      return this.getRightAnswer();
     },
   },
   components: {

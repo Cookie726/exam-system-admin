@@ -34,6 +34,9 @@
             <el-table-column align="center" label="分数" prop="score">
             </el-table-column>
           </el-table>
+          <div style="text-align: center; margin-top: 12px">
+            <el-button @click="getExcel" type="warning">导出成绩</el-button>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="成绩统计">
           <div class="row">
@@ -97,16 +100,52 @@ export default {
       this.$emit("update:showMarkDialog", false);
       done();
     },
+    getExcel() {
+      require.ensure([], () => {
+        const { export_json_to_excel } = require("@/utils/Export2Excel.js");
+        const tHeader = ["姓名", "分数", "提交时间"];
+        const filterVal = ["student.userName", "score", "submitTime"];
+        const list = this.studentList;
+        const data = this.formatJson(filterVal, list);
+        export_json_to_excel(tHeader, data, `${this.paper.title}-成绩表`);
+      });
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) =>
+        filterVal.map((j) => {
+          let m = v;
+          j.split(".").forEach((e) => {
+            m = m[e];
+          });
+          return m;
+        })
+      );
+    },
   },
   watch: {
     showMarkDialog(newVal) {
       if (newVal === true) {
-        getGrades(this.paperId).then((res) => {
-          if (res.code === 0) {
-            this.paper = res.data.paper;
-            this.studentList = res.data.studentList;
-          }
+        const loading = this.$loading({
+          lock: true,
+          text: "加载中",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
         });
+        getGrades(this.paperId)
+          .then((res) => {
+            if (res.status === 0) {
+              this.paper = res.data.paper;
+              this.studentList = res.data.studentList;
+            } else {
+              throw new Error(res.msg);
+            }
+          })
+          .catch((e) => {
+            throw new Error(e);
+          })
+          .finally(() => {
+            loading.close();
+          });
       }
     },
   },

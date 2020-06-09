@@ -1,12 +1,10 @@
 import {
     get,
     post
-} from "../utils/request"
+} from "@/utils/request"
 
-export const getUserList = param => get("/administrator/findUser", param)
+export const getUserList = param => get("/user/list", param)
 
-export const updateUserPower = data => get("/administrator/updateUserPower", data)
+export const updateUserPower = data => post("/role/changeByIdList", data)
 
-export const deleteUser = data => post("/administrator/deleteUser", data)
-
-export const startUser = data => post("/administrator/startUser", data)
+export const updateStatus = data => post("/user/changeStatus", data)

@@ -1,12 +1,12 @@
 <template>
   <div class="question-operation operation-check">
     <i
-      @click="score = maxScore"
+      @click="handleRight"
       class="icon el-icon-check"
       :class="{ 'icon-checked': score == maxScore }"
     ></i>
     <i
-      @click="score = 0"
+      @click="handleWrong"
       class="icon el-icon-close"
       :class="{ 'icon-checked': score != maxScore }"
     ></i>
@@ -49,7 +49,14 @@ export default {
       this.$store.commit("markPaper/SET_SCORE", {
         questionId: this.questionId,
         score: +this.score,
+        tag: this.score === this.maxScore ? 1 : 0,
       });
+    },
+    handleRight() {
+      this.score = this.maxScore;
+    },
+    handleWrong() {
+      this.score = 0;
     },
   },
 };

@@ -22,8 +22,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="限制时间">
+          <el-input
+            style="width: 60%"
+            @input="handleChangeData('timeLimit', parseInt($event))"
+            :value="paperForm.timeLimit"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="答题时间" prop="during">
           <el-date-picker
+            style="width: 60%"
             :value="paperForm.during"
             @input="handleChangeData('during', $event)"
             type="datetimerange"
@@ -43,8 +51,8 @@
           >
             <el-option
               v-for="stu in studentList"
-              :value="stu.sno"
-              :key="stu.sno"
+              :value="stu.id"
+              :key="stu.id"
               :label="stu.userName"
             ></el-option>
           </el-select>
@@ -84,6 +92,7 @@
 <script>
 import { formatDate } from "@/utils/helpers";
 import { paperClassify } from "@/config/default";
+import { getUserList } from "@/api/userManage";
 export default {
   props: {
     paperInfo: {
@@ -98,6 +107,7 @@ export default {
           studentIdList: [],
           user: {},
           questionList: [],
+          timeLimit: null,
         };
       },
     },
@@ -117,9 +127,21 @@ export default {
         user: this.paperInfo.user,
         studentIdList: this.paperInfo.studentIdList,
         questionList: this.paperInfo.questionList,
+        timeLimit: this.paperInfo.timeLimit,
       };
       return paperForm;
     },
+  },
+  mounted() {
+    getUserList({
+      roleId: 2,
+      userName: "",
+      sno: "",
+    }).then((res) => {
+      if (res.code === 0) {
+        this.studentList = res.data.userList;
+      }
+    });
   },
   data() {
     return {
@@ -156,20 +178,8 @@ export default {
       },
       studentList: [
         {
-          sno: "2018010280",
-          userName: "张三",
-        },
-        {
-          sno: "2018010281",
-          userName: "李四",
-        },
-        {
-          sno: "2018010282",
-          userName: "小二",
-        },
-        {
-          sno: "2018010283",
-          userName: "老王",
+          id: 10,
+          userName: "刘佳昕",
         },
       ],
       paperClassify: paperClassify,

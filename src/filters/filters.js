@@ -26,11 +26,13 @@ export const getTotalScore = list => {
     return score
 }
 
-export const getRoleName = role => {
-    if (role === 0) {
-        return "学生"
-    } else if (role === 1) {
-        return "教师"
+export const getRoleName = roles => {
+    if (roles[0].name === 'teacher') {
+        return '教师'
+    } else if (roles[0].name === 'student') {
+        return '学生'
+    } else if (roles[0].name === 'admin') {
+        return '管理员'
     }
 }
 
@@ -48,4 +50,11 @@ export const getMarkText = isMark => {
     } else {
         return "判卷"
     }
+}
+
+export const getText = html => {
+    html = html.replace(/<\/?[^>]*>/g, ''); //去除HTML tag
+    html = html.replace(/[ | ]*\n/g, '\n'); //去除行尾空白
+    html = html.replace(/&nbsp;/ig, ''); //去掉&nbsp;
+    return html;
 }

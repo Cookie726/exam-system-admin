@@ -1,7 +1,19 @@
 import {
-    post
+    post,
+    get,
+    put
 } from "../utils/request"
 
-export const signin = data => post("/sign/login", data)
+export const signin = ({
+    sno,
+    password
+}) => {
+    return post("/login", {
+        sno,
+        password,
+    })
+}
 
-export const signup = data => post("/User/register", data)
+export const signup = data => put("/register", data)
+
+export const logout = () => get("/logout")

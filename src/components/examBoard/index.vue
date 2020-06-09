@@ -1,6 +1,6 @@
 <template>
   <div class="exam-board-container">
-    <div class="nav" v-if="!isAnswer">
+    <div class="nav" v-if="pageName === 'markExam'">
       <ul class="menu-items">
         <li class="menu-item">
           <div class="item-label">姓名</div>
@@ -12,7 +12,10 @@
         </li>
       </ul>
     </div>
-    <div class="nav" v-if="isAnswer">
+    <div
+      class="nav"
+      v-if="pageName === 'examStart' || pageName === 'paperPreview'"
+    >
       <ul class="menu-items">
         <li class="menu-item menu-item-time">
           <div class="item-label">剩余时间</div>
@@ -34,7 +37,7 @@
         </li>
       </ul>
     </div>
-    <div class="nav nav-bottom" v-if="!isAnswer">
+    <div class="nav nav-bottom" v-if="pageName === 'markExam'">
       <ul class="menu-items">
         <li class="menu-item disabled">
           <span class="item-label">上一人</span>
@@ -43,7 +46,7 @@
       </ul>
     </div>
     <button
-      v-if="!isAnswer"
+      v-if="pageName === 'markExam'"
       type="button"
       class="btn btn-primary btn-nav btn-bottom position-left-0"
       @click="handleMarkPaper"
@@ -51,12 +54,20 @@
       保存
     </button>
     <button
-      v-if="isAnswer"
+      v-if="pageName === 'paperPreview' || pageName === 'examStart'"
       type="button"
       @click="handleSubmitAnswer"
       class="btn btn-primary btn-nav btn-bottom position-left-0"
     >
       提交
+    </button>
+    <button
+      v-if="pageName === 'recordDetail'"
+      type="button"
+      @click="handleSubmitAnswer"
+      class="btn btn-primary btn-nav btn-bottom position-left-0"
+    >
+      返回
     </button>
   </div>
 </template>
@@ -64,17 +75,14 @@
 <script>
 import { submitAnswer } from "@/api/paperHome";
 export default {
-  data() {
-    return {
-      timeLimit: 3605,
-    };
-  },
   props: {
     isAnswer: {
       type: Boolean,
       default: true,
     },
     paperId: Number,
+    timeLimit: Number,
+    pageName: String,
   },
   mounted() {
     setInterval(() => {
@@ -98,13 +106,17 @@ export default {
         });
     },
     async handleSubmitAnswer() {
-      try {
-        const res = await submitAnswer(this.paperId);
-        if (res.code !== 0) {
-          window.ELEMENT.Message.error(res.msg);
+      if (this.pageName === "examStart") {
+        try {
+          const res = await submitAnswer(this.paperId);
+          if (res.code !== 0) {
+            window.ELEMENT.Message.error(res.msg);
+          }
+        } catch (e) {
+          throw new Error(e);
         }
-      } catch (e) {
-        throw new Error(e);
+      } else if (this.pageName === "paperPreview") {
+        window.ELEMENT.Message.error("不能提交试卷");
       }
     },
   },

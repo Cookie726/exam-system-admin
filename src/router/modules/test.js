@@ -6,7 +6,9 @@ export default [{
         role: ["admin", "teacher"],
         icon: "test-manage"
     },
-    redirect: "testPaper",
+    redirect: {
+        name: "testPaper"
+    },
     component: resolve => require(["@/views/test"], resolve),
     children: [{
             path: "paper",

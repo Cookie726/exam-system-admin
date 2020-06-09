@@ -6,7 +6,7 @@
         <li>
           <svg-icon icon-class="username"></svg-icon>
           <input
-            v-model.trim="signupForm.realName"
+            v-model.trim="signupForm.userName"
             placeholder="姓名"
             type="text"
             class="validate-input"
@@ -26,7 +26,7 @@
           <input
             type="radio"
             value="男"
-            v-model="signupForm.sex"
+            v-model="signupForm.gender"
             class="hidden"
             name="sex"
             id="male"
@@ -35,7 +35,7 @@
           <input
             type="radio"
             value="女"
-            v-model="signupForm.sex"
+            v-model="signupForm.gender"
             class="hidden"
             name="sex"
             id="female"
@@ -74,15 +74,15 @@
 </template>
 
 <script>
-import { signup } from "../../../api/sign";
-import { validateSignupForm } from "../../../utils/validate";
+import { signup } from "@/api/sign";
+import { validateSignupForm } from "@/utils/validate";
 export default {
   data() {
     return {
       signupForm: {
-        realName: "",
+        userName: "",
         sno: "",
-        sex: "男",
+        gender: "男",
         password: "",
       },
       confirmPwd: "",
@@ -96,15 +96,17 @@ export default {
         confirmPwd: this.confirmPwd,
       });
       if (pass) {
-        const enterTime = new Date().getTime();
-        signup(Object.assign({ enterTime }, this.signupForm)).then((res) => {
-          if (res.code === 0) {
-            // this.$message.success(res.msg);
-            console.log(res.msg)
-          } else {
-            window.ELEMENT.Message.error(res.msg);
-          }
-        });
+        signup(this.signupForm)
+          .then((res) => {
+            if (res.code === 0) {
+              window.ELEMENT.Message.success("注册成功，请等待管理员审核");
+            } else {
+              window.ELEMENT.Message.error(res.msg);
+            }
+          })
+          .catch((e) => {
+            throw new Error(e);
+          });
       }
     },
   },

@@ -1,34 +1,42 @@
 export const userManageMixin = {
     data() {
         return {
-            tableData: {
-                list: [],
-                total: 0,
-            },
-            multipleSelection: [],
+            total: 0,
+            userList: [],
             param: {
-                page: 1,
+                currentPage: 1,
                 limit: 10,
+                status: 1
             },
         }
     },
-    watch: {
-        param: {
-            deep: true,
-            handler: "loadData"
-        }
-    },
-    created() {
+    mounted() {
         this.initList()
     },
     methods: {
         initList() {
-            this.loadData()
+            this.loadData(this.param)
         },
         loadData() {},
-        handleSelectionChange(val) {
-            this.multipleSelection = val.map(stu => stu.sno);
-            console.log(this.multipleSelection)
+        handleCurrentChange(val) {
+            this.param.currentPage = val;
+            this.loadData(this.param)
+        },
+        handleSizeChange(val) {
+            this.param.limit = val;
+            this.loadData(this.param)
+        },
+        handleSearch() {
+            if (!(this.param.userName || this.param.sno)) {
+                window.ELEMENT.Message.warning("查询条件不能为空");
+                return;
+            }
+            this.loadData(this.param)
+        },
+        resetForm() {
+            this.param.userName = "";
+            this.param.sno = "";
+            this.loadData(this.param)
         },
     }
 }

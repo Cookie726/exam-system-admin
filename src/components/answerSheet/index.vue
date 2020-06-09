@@ -11,7 +11,13 @@
             v-for="(item, index) in list"
             :key="index"
             class="box normal-box"
-            :class="{ marked: flag[index], s1: !done[index], s3: done[index] }"
+            :class="{
+              marked: flag[index],
+              s1: !done[index],
+              s3: done[index],
+              s2: item.isRight && isRight in item,
+              s4: !item.isRight && isRight in item,
+            }"
           >
             <a :href="'#' + item.id" class="iconBox">{{ index + 1 }}</a
             ><span class="box icon-box question_marked"></span>
@@ -20,23 +26,27 @@
       </div>
     </div>
     <div class="modal-footer">
-      <template v-if="isAnswer"
+      <template v-if="pageName === 'examStart' || pageName === 'paperPreview'"
         ><span class="box icon-box s1"></span>
         <span class="icon-label">未答</span></template
       >
-      <template v-if="!isAnswer">
+      <template
+        v-if="!(pageName === 'examStart' || pageName === 'paperPreview')"
+      >
         <span class="box icon-box s2"></span>
         <span class="icon-label">正确</span></template
       >
-      <template v-if="isAnswer">
+      <template v-if="pageName === 'examStart' || pageName === 'paperPreview'">
         <span class="box icon-box s3"></span>
         <span class="icon-label">已答</span>
       </template>
-      <template v-if="!isAnswer">
+      <template
+        v-if="!(pageName === 'examStart' || pageName === 'paperPreview')"
+      >
         <span class="box icon-box s4"></span>
         <span class="icon-label">错误</span></template
       >
-      <template v-if="isAnswer">
+      <template v-if="pageName === 'examStart' || pageName === 'paperPreview'">
         <span class="box icon-box marked"></span>
         <span class="icon-label">标记</span>
       </template>
@@ -47,10 +57,6 @@
 <script>
 export default {
   props: {
-    isAnswer: {
-      type: Boolean,
-      default: true,
-    },
     list: {
       type: Array,
       default: () => [
@@ -74,6 +80,7 @@ export default {
         },
       ],
     },
+    pageName: String,
   },
   computed: {
     flag() {
@@ -83,10 +90,8 @@ export default {
       return this.$store.state.exercise.done;
     },
   },
-  watch: {
-    done(newVal) {
-      console.log("newVal", newVal);
-    },
+  mounted() {
+    console.log(this.list);
   },
 };
 </script>

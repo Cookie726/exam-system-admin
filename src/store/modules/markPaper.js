@@ -20,17 +20,20 @@ export default {
             state.scoreList = questionIdList.map(id => {
                 return {
                     questionId: id,
-                    score: 0
+                    score: 0,
+                    tag: 0
                 }
             })
         },
         SET_SCORE(state, {
             score,
-            questionId
+            questionId,
+            tag
         }) {
             state.scoreList.forEach(item => {
                 if (item.questionId === questionId) {
                     item.score = score
+                    item.tag = tag
                     return;
                 }
             })
@@ -41,6 +44,7 @@ export default {
             state
         }) {
             return new Promise((resolve, reject) => {
+                console.log(state)
                 if (!state.userId || !state.paperId) {
                     reject("试卷或用户信息不完整")
                 }

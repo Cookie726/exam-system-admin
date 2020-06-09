@@ -18,7 +18,11 @@
           label="提交时间"
           width="200"
           align="center"
-        ></el-table-column>
+        >
+          <template slot-scope="scope">{{
+            scope.row.submitTime || "未提交"
+          }}</template></el-table-column
+        >
         <el-table-column property="isSubmit" align="center" label="提交">
           <template slot-scope="scope">
             <el-tag
@@ -65,7 +69,6 @@ export default {
       done();
     },
     handleCorrect(isMark, userId) {
-      console.log(this.paperId);
       if (isMark === 1) {
         this.$message({
           message: "该学生的试卷已经被批改",

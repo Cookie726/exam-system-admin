@@ -11,7 +11,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    // 侧边导航是否折叠
     isSidebarNavCollapse: false,
     currentMenu: null,
     crumbList: [],
@@ -29,7 +28,7 @@ export default new Vuex.Store({
       state.crumbList = crumbList
     },
     setEditableTabs(state, to) {
-      if (to.matched[0].name != 'layout') {
+      if (to.matched.length === 0 || to.matched[0].name != 'layout') {
         return;
       }
       let have = false

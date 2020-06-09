@@ -2,7 +2,7 @@
   <div class="home-container">
     <div v-if="list.length === 0" class="empty">
       <svg-icon class="empty-icon" icon-class="empty"></svg-icon>
-      <h2>没有需要做的考题!</h2>
+      <h2>考试记录为空!</h2>
     </div>
     <div class="paper-container">
       <div class="paper-items">
@@ -24,52 +24,63 @@
 </template>
 
 <script>
-import { getExamList } from "@/api/home";
+import { getExamRecord } from "@/api/examRecord";
 import PaperCard from "@/components/paperCard";
 export default {
   data() {
     return {
       list: [
         {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
+          startTime: "2020/04/22 00:00:00",
+          endTime: "2020/04/26 00:00:00",
+          timeLimit: 1800,
           title: "前端第一次测试",
           id: "10001",
+          paperScore: 100,
+          grades: 20
         },
         {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
+          startTime: "2020/04/22 00:00:00",
+          endTime: "2020/04/26 00:00:00",
+          timeLimit: 1800,
           title: "前端第一次测试",
           id: "10002",
+          paperScore: 100,
+          grades: 80
         },
         {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
+          startTime: "2020/04/22 00:00:00",
+          endTime: "2020/04/26 00:00:00",
+          timeLimit: 1800,
           title: "前端第一次测试",
           id: "10003",
+          paperScore: 100,
+          grades: 20
         },
         {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
+          startTime: "2020/04/22 00:00:00",
+          endTime: "2020/04/26 00:00:00",
+          timeLimit: 1800,
           title: "前端第一次测试",
           id: "10004",
+          paperScore: 100,
+          grades: 100
         },
         {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
+          startTime: "2020/04/22 00:00:00",
+          endTime: "2020/04/26 00:00:00",
+          timeLimit: 1800,
           title: "前端第一次测试",
           id: "10005",
+          paperScore: 100,
+          grades: 20
         },
       ],
       total: 0,
       pageConfig: {
         currentPage: 1,
         limit: 12,
+        title: ""
       },
     };
   },
@@ -88,7 +99,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
       try {
-        const res = await getExamList(this.pageConfig);
+        const res = await getExamRecord(this.pageConfig);
         if (res.code === 0) {
           this.list = res.data.paperList;
           this.total = res.data.total;

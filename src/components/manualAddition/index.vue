@@ -142,8 +142,8 @@
       </div>
       <div class="key-cloze key-panel" v-if="type === '简答题'">
         <div class="title">
-          <span class="tip">解析</span>
-          <span class="intro">这里填写该问题对应的答案解释</span>
+          <span class="tip">答案</span>
+          <span class="intro">这里填写该问题的正确答案</span>
         </div>
         <div class="editor-container" @click="updateActive('cloze-panel')">
           <editor
@@ -174,6 +174,7 @@
 <script>
 import { questionType, paperClassify } from "@/config/default";
 import editor from "@/components/editor";
+import { addQuestion } from "@/api/paperQuestionManage";
 import { isSetAnswer } from "@/utils/validate";
 export default {
   data() {
@@ -207,6 +208,9 @@ export default {
         },
       ],
     };
+  },
+  props: {
+    handleCloseAddQuestion: Function,
   },
   watch: {
     type(newVal) {
@@ -348,7 +352,14 @@ export default {
           optionList,
           classify: this.classify,
         };
-        console.log(param);
+        addQuestion(param).then((res) => {
+          if (res.code === 0) {
+            window.ELEMENT.Message.success("添加成功");
+            this.handleCloseAddQuestion();
+          } else {
+            window.ELEMENT.Message.error(res.msg);
+          }
+        });
       }, 0);
     },
   },

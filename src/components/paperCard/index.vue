@@ -1,16 +1,38 @@
 <template>
   <div class="paper-card">
+    <div v-if="pathName === 'examRecord'" class="item-status">
+      <span>未通过</span>
+    </div>
     <div class="item-title">{{ paperItem.title }}</div>
     <div class="item-row item-during">
-      <div class="item-label">考试时间：</div>
-      <div class="item-data">{{ paperItem.start }}~{{ paperItem.end }}</div>
+      <div class="item-label">开始时间：</div>
+      <div class="item-data">
+        {{ paperItem.startTime }}
+      </div>
+    </div>
+    <div class="item-row item-during">
+      <div class="item-label">截止时间：</div>
+      <div class="item-data">
+        {{ paperItem.endTime }}
+      </div>
     </div>
     <div class="item-row item-limit">
       <div class="item-label">考试时长：</div>
-      <div class="item-data">{{ limitTime }}分钟</div>
+      <div class="item-data">{{ timeLimit }}分钟</div>
     </div>
-    <el-button type="primary" @click="handleAnswer" class="button"
+    <el-button
+      v-if="pathName === 'home'"
+      type="primary"
+      @click="handleAnswer"
+      class="button"
       >开始答题</el-button
+    >
+    <el-button
+      v-if="pathName === 'examRecord'"
+      type="primary"
+      @click="handleRecord"
+      class="button"
+      >查看详情</el-button
     >
   </div>
 </template>
@@ -22,9 +44,12 @@ export default {
     type: Number,
   },
   computed: {
-    limitTime() {
-      return Math.floor(this.paperItem.limitTime / 60);
+    timeLimit() {
+      return Math.floor(this.paperItem.timeLimit);
     },
+    pathName() {
+      return this.$route.name;
+    }
   },
   methods: {
     handleAnswer() {
@@ -34,6 +59,9 @@ export default {
       });
       window.open(routeData.href, "_blank");
     },
+    handleRecord() {
+      console.log(this.paperItem.id);
+    },
   },
 };
 </script>
@@ -41,8 +69,8 @@ export default {
 <style lang="less" scoped>
 .paper-card {
   width: 390px;
-  height: 176px;
   padding: 20px;
+  height: 206px;
   margin-right: 24px;
   margin-bottom: 24px;
   border-left: 4px solid #c1c1cb;
@@ -60,6 +88,20 @@ export default {
     .button {
       display: block;
     }
+  }
+  .item-status {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    background-color: red;
+    transform: rotate(45deg);
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    color: #f8f8f8;
   }
   .item-title {
     line-height: 28px;

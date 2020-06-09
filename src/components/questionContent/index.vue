@@ -1,7 +1,7 @@
 <template>
   <div class="question-content">
     <span class="question-type">{{ questionType }}</span>
-    <div class="main-content" v-html="combineContent"></div>
+    <div class="main-content" v-html="content"></div>
   </div>
 </template>
 
@@ -10,12 +10,6 @@ export default {
   props: {
     content: String,
     questionType: String,
-    value: Number,
-  },
-  computed: {
-    combineContent() {
-      return `${this.content}(${this.value}分)`;
-    },
   },
 };
 </script>

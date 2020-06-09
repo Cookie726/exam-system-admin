@@ -51,6 +51,9 @@
         label="题干"
         min-width="320"
       >
+        <template slot-scope="scope">
+          {{ scope.row.content | getText }}
+        </template>
       </el-table-column>
       <el-table-column
         align="center"
@@ -91,19 +94,19 @@
           >
         </template>
       </el-table-column>
-      <div class="block">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageConfig.page"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="pageConfig.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
-        >
-        </el-pagination>
-      </div>
     </el-table>
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageConfig.currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageConfig.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      >
+      </el-pagination>
+    </div>
     <el-dialog title="题目信息" :visible.sync="showQuestionDetail">
       <question-detail :question="quesDetail"></question-detail>
     </el-dialog>
@@ -112,11 +115,16 @@
 
 <script>
 import { questionType, paperClassify } from "@/config/default";
+import {
+  getQuestionList,
+  getQuestionDetail,
+  deleteQuestion,
+} from "@/api/paperQuestionManage";
 import AddQuestion from "@/components/addQuestion";
 import QuestionDetail from "@/components/questionDetail";
 export default {
   methods: {
-    handleClick(id) {
+    async handleClick(id) {
       console.log(id);
       const loading = this.$loading({
         lock: true,
@@ -124,13 +132,28 @@ export default {
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)",
       });
-      setTimeout(() => {
+      try {
+        const res = await getQuestionDetail(id);
+        if (res.code === 0) {
+          this.quesDetail = res.data;
+          this.showQuestionDetail = true;
+        } else {
+          throw new Error(res.msg);
+        }
+      } catch (e) {
+        throw new Error(e);
+      } finally {
         loading.close();
-        this.showQuestionDetail = true;
-      }, 1000);
+      }
     },
-    handleSizeChange() {},
-    handleCurrentChange() {},
+    handleSizeChange(pageSize) {
+      this.pageConfig.pageSize = pageSize;
+      this.setData();
+    },
+    handleCurrentChange(currentPage) {
+      this.pageConfig.currentPage = currentPage;
+      this.setData();
+    },
     handleAddQuestion() {
       this.dialogAddQuestion = true;
     },
@@ -141,6 +164,7 @@ export default {
       this.pageConfig.classify = "";
       this.pageConfig.questionType = "";
       this.pageConfig.content = "";
+      this.setData()
     },
     handleSearch() {
       if (
@@ -150,16 +174,53 @@ export default {
           this.pageConfig.questionType
         )
       ) {
-        // this.$message.warning("查询条件不能为空");
-        console.log("查询条件不能为空")
+        window.ELEMENT.Message.warning("查询条件不能为空");
         return;
       }
+      this.setData();
     },
     handleDelete(id) {
-      console.log(id);
+      window.ELEMENT.MessageBox.confirm("是否删除改题目？").then(() => {
+        deleteQuestion(id)
+          .then((res) => {
+            if (res.code === 0) {
+              window.ELEMENT.Message.success("删除成功");
+              this.setData();
+            } else {
+              window.ELEMENT.Message.error(res.msg);
+            }
+          })
+          .catch((e) => {
+            throw new Error(e);
+          });
+      });
+    },
+    setData() {
+      const loading = this.$loading({
+        lock: true,
+        text: "加载中",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      getQuestionList(this.pageConfig)
+        .then((res) => {
+          loading.close();
+          if (res.code === 0) {
+            this.total = res.data.total;
+            this.tableData = res.data.questionList;
+          } else {
+            throw new Error(res.msg);
+          }
+        })
+        .catch((e) => {
+          loading.close();
+          throw new Error(e);
+        });
     },
   },
-
+  mounted() {
+    this.setData();
+  },
   data() {
     return {
       tableData: [
@@ -175,7 +236,7 @@ export default {
       ],
       pageConfig: {
         limit: 10,
-        page: 1,
+        currentPage: 1,
         content: "",
         classify: "",
         questionType: "",
@@ -201,6 +262,7 @@ export default {
           },
         ],
       },
+      total: 0,
     };
   },
 

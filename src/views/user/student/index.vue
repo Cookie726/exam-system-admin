@@ -17,14 +17,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table
-      :data="userList"
-      border
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column align="center" type="selection" width="55">
-      </el-table-column>
+    <el-table :data="userList" border style="width: 100%">
       <el-table-column align="center" prop="userName" label="姓名" width="180">
       </el-table-column>
       <el-table-column align="center" prop="sno" label="学号" width="160">
@@ -33,7 +26,7 @@
       </el-table-column>
       <el-table-column align="center" label="角色" width="100">
         <template slot-scope="scope">
-          <p>{{ scope.row.role | getRoleName }}</p>
+          <p>{{ scope.row.roles | getRoleName }}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -64,23 +57,27 @@
           <el-button
             type="text"
             size="small"
-            @click="updatePower(scope.row.sno)"
+            @click="updatePower([scope.row.sno])"
             >设置为老师</el-button
           >
         </template>
       </el-table-column>
     </el-table>
     <div class="block">
-      <v-page
-        :currentPage.sync="param.page"
-        :pageSize.sync="param.limit"
-        :total="tableData.total"
-      ></v-page>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="param.currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="param.limit"
+        layout="total, sizes, prev, pager, next"
+        :total="total"
+      >
+      </el-pagination>
     </div>
   </div>
 </template>
 <script>
-import VPage from "@/components/pager";
 import { userManageMixin } from "@/mixins";
 import { getUserList, updateUserPower } from "@/api/userManage";
 export default {
@@ -99,52 +96,42 @@ export default {
       };
       console.log(data);
     },
-    async updatePower({ sno, id }) {
-      const res = await updateUserPower({ sno, id });
-      console.log(res);
+    updatePower(snoList) {
+      window.ELEMENT.MessageBox.confirm("是否要设置为老师？").then(async () => {
+        try {
+          const param = {
+            snoList,
+            roleId: 3,
+          };
+          const res = await updateUserPower(param);
+          if (res.code === 0) {
+            window.ELEMENT.Message.success("更改成功");
+            this.loadData(this.param);
+          } else {
+            window.ELEMENT.Message.error(res.msg);
+          }
+        } catch (e) {
+          throw new Error(e);
+        }
+      });
     },
-    async loadData() {
-      const res = await getUserList(this.param);
-      this.tableData.list = res.data;
-      this.tableData.total = res.count;
-    },
-    resetForm() {
-      this.param.userName = "";
-      this.param.sno = "";
-    },
-    handleSearch() {
-      if (!(this.param.userName || this.param.sno)) {
-        // this.$message.warning("查询条件不能为空");
-        console.log("查询条件不能为空")
-        return;
-      }
+    async loadData(param) {
+      const res = await getUserList(param);
+      this.userList = res.data.userList;
+      this.total = res.data.total;
     },
   },
   data() {
     return {
       param: {
-        page: 1,
+        currentPage: 1,
         limit: 10,
-        role: 0,
+        roleId: 2,
         userName: "",
+        status: 1,
         sno: "",
       },
-      total: 10,
-      userList: [
-        {
-          userName: "潘炳名",
-          id: 1,
-          sno: "2018010280",
-          role: 0,
-          status: 1,
-          gender: "男",
-          enterTime: "2020-05-21 21:20:22",
-        },
-      ],
     };
-  },
-  components: {
-    "v-page": VPage,
   },
   mixins: [userManageMixin],
 };

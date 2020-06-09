@@ -29,6 +29,9 @@ export default {
     paperInfo: Object,
     changeData: Function,
   },
+  mounted() {
+    console.log("paperInfo", this.paperInfo);
+  },
   methods: {
     handleBeforeClose(done) {
       this.$emit("update:showPaperInfoDialog", false);
@@ -53,10 +56,11 @@ export default {
         classify: this.paperInfo.classify,
         startTime: this.paperInfo.startTime,
         endTime: this.paperInfo.endTime,
+        timeLimit: this.paperInfo.timeLimit,
         studentIdList: this.paperInfo.studentIdList,
       };
       if (validateUpdatePaperInfo(data)) {
-        updatePaper(data).then((res) => {
+        updatePaper(this.paperInfo.id, data).then((res) => {
           if (res.code === 0) {
             window.ELEMENT.Message.success("更新成功");
             this.$emit("update:showPaperInfoDialog", false);

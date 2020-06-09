@@ -87,11 +87,11 @@ export default {
       this.editor = new E(this.$refs.toolbar, this.$refs.editor);
       this.editor.customConfig.uploadImgShowBase64 = false; // base 64 存储图片
       this.editor.customConfig.uploadImgServer =
-        "http://www.liskarm.xyz/AixinMarket/upload"; // 填写配置服务器端地址
+        "http://192.144.227.168:8086/upload/pic"; // 填写配置服务器端地址
       this.editor.customConfig.uploadImgHeaders = {
         Accept: "application/json, text/plain, */*",
       }; // 自定义 header
-      this.editor.customConfig.uploadFileName = "imgFile"; // 后端接受上传文件的参数名
+      this.editor.customConfig.uploadFileName = "pic"; // 后端接受上传文件的参数名
       this.editor.customConfig.uploadImgParams = {
         // 如果版本 <=v3.1.0 ，属性值会自动进行 encode ，此处无需 encode
         // 如果版本 >=v3.1.1 ，属性值不会自动 encode ，如有需要自己手动 encode
@@ -130,7 +130,7 @@ export default {
           //循环插入图片
           // for (let i = 0; i < 1; i++) {
           if (result.code == 0) {
-            let url = result.data.filepath;
+            let url = result.data;
             JSON.stringify(url);
             insertImg(url);
           } else {

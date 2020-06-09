@@ -133,7 +133,11 @@
             ></el-button>
           </el-tooltip>
           <el-tooltip content="删除" placement="top">
-            <el-button type="text" icon="el-icon-delete"></el-button>
+            <el-button
+              @click="handleDelete(scope.row.id)"
+              type="text"
+              icon="el-icon-delete"
+            ></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -142,7 +146,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="pageConfig.page"
+        :current-page="pageConfig.currentPage"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="pageConfig.limit"
         layout="total, sizes, prev, pager, next"
@@ -171,12 +175,16 @@ import SubmitList from "@/components/submitList";
 import MarkDialog from "@/components/markDialog";
 import PaperInfoDialog from "@/components/paperInfoDialog";
 import { paperClassify } from "@/config/default";
-import { getPaperList, getPaperDetail } from "@/api/paperQuestionManage";
+import {
+  getPaperList,
+  getPaperDetail,
+  deletePaper,
+} from "@/api/paperQuestionManage";
 export default {
   methods: {
     handleView(id) {
       let routeData = this.$router.resolve({
-        name: "examStart",
+        name: "paperPreview",
         params: {
           id,
         },
@@ -202,7 +210,10 @@ export default {
         .then((res) => {
           loading.close();
           if (res.code === 0) {
-            this.paperInfo = res.data;
+            console.log(res);
+            this.paperInfo = res.data.paperInfo;
+            this.paperInfo.questionList = res.data.questionList;
+            this.paperInfo.studentIdList = [];
           } else {
             throw new Error(res.msg);
           }
@@ -215,6 +226,7 @@ export default {
     resetForm() {
       this.pageConfig.classify = "";
       this.pageConfig.title = "";
+      this.setData();
     },
     handleSearch() {
       if (!(this.pageConfig.classify || this.pageConfig.title)) {
@@ -225,10 +237,28 @@ export default {
       }
     },
     changeData(prop, e) {
+      console.log(prop, e);
       this.paperInfo[prop] = e;
+      this.$forceUpdate();
     },
     handleAddPaper() {
       this.$router.push("/addPaper");
+    },
+    handleDelete(id) {
+      window.ELEMENT.MessageBox.confirm("是否删除改题目？").then(() => {
+        deletePaper(id)
+          .then((res) => {
+            if (res.code === 0) {
+              window.ELEMENT.Message.success("删除成功");
+              this.setData();
+            } else {
+              window.ELEMENT.Message.error(res.msg);
+            }
+          })
+          .catch((e) => {
+            throw new Error(e);
+          });
+      });
     },
     setData() {
       const loading = this.$loading({
@@ -277,12 +307,12 @@ export default {
         },
       ],
       pageConfig: {
-        page: 1,
+        currentPage: 1,
         limit: 10,
         title: "",
         classify: "",
       },
-      total: 10,
+      total: 0,
       paperClassify,
       paperInfo: {},
       currentPaperId: null,
@@ -306,7 +336,7 @@ export default {
 }
 .demo-table-expand .el-form-item {
   margin-right: 0;
-  margin-bottom: 0; 
+  margin-bottom: 0;
   width: 50%;
 }
 </style>

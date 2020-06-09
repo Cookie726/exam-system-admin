@@ -27,8 +27,8 @@
 </template>
 
 <script>
-// import { validateSigninForm } from "../../../utils/validate";
-import { signin } from "../../../api/sign";
+import { validateSigninForm } from "@/utils/validate";
+import { signin } from "@/api/sign";
 export default {
   data() {
     return {
@@ -40,32 +40,25 @@ export default {
   },
   methods: {
     signin() {
-      // const pass = validateSigninForm.call(this, this.signinForm);
-      // if (pass) {
-      signin(this.signinForm).then((res) => {
-        if (res.code === 0) {
-          this.$store.commit("user/SIGNIN", res.data.user);
-          const role = this.$store.state.user.user.role;
-          this.$store.dispatch("router/GenerateRoutes", role).then(() => {
-            this.$store.commit(
-              "SET_SIDEBAR_LIST",
-              this.$store.state.router.dynamicRoutes
-            );
-          });
-          this.$router.push("/");
-        }
-        // if (res.code === 0) {
-        //   // this.$router.addRoutes(dynamicRoute);
-        //   console.log(dynamicRoute);
-        //   this.$router.push({
-        //     name: "updatePaper",
-        //     params: {
-        //       id: 1,
-        //     },
-        //   });
-        // }
-      });
-      // }
+      const pass = validateSigninForm.call(this, this.signinForm);
+      if (pass) {
+        signin(this.signinForm).then((res) => {
+          if (res.code === 0) {
+            this.$store.commit("user/SIGNIN", res.data);
+            const role = this.$store.state.user.user.roles[0].name;
+            this.$store.dispatch("router/GenerateRoutes", role).then(() => {
+              this.$store.commit(
+                "SET_SIDEBAR_LIST",
+                this.$store.state.router.dynamicRoutes
+              );
+              this.$router.addRoutes(this.$store.state.router.dynamicRoutes);
+            });
+            this.$router.push("/");
+          } else {
+            window.ELEMENT.Message.error(res.msg);
+          }
+        });
+      }
     },
   },
 };

@@ -33,6 +33,23 @@ const routes = [{
     path: "/examStart/:id",
     name: "examStart",
     component: ExamStart
+  },
+  {
+    path: "/recordDetail/:id",
+    name: "recordDetail",
+    meta: {
+      name: "答题记录",
+      role: ["admin", "teacher", "student"],
+    },
+    component: resolve => require(["@/views/recordDetail"], resolve)
+  }, {
+    path: "/paperPreview/:id",
+    name: "paperPreview",
+    meta: {
+      name: "预览试卷",
+      role: ["admin", "teacher", "student"],
+    },
+    component: resolve => require(["@/views/paperPreview"], resolve)
   }, {
     path: "/markExam/:id/:userId",
     name: "markExam",

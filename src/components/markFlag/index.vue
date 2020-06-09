@@ -21,12 +21,6 @@ export default {
       return this.isMark ? "取消标记" : "标记本题";
     },
   },
-  mounted() {
-    console.log(this.isMark, this.index);
-    this.$on("setScore", (data) => {
-      console.log("设置分数", data);
-    });
-  },
   methods: {
     handleMark() {
       this.$emit("update:isMark", !this.isMark);

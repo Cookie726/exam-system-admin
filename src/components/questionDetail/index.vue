@@ -3,7 +3,6 @@
     <question-content
       :content="question.content"
       :questionType="question.questionType"
-      :value="question.value"
     ></question-content>
     <question-option
       :optionList="question.optionList"

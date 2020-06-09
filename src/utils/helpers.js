@@ -1,11 +1,3 @@
-export const initAnswerType = (type) => {
-    if (type === "单选题" || type === "判断题") {
-        return null
-    } else if (type === "多选题") {
-        return []
-    }
-}
-
 export const isComplete = (type, newVal) => {
     if (!newVal) return false
     let val
@@ -40,20 +32,12 @@ export const hasPermission = (role, route) => {
 }
 
 export const getRoutes = (role, dynamicRoutes) => {
-    let roleName
-    if (role === 0) {
-        roleName = "student"
-    } else if (role === 1) {
-        roleName = "teacher"
-    } else if (role === 2) {
-        roleName = "admin"
-    }
     const res = []
     dynamicRoutes.forEach(route => {
         const temp = {
             ...route
         }
-        if (hasPermission(roleName, temp)) {
+        if (hasPermission(role, temp)) {
             if (temp.children) {
                 temp.children = getRoutes(role, route.children)
             }
@@ -68,6 +52,7 @@ export const getRoutes = (role, dynamicRoutes) => {
             return
         }
     })
+    console.log("resresres", res)
     return res
 }
 
