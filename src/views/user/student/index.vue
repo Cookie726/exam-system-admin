@@ -128,7 +128,6 @@ export default {
         limit: 10,
         roleId: 2,
         userName: "",
-        status: 1,
         sno: "",
       },
     };

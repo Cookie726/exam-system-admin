@@ -54,9 +54,10 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .mark-exam-container {
   padding-top: 70px;
   background: #eff3f7;
+  min-height: 100%;
 }
 </style>

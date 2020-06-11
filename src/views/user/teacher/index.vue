@@ -129,7 +129,6 @@ export default {
         roleId: 3,
         userName: "",
         sno: "",
-        status: 1,
       },
     };
   },

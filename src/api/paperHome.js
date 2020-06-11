@@ -1,5 +1,5 @@
 import {
-    put
+    post
 } from "@/utils/request"
 
 export const getExamList = (data) => {
@@ -11,7 +11,7 @@ export const getExamList = (data) => {
 }
 
 export const putAnswer = (data) => {
-    return put("/exam/conserve", data)
+    return post("/exam/conserve", data)
 }
 
 export const putShortAnswer = data => {
@@ -31,9 +31,5 @@ export const startExam = id => {
 }
 
 export const submitAnswer = id => {
-    console.log(id)
-    return Promise.resolve({
-        code: 0,
-        msg: ""
-    })
+    return post("/exam/submit/" + id)
 }

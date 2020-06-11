@@ -40,6 +40,7 @@ export default {
   },
   methods: {
     signin() {
+      // logout();
       const pass = validateSigninForm.call(this, this.signinForm);
       if (pass) {
         signin(this.signinForm).then((res) => {

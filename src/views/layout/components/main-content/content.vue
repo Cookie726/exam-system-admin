@@ -1,5 +1,5 @@
 <template>
-  <div :class="{navCollapsed: isSidebarNavCollapse}" class="main-content">
+  <div :class="{ navCollapsed: isSidebarNavCollapse }" class="main-content">
     <el-tabs
       type="border-card"
       @tab-click="handleChange"
@@ -26,7 +26,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["isSidebarNavCollapse", "currentMenu", "editableTabs"])
+    ...mapState(["isSidebarNavCollapse", "currentMenu", "editableTabs"]),
   },
   methods: {
     handleTabsRemove(targetName) {
@@ -45,17 +45,16 @@ export default {
       this.$store.commit("SET_CURRENT_MENU", activeName);
       this.$store.commit("REMOVE_TABS", targetName);
       this.$router.push({
-        name: activeName
-      })
+        name: activeName,
+      });
     },
     handleChange(targetName) {
       this.$router.push({
-        name: targetName.name
+        name: targetName.name,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

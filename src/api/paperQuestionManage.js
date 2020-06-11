@@ -321,6 +321,10 @@ export const deletePaper = id => {
     return onDelete("/paperInfo/" + id)
 }
 
+/**
+ * 
+ * @param {username, password} data 
+ */
 export const addPaper = data => {
     return put("paperInfo", data)
 }

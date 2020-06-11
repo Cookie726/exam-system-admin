@@ -106,6 +106,7 @@ export default {
   width: 100%;
   background: @bg;
   padding-bottom: 80px;
+  min-height: 100%;
   display: inline-flex;
   flex-direction: row;
   justify-content: space-between;
