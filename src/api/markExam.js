@@ -1,7 +1,5 @@
-export const markExam = data => {
-    console.log(data)
-    return Promise.resolve({
-        code: 0,
-        msg: ""
-    })
-}
+import {
+    post
+} from "../utils/request";
+
+export const markExam = data => post("/papermark/submit", data)

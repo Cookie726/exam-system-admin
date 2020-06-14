@@ -17,9 +17,9 @@ export default {
     actions: {
         GenerateRoutes({
             commit
-        }, role) {
+        }, roles) {
             return new Promise(resolve => {
-                const accessedRouters = getRoutes(role, asyncRoute)
+                const accessedRouters = getRoutes(roles[0].permissions, asyncRoute)
                 commit('SET_ROUTERS', accessedRouters);
                 resolve()
             })

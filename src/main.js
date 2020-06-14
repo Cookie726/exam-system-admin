@@ -18,11 +18,12 @@ router.beforeEach((to, from, next) => {
       })
       window.ELEMENT.Message.warning("请先退出该账号")
     } else {
-      if (store.state.router.dynamicRoutes.length === 0) { // 判断是否已添加动态路由
-        const role = store.state.user.user.roles[0].name
-        store.dispatch("router/GenerateRoutes", role).then(() => {
-          router.addRoutes(store.state.router.dynamicRoutes)
-          store.commit("SET_SIDEBAR_LIST", store.state.router.dynamicRoutes) // 设置侧边栏菜单
+      if (store.state.user.roles.length === 0) { // 判断是否获取到用户信息
+        store.dispatch('user/GETUSERINFO').then((roles) => {
+          store.dispatch("router/GenerateRoutes", roles).then(() => {
+            router.addRoutes(store.state.router.dynamicRoutes)
+            store.commit("SET_SIDEBAR_LIST", store.state.router.dynamicRoutes) // 设置侧边栏菜单
+          })
           next({
             ...to,
             replace: true
@@ -55,31 +56,3 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount("#app");
-
-
-
-
-
-
-
-
-
-// response = {
-//   code: 0,
-//   msg: "",
-//   data: {
-//     paper: {},
-//     questionList: [{
-//       content: "",
-//       classify: "",
-//       questionType: "",
-//       analysis: "",
-//       value: 0,
-//       optionList: [],
-//       studentAnswer: "",
-//       filePath: "",
-//       user: {},
-//       studentOptionList: []
-//     }]
-//   }
-// }

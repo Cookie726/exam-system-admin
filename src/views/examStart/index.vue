@@ -5,6 +5,8 @@
       :questionList="questionList"
       :timeLimit="timeLimit"
       :paperId="paperId"
+      :startTime="startTime"
+      :endTime="endTime"
     ></exam>
   </div>
 </template>
@@ -27,28 +29,18 @@ export default {
     getPaperInfo(this.paperId).then((res) => {
       if (res.code === 0) {
         this.questionList = res.data.questionList;
-        this.timeLimit = res.data.paper.timeLimit;
+        this.timeLimit = res.data.paperInfo.timeLimit * 60;
+        this.startTime = res.data.paperInfo.startTime
+        this.endTime = res.data.paperInfo.endTime
       }
     });
   },
   data() {
     return {
-      questionList: [
-        {
-          id: 1,
-          content: "<p>简答题</p>",
-          questionType: "简答题",
-          analysis: "<p>这是解析</p>",
-          value: 10,
-          optionList: [
-            {
-              id: 1,
-              choice: "<p>这是答案</p>",
-            },
-          ],
-        },
-      ],
-      timeLimit: 150 * 60,
+      questionList: [],
+      timeLimit: 0,
+      startTime: "",
+      endTime: ""
     };
   },
 };

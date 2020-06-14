@@ -28,7 +28,6 @@
 
 <script>
 import { validateSigninForm } from "@/utils/validate";
-import { signin } from "@/api/sign";
 export default {
   data() {
     return {
@@ -40,25 +39,15 @@ export default {
   },
   methods: {
     signin() {
-      // logout();
-      const pass = validateSigninForm.call(this, this.signinForm);
-      if (pass) {
-        signin(this.signinForm).then((res) => {
-          if (res.code === 0) {
-            this.$store.commit("user/SIGNIN", res.data);
-            const role = this.$store.state.user.user.roles[0].name;
-            this.$store.dispatch("router/GenerateRoutes", role).then(() => {
-              this.$store.commit(
-                "SET_SIDEBAR_LIST",
-                this.$store.state.router.dynamicRoutes
-              );
-              this.$router.addRoutes(this.$store.state.router.dynamicRoutes);
-            });
-            this.$router.push("/");
-          } else {
-            window.ELEMENT.Message.error(res.msg);
-          }
-        });
+      if (validateSigninForm(this.signinForm)) {
+        this.$store
+          .dispatch("user/SIGNIN", this.signinForm)
+          .then(() => {
+            this.$router.replace({ path: "/" });
+          })
+          .catch((e) => {
+            window.ELEMENT.Message.error(e);
+          });
       }
     },
   },

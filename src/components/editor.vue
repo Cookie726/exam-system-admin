@@ -83,11 +83,11 @@ export default {
     this.editor.txt.html(this.value);
   },
   methods: {
-    seteditor() {
+    async seteditor() {
       this.editor = new E(this.$refs.toolbar, this.$refs.editor);
       this.editor.customConfig.uploadImgShowBase64 = false; // base 64 存储图片
-      this.editor.customConfig.uploadImgServer =
-        "http://192.144.227.168:8086/upload/pic"; // 填写配置服务器端地址
+      const { baseURL } = await import("@/utils/request");
+      this.editor.customConfig.uploadImgServer = `${baseURL}/upload/pic`; // 填写配置服务器端地址
       this.editor.customConfig.uploadImgHeaders = {
         Accept: "application/json, text/plain, */*",
       }; // 自定义 header

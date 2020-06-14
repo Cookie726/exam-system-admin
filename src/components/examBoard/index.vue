@@ -1,6 +1,6 @@
 <template>
   <div class="exam-board-container">
-    <div class="nav" v-if="pageName === 'markExam'">
+    <div class="nav" v-if="pageName === 'examRecordDetail'">
       <ul class="menu-items">
         <li class="menu-item">
           <div class="item-label">姓名</div>
@@ -37,14 +37,6 @@
         </li>
       </ul>
     </div>
-    <div class="nav nav-bottom" v-if="pageName === 'markExam'">
-      <ul class="menu-items">
-        <li class="menu-item disabled">
-          <span class="item-label">上一人</span>
-        </li>
-        <li class="menu-item"><span class="item-label">下一人</span></li>
-      </ul>
-    </div>
     <button
       v-if="pageName === 'markExam'"
       type="button"
@@ -60,14 +52,6 @@
       class="btn btn-primary btn-nav btn-bottom position-left-0"
     >
       提交
-    </button>
-    <button
-      v-if="pageName === 'recordDetail'"
-      type="button"
-      @click="handleSubmitAnswer"
-      class="btn btn-primary btn-nav btn-bottom position-left-0"
-    >
-      返回
     </button>
   </div>
 </template>
@@ -94,7 +78,6 @@ export default {
       this.$store
         .dispatch("markPaper/SUBMIT")
         .then((res) => {
-          console.log(res);
           if (res.code === 0) {
             window.ELEMENT.Message.success("批改成功");
           } else {
@@ -107,13 +90,30 @@ export default {
     },
     async handleSubmitAnswer() {
       if (this.pageName === "examStart") {
-        try {
-          const res = await submitAnswer(this.paperId);
-          if (res.code !== 0) {
-            window.ELEMENT.Message.error(res.msg);
+        if (new Date() < new Date(this.startTime).getTime()) {
+          window.ELEMENT.Notification.error({
+            title: "错误",
+            message: "考试还未开始不能提交",
+          });
+          return;
+        } else if (new Date() > new Date(this.endTime).getTime()) {
+          window.ELEMENT.Notification.error({
+            title: "错误",
+            message: "考试已经结束不能提交",
+          });
+          return;
+        } else {
+          try {
+            const res = await submitAnswer(this.paperId);
+            if (res.code !== 0) {
+              window.ELEMENT.Message.error(res.msg);
+            } else {
+              window.ELEMENT.Message.success("提交成功");
+              this.$router.replace({ path: "/" });
+            }
+          } catch (e) {
+            throw new Error(e);
           }
-        } catch (e) {
-          throw new Error(e);
         }
       } else if (this.pageName === "paperPreview") {
         window.ELEMENT.Message.error("不能提交试卷");

@@ -54,7 +54,6 @@ export default {
   methods: {
     toTwoStage(paperInfo) {
       Object.assign(this.newPaper, paperInfo);
-      console.log(this.newPaper);
       this.currentStage = "second";
       this.active++;
     },
@@ -76,7 +75,6 @@ export default {
       });
       this.newPaper.questionList = list;
       this.newPaper.paperScore = paperScore;
-      console.log(this.newPaper);
     },
     changeData(prop, value) {
       this.newPaper[prop] = value;

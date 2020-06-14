@@ -125,7 +125,6 @@ import QuestionDetail from "@/components/questionDetail";
 export default {
   methods: {
     async handleClick(id) {
-      console.log(id);
       const loading = this.$loading({
         lock: true,
         text: "拼命获取中···",

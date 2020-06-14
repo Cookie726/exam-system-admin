@@ -114,9 +114,7 @@ export default {
       pageConfig: {
         limit: 10,
         currentPage: 1,
-        status: 0,
         sno: "",
-        roleId: 2,
         userName: ""
       },
       total: 0,

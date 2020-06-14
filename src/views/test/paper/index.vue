@@ -142,7 +142,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="block">
+    <div class="block" style="text-align: center">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -189,7 +189,7 @@ export default {
           id,
         },
       });
-      window.open(routeData.href, "view_window");
+      window.open(routeData.href, "_blank");
     },
     handleSizeChange(pageSize) {
       this.pageConfig.pageSize = pageSize;
@@ -210,14 +210,13 @@ export default {
         .then((res) => {
           loading.close();
           if (res.code === 0) {
-            console.log(res);
-            this.paperInfo = res.data.paperInfo;
-            this.paperInfo.questionList = res.data.questionList;
+            this.paperInfo = res.data.paper;
+            this.paperInfo.questionNum = res.data.questionNum;
             this.paperInfo.studentIdList = [];
+            this.showPaperInfoDialog = true;
           } else {
             throw new Error(res.msg);
           }
-          this.showPaperInfoDialog = true;
         })
         .catch((e) => {
           throw new Error(e);
@@ -237,9 +236,7 @@ export default {
       }
     },
     changeData(prop, e) {
-      console.log(prop, e);
-      this.paperInfo[prop] = e;
-      this.$forceUpdate();
+      this.$set(this.paperInfo, prop, e);
     },
     handleAddPaper() {
       this.$router.push("/addPaper");
@@ -326,7 +323,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 .demo-table-expand {
   font-size: 0;
 }

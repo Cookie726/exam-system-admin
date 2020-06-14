@@ -1,13 +1,12 @@
 import store from "@/store";
 import axios from "axios"
+export const baseURL = "http://192.144.227.168:8086"
 const service = axios.create({
-    // baseURL: "http://192.144.227.168:8086",
-    baseURL: "http://6t9auj.natappfree.cc",
-    // baseURL: "http://localhost:3000",
-    timeout: 5000,
+    baseURL,
+    timeout: 8000,
     withCredentials: true,
     headers: {
-        "Content-Type": 'application/json'
+        "Content-Type": 'application/json',
     }
 })
 

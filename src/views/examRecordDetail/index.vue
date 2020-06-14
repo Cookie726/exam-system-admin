@@ -6,7 +6,7 @@
 
 <script>
 import Exam from "@/components/exam";
-import { getRecord } from "@/api/paperQuestionManage";
+import { getRecordDetail } from "@/api/examRecord";
 export default {
   components: {
     exam: Exam,
@@ -21,26 +21,11 @@ export default {
   },
   methods: {
     setData() {
-      const data = {
-        paperId: this.$route.params.id,
-        userId: this.$route.params.userId,
-      };
-      getRecord(data).then((res) => {
+      getRecordDetail(this.$route.params.id).then((res) => {
         if (res.code === 0) {
           this.questionList = res.data.recordQuestionDTOList;
-          this._init_store();
         }
       });
-    },
-    _init_store() {
-      const data = {};
-      data.paperId = this.$route.params.id;
-      data.userId = this.$route.params.userId;
-      data.questionIdList = [];
-      this.questionList.forEach((ques) => {
-        data.questionIdList.push(ques.id);
-      });
-      this.$store.commit("markPaper/INIT", data);
     },
   },
 };

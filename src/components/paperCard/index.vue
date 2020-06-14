@@ -1,7 +1,30 @@
 <template>
-  <div class="paper-card">
-    <div v-if="pathName === 'examRecord'" class="item-status">
-      <span>未通过</span>
+  <div
+    class="paper-card"
+    :class="{
+      bl_danger:
+        paperItem.grades / paperItem.paperScore < 0.6 &&
+        pathName === 'examRecord',
+      bl_success:
+        paperItem.grades / paperItem.paperScore >= 0.6 &&
+        pathName === 'examRecord',
+      bl_error: !paperItem.isMark && pathName === 'examRecord',
+    }"
+  >
+    <div
+      v-if="pathName === 'examRecord'"
+      class="item-status"
+      :class="{
+        danger: paperItem.grades / paperItem.paperScore < 0.6,
+        success: paperItem.grades / paperItem.paperScore >= 0.6,
+        error: !paperItem.isMark,
+      }"
+    >
+      <span v-if="paperItem.grades / paperItem.paperScore < 0.6">未通过</span>
+      <span v-else-if="paperItem.grades / paperItem.paperScore >= 0.6"
+        >及格</span
+      >
+      <span v-if="!paperItem.isMark">未批改</span>
     </div>
     <div class="item-title">{{ paperItem.title }}</div>
     <div class="item-row item-during">
@@ -49,24 +72,45 @@ export default {
     },
     pathName() {
       return this.$route.name;
-    }
+    },
   },
   methods: {
     handleAnswer() {
-      let routeData = this.$router.resolve({
-        name: "examStart",
-        params: { id: this.paperItem.id },
-      });
-      window.open(routeData.href, "_blank");
+      if (new Date(this.paperItem.startTime).getTime() > new Date().getTime()) {
+        window.ELEMENT.MessageBox.alert("考试还未开始", "提示", {
+          confirmButtonText: "确定",
+        });
+      } else {
+        let routeData = this.$router.resolve({
+          name: "examStart",
+          params: { id: this.paperItem.id },
+        });
+        window.open(routeData.href, "_blank");
+      }
     },
     handleRecord() {
-      console.log(this.paperItem.id);
+      const routeData = this.$router.resolve({
+        name: "examRecordDetail",
+        params: {
+          id: this.paperItem.id,
+        },
+      });
+      window.open(routeData.href, "_blank");
     },
   },
 };
 </script>
 
 <style lang="less" scoped>
+.danger {
+  background-color: red;
+}
+.success {
+  background-color: #67c23a;
+}
+.error {
+  background-color: #e6a23c;
+}
 .paper-card {
   width: 390px;
   padding: 20px;
@@ -95,7 +139,6 @@ export default {
     position: absolute;
     right: -30px;
     top: -30px;
-    background-color: red;
     transform: rotate(45deg);
     font-size: 12px;
     display: flex;
@@ -129,5 +172,14 @@ export default {
     position: absolute;
     right: 15px;
   }
+}
+.bl_danger {
+  border-left: 4px solid red;
+}
+.bl_success {
+  border-left: 4px solid #67c23a;
+}
+.bl_error {
+  border-left: 4px solid #e6a23c;
 }
 </style>

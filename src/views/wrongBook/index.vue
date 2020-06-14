@@ -1,32 +1,24 @@
 <template>
   <div>
-    <el-table :data="questionList" border>
-      <el-table-column
-        align="center"
-        prop="content"
-        label="题目"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="questionType"
-        label="题型"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="classify"
-        label="分类"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="value"
-        label="分数"
-      ></el-table-column>
-    </el-table>
+    <wrong-question
+      v-for="question in questionList"
+      :key="question.id"
+      :question="question"
+    ></wrong-question>
+    <div class="block">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        layout="prev, pager, next"
+        :total="total"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
 import { getWrongBook } from "@/api/wrongBook";
+import WrongQuestion from "@/components/wrongQuestion";
 export default {
   data() {
     return {
@@ -161,7 +153,7 @@ export default {
       total: 0,
       pageConfig: {
         currentPage: 1,
-        limit: 12,
+        limit: 8,
       },
     };
   },
@@ -170,10 +162,26 @@ export default {
   },
   methods: {
     setData() {
-      getWrongBook(this.pageConfig);
+      getWrongBook(this.pageConfig).then((res) => {
+        if (res.code === 0) {
+          this.questionList = res.data.recordQuestionDTOList;
+          this.total = res.data.total;
+        }
+      });
     },
+    handleCurrentChange(currentPage) {
+      this.pageConfig.currentPage = currentPage;
+      this.setData();
+    },
+  },
+  components: {
+    WrongQuestion,
   },
 };
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.block {
+  text-align: center;
+}
+</style>

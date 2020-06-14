@@ -3,7 +3,7 @@ import {
     post
 } from "../utils/request"
 
-export const getNewUserList = data => get("/user", data)
+export const getNewUserList = data => get("/audit", data)
 
 export const passNewUser = data => post("/audit", data)
 

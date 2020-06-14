@@ -1,12 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Layout from "../views/layout";
-import Sign from "../views/sign"
-import Signin from "../views/sign/signin"
-import Signup from "../views/sign/signup"
-import MarkExam from "../views/markExam"
-import ExamStart from "../views/examStart"
-import UpdatePaper from "../views/updatePaper"
+const Layout = resolve => require(["@/views/layout"], resolve)
+const Sign = resolve => require(["@/views/sign"], resolve)
+const Signin = resolve => require(["@/views/sign/signin"], resolve)
+const Signup = resolve => require(["@/views/sign/signup"], resolve)
 import RouterConfig from './modules'
 import Error from "@/views/404"
 export const asyncRoute = [{
@@ -28,11 +25,11 @@ Vue.use(VueRouter);
 const routes = [{
     path: "/updatePaper/:id",
     name: "updatePaper",
-    component: UpdatePaper
+    component: resolve => require(["@/views/updatePaper"], resolve)
   }, {
     path: "/examStart/:id",
     name: "examStart",
-    component: ExamStart
+    component: resolve => require(["@/views/examStart"], resolve)
   },
   {
     path: "/recordDetail/:id",
@@ -42,6 +39,14 @@ const routes = [{
       role: ["admin", "teacher", "student"],
     },
     component: resolve => require(["@/views/recordDetail"], resolve)
+  }, {
+    path: "/examRecordDetail/:id",
+    name: "examRecordDetail",
+    meta: {
+      name: "答题详情",
+      role: ["student"],
+    },
+    component: resolve => require(["@/views/examRecordDetail"], resolve)
   }, {
     path: "/paperPreview/:id",
     name: "paperPreview",
@@ -53,7 +58,7 @@ const routes = [{
   }, {
     path: "/markExam/:id/:userId",
     name: "markExam",
-    component: MarkExam
+    component: resolve => require(["@/views/markExam"], resolve)
   }, {
     path: "/sign",
     name: "sign",
@@ -84,7 +89,7 @@ const routes = [{
 ];
 
 const router = new VueRouter({
-  mode: "hash",
+  mode: "history",
   base: process.env.BASE_URL,
   routes
 });

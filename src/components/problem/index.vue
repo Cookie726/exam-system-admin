@@ -74,7 +74,9 @@
           :on-exceed="handleExceed"
           :file-list="fileList"
         >
-          <el-button size="small" type="primary">上传附件</el-button>
+          <el-button size="small" type="primary" icon="el-icon-upload"
+            >上传附件</el-button
+          >
         </el-upload>
       </template>
     </div>
@@ -117,11 +119,12 @@
         <div class="editor-container">
           <div class="content" v-html="studentAnswer"></div>
         </div>
-        <a href="http://192.144.227.168:8090/annex/nY9Nn2KPXNi测试.txt">下载</a>
         <el-button
           @click="handleFileDownload"
           style="margin-top: 6px"
           size="mini"
+          type="primary"
+          icon="el-icon-download"
           >下载附件</el-button
         >
       </template>
@@ -162,7 +165,6 @@
 <script>
 import { isComplete } from "utils/helpers";
 import { putAnswer } from "@/api/paperHome";
-// import { download } from "@/api/fileUpload";
 import editor from "@/components/editor";
 import MarkFlag from "@/components/markFlag";
 import SetScore from "@/components/setScore";
@@ -177,6 +179,8 @@ export default {
     index: Number,
     paperId: Number,
     pageName: String,
+    startTime: String,
+    endTime: String,
   },
   data() {
     return {
@@ -192,38 +196,66 @@ export default {
       const ref = `inputBtn${index}`;
       this.$refs[ref][0].click();
       if (this.pageName === "examStart") {
-        const data = {
-          paperId: this.paperId,
-          questionId: this.question.id,
-          optionIdList: Array.isArray(this.answer)
-            ? this.answer
-            : [this.answer],
-        };
-        try {
-          const res = await putAnswer(data);
-          if (res.code !== 0) {
-            window.ELEMENT.Message.error(res.msg);
+        if (new Date() < new Date(this.startTime).getTime()) {
+          window.ELEMENT.Notification.error({
+            title: "错误",
+            message: "考试还未开始不能答题",
+          });
+          return;
+        } else if (new Date() > new Date(this.endTime).getTime()) {
+          window.ELEMENT.Notification.error({
+            title: "错误",
+            message: "考试已经结束不能答题",
+          });
+          return;
+        } else {
+          const data = {
+            paperId: this.paperId,
+            questionId: this.question.id,
+            optionIdList: Array.isArray(this.answer)
+              ? this.answer
+              : [this.answer],
+          };
+          try {
+            const res = await putAnswer(data);
+            if (res.code !== 0) {
+              window.ELEMENT.Message.error(res.msg);
+            }
+          } catch (e) {
+            throw new Error(e);
           }
-        } catch (e) {
-          throw new Error(e);
         }
       }
     },
     async handleSave() {
       if (this.pageName === "examStart") {
-        const data = {
-          paperId: this.paperId,
-          questionId: this.question.id,
-          annexPath: this.annexPath,
-          studentAnswer: this.answer,
-        };
-        try {
-          const res = await putAnswer(data);
-          if (res.code !== 0) {
-            window.ELEMENT.Message.error(res.msg);
+        if (new Date() < new Date(this.startTime).getTime()) {
+          window.ELEMENT.Notification.error({
+            title: "错误",
+            message: "考试还未开始不能答题",
+          });
+          return;
+        } else if (new Date() > new Date(this.endTime).getTime()) {
+          window.ELEMENT.Notification.error({
+            title: "错误",
+            message: "考试已经结束不能答题",
+          });
+          return;
+        } else {
+          const data = {
+            paperId: this.paperId,
+            questionId: this.question.id,
+            annexPath: this.annexPath,
+            studentAnswer: this.answer,
+          };
+          try {
+            const res = await putAnswer(data);
+            if (res.code !== 0) {
+              window.ELEMENT.Message.error(res.msg);
+            }
+          } catch (e) {
+            throw new Error(e);
           }
-        } catch (e) {
-          throw new Error(e);
         }
       }
     },
@@ -248,11 +280,9 @@ export default {
     },
     getStudentAnswer() {
       let answer = "";
-      console.log("quesss", this.question);
       if (this.question.questionType === "简答题") {
         answer = this.question.studentAnswer;
       } else if (this.question.questionType === "判断题") {
-        console.log(this.question.optionList);
         answer = this.question.optionList.find((option) => {
           return option.id === this.question.studentOptionList[0].id;
         }).choice;
@@ -294,10 +324,11 @@ export default {
       }
       return rightAnswer;
     },
-    handleFileDownload() {
+    async handleFileDownload() {
+      const { baseURL } = await import("@/utils/request");
       let a = document.createElement("a");
       a.style.display = "none";
-      a.href = "http://192.144.227.168:8090/annex/nY9Nn2KPXNi测试.txt";
+      a.href = `${baseURL}/download?fileName=${this.question.filePath}`;
       a.setAttribute("download", "测试");
       document.body.appendChild(a);
       a.click(); //执行下载

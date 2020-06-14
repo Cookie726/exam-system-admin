@@ -12,7 +12,6 @@
       </div>
       <div class="block">
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           layout="prev, pager, next"
           :total="total"
@@ -29,43 +28,7 @@ import PaperCard from "@/components/paperCard";
 export default {
   data() {
     return {
-      list: [
-        {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
-          title: "前端第一次测试",
-          id: "10001",
-        },
-        {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
-          title: "前端第一次测试",
-          id: "10002",
-        },
-        {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
-          title: "前端第一次测试",
-          id: "10003",
-        },
-        {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
-          title: "前端第一次测试",
-          id: "10004",
-        },
-        {
-          start: "2020/04/22 00:00:00",
-          end: "2020/04/26 00:00:00",
-          limitTime: 1800,
-          title: "前端第一次测试",
-          id: "10005",
-        },
-      ],
+      list: [],
       total: 0,
       pageConfig: {
         currentPage: 1,
@@ -103,12 +66,8 @@ export default {
         loading.close();
       }
     },
-    handleSizeChange(pageSize) {
-      this.pageConfig.limit = pageSize;
-      this.setData();
-    },
     handleCurrentChange(currentPage) {
-      this.pageConfig.limit = currentPage;
+      this.pageConfig.currentPage = currentPage;
       this.setData();
     },
   },

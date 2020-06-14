@@ -1,3 +1,7 @@
+import {
+    updateStatus
+} from "@/api/userManage"
+
 export const userManageMixin = {
     data() {
         return {
@@ -14,6 +18,30 @@ export const userManageMixin = {
         this.initList()
     },
     methods: {
+        handleDelete(idList) {
+            const data = {
+                idList,
+                status: 2,
+            };
+            updateStatus(data).then(res => {
+                if (res.code === 0) {
+                    window.ELEMENT.Message.success("禁用成功")
+                    this.loadData(this.param)
+                }
+            });
+        },
+        startUser(idList) {
+            const data = {
+                idList,
+                status: 1,
+            };
+            updateStatus(data).then(res => {
+                if (res.code === 0) {
+                    window.ELEMENT.Message.success("启用成功")
+                    this.loadData(this.param)
+                }
+            });
+        },
         initList() {
             this.loadData(this.param)
         },

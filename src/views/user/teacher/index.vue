@@ -79,23 +79,9 @@
 </template>
 <script>
 import { userManageMixin } from "@/mixins";
-import { getUserList, updateUserPower, updateStatus } from "@/api/userManage";
+import { getUserList, updateUserPower } from "@/api/userManage";
 export default {
   methods: {
-    handleDelete(idList) {
-      const data = {
-        idList,
-        status: 2,
-      };
-      updateStatus(data);
-    },
-    startUser(idList) {
-      const data = {
-        idList,
-        status: 1,
-      };
-      updateStatus(data);
-    },
     updatePower(snoList) {
       window.ELEMENT.MessageBox.confirm("是否要设置为学生？").then(async () => {
         try {
@@ -116,10 +102,24 @@ export default {
       });
     },
     async loadData(param) {
-      const res = await getUserList(param);
-      this.userList = res.data.userList;
-      this.total = res.data.total;
-    }
+      const loading = this.$loading({
+        lock: true,
+        text: "加载中",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      try {
+        const res = await getUserList(param);
+        if (res.code === 0) {
+          this.userList = res.data.userList;
+          this.total = res.data.total;
+        } else {
+          window.ELEMENT.Message.error(res.msg);
+        }
+      } finally {
+        loading.close();
+      }
+    },
   },
   data() {
     return {

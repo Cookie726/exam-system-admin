@@ -49,7 +49,7 @@ export default {
       this.$store.commit("markPaper/SET_SCORE", {
         questionId: this.questionId,
         score: +this.score,
-        tag: this.score === this.maxScore ? 1 : 0,
+        tag: this.score == this.maxScore ? 1 : 0,
       });
     },
     handleRight() {

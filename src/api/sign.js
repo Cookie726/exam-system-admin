@@ -17,3 +17,5 @@ export const signin = ({
 export const signup = data => put("/register", data)
 
 export const logout = () => get("/logout")
+
+export const getUserInfo = () => get("/userInfo")

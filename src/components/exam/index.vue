@@ -10,6 +10,8 @@
           :index="index"
           :pageName="pageName"
           :question="problem"
+          :startTime="startTime"
+          :endTime="endTime"
           :paperId="paperId"
         ></problem
       ></template>
@@ -20,6 +22,8 @@
         :paperId="paperId"
         :isAnswer="isAnswer"
         :pageName="pageName"
+        :startTime="startTime"
+        :endTime="endTime"
       ></exam-board>
     </div>
   </div>
@@ -39,6 +43,8 @@ export default {
     paperId: Number,
     questionList: Array,
     timeLimit: Number,
+    startTime: String,
+    endTime: String,
   },
   data() {
     return {};
@@ -71,7 +77,6 @@ export default {
   mounted() {
     this._init_flag();
     this._init_done();
-    this._init_store();
   },
   methods: {
     _init_flag() {
@@ -82,18 +87,6 @@ export default {
     _init_done() {
       if (this.pageName === "examStart" || this.pageName === "paperPreview") {
         this.$store.commit("exercise/INIT_DONE", this.questionList.length);
-      }
-    },
-    _init_store() {
-      if (this.pageName === "markExam") {
-        const data = {};
-        data.paperId = this.$route.params.id;
-        data.userId = this.$route.params.userId;
-        data.questionIdList = [];
-        this.questionList.forEach((ques) => {
-          data.questionIdList.push(ques.id);
-        });
-        this.$store.commit("markPaper/INIT", data);
       }
     },
   },

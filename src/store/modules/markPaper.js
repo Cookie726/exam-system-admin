@@ -44,7 +44,6 @@ export default {
             state
         }) {
             return new Promise((resolve, reject) => {
-                console.log(state)
                 if (!state.userId || !state.paperId) {
                     reject("试卷或用户信息不完整")
                 }

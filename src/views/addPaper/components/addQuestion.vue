@@ -29,9 +29,6 @@ export default {
     close() {
       this.handleCloseAddQuestion();
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     handleConfirm() {
       this.close();
     },

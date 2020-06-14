@@ -25,13 +25,19 @@
             </el-table-column>
             <el-table-column align="center" label="提交时间" width="300">
               <template slot-scope="scope">
-                <i class="el-icon-time"></i>
+                <i
+                  class="el-icon-time"
+                  v-if="scope.row.paperStudentDTO.isSubmit === 1"
+                ></i>
                 <span style="margin-left: 10px">{{
-                  scope.row.submitTime
+                  scope.row.paperStudentDTO.isSubmit === 1
+                    ? scope.row.submitTime
+                    : "未提交"
                 }}</span>
               </template>
             </el-table-column>
             <el-table-column align="center" label="分数" prop="score">
+              <template slot-scope="scope">{{ scope.score || 0 }}</template>
             </el-table-column>
           </el-table>
           <div style="text-align: center; margin-top: 12px">
@@ -96,6 +102,9 @@ export default {
     paperId: Number,
   },
   methods: {
+    getGrades() {
+      return 1;
+    },
     handleBeforeClose(done) {
       this.$emit("update:showMarkDialog", false);
       done();
@@ -133,9 +142,10 @@ export default {
         });
         getGrades(this.paperId)
           .then((res) => {
-            if (res.status === 0) {
+            if (res.code === 0) {
               this.paper = res.data.paper;
               this.studentList = res.data.studentList;
+              console.log(this.studentList);
             } else {
               throw new Error(res.msg);
             }
@@ -151,60 +161,8 @@ export default {
   },
   data() {
     return {
-      paper: {
-        title: "前端第一次测试",
-        createTime: "2020/05/19 21:54",
-        startTime: "2020/05/20 12:00",
-        endTime: "2020/05/25 12:00",
-        timeLimit: 3600,
-        user: {
-          userName: "潘炳名",
-        },
-        classify: "前端",
-        paperScore: 100,
-      },
-      studentList: [
-        {
-          student: {
-            userName: "程咬金",
-            sno: "2018010280",
-          },
-          score: 60,
-          submitTime: "2020/05/20 16:25",
-        },
-        {
-          student: {
-            userName: "程咬金",
-            sno: "2018010280",
-          },
-          score: 70,
-          submitTime: "2020/05/20 16:25",
-        },
-        {
-          student: {
-            userName: "程咬金",
-            sno: "2018010280",
-          },
-          score: 80,
-          submitTime: "2020/05/20 16:25",
-        },
-        {
-          student: {
-            userName: "程咬金",
-            sno: "2018010280",
-          },
-          score: 40,
-          submitTime: "2020/05/20 16:25",
-        },
-        {
-          student: {
-            userName: "程咬金",
-            sno: "2018010280",
-          },
-          score: 50,
-          submitTime: "2020/05/20 16:25",
-        },
-      ],
+      paper: {},
+      studentList: [],
     };
   },
   computed: {

@@ -90,9 +90,6 @@ export default {
       return this.$store.state.exercise.done;
     },
   },
-  mounted() {
-    console.log(this.list);
-  },
 };
 </script>
 

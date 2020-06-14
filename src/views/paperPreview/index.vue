@@ -1,6 +1,5 @@
 <template>
   <div class="mark-exam-container">
-    <nav-bar></nav-bar>
     <exam
       :paperId="paperId"
       :timeLimit="timeLimit"
@@ -10,13 +9,11 @@
 </template>
 
 <script>
-import NavBar from "@/components/navbar";
 import Exam from "@/components/exam";
 import { getExam } from "@/api/paperQuestionManage";
 export default {
   components: {
     exam: Exam,
-    "nav-bar": NavBar,
   },
   data() {
     return {
@@ -52,7 +49,7 @@ export default {
 
 <style lang="less" scoped>
 .mark-exam-container {
-  padding-top: 70px;
+  padding-top: 20px;
   background: #eff3f7;
 }
 </style>

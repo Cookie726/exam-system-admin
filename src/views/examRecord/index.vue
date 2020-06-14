@@ -6,7 +6,7 @@
     </div>
     <div class="paper-container">
       <div class="paper-items">
-        <template v-for="item in list">
+        <template v-for="item in paperList">
           <paper-card :type="0" :key="item.id" :paperItem="item"></paper-card>
         </template>
       </div>
@@ -29,63 +29,29 @@ import PaperCard from "@/components/paperCard";
 export default {
   data() {
     return {
-      list: [
-        {
-          startTime: "2020/04/22 00:00:00",
-          endTime: "2020/04/26 00:00:00",
-          timeLimit: 1800,
-          title: "前端第一次测试",
-          id: "10001",
-          paperScore: 100,
-          grades: 20
-        },
-        {
-          startTime: "2020/04/22 00:00:00",
-          endTime: "2020/04/26 00:00:00",
-          timeLimit: 1800,
-          title: "前端第一次测试",
-          id: "10002",
-          paperScore: 100,
-          grades: 80
-        },
-        {
-          startTime: "2020/04/22 00:00:00",
-          endTime: "2020/04/26 00:00:00",
-          timeLimit: 1800,
-          title: "前端第一次测试",
-          id: "10003",
-          paperScore: 100,
-          grades: 20
-        },
-        {
-          startTime: "2020/04/22 00:00:00",
-          endTime: "2020/04/26 00:00:00",
-          timeLimit: 1800,
-          title: "前端第一次测试",
-          id: "10004",
-          paperScore: 100,
-          grades: 100
-        },
-        {
-          startTime: "2020/04/22 00:00:00",
-          endTime: "2020/04/26 00:00:00",
-          timeLimit: 1800,
-          title: "前端第一次测试",
-          id: "10005",
-          paperScore: 100,
-          grades: 20
-        },
-      ],
+      list: [],
       total: 0,
       pageConfig: {
         currentPage: 1,
         limit: 12,
-        title: ""
+        title: "",
       },
     };
   },
   components: {
     "paper-card": PaperCard,
+  },
+  computed: {
+    paperList() {
+      return this.list.map((p) => {
+        const _p = {
+          ...p.paperInfo,
+          isMark: !!p.gradesDTO,
+          grades: p.gradesDTO?.score,
+        };
+        return _p;
+      });
+    },
   },
   mounted() {
     this.setData();
@@ -101,7 +67,7 @@ export default {
       try {
         const res = await getExamRecord(this.pageConfig);
         if (res.code === 0) {
-          this.list = res.data.paperList;
+          this.list = res.data.recordPaperInfoDTOList;
           this.total = res.data.total;
         } else {
           throw new Error(res.msg);

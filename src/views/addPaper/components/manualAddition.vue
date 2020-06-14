@@ -287,7 +287,6 @@ export default {
       }
       if (newVal.length !== 0) {
         newVal.forEach(v => {
-          console.log(v);
           this.answerList[v].key = 1;
         });
       }
@@ -321,7 +320,6 @@ export default {
         param.type = this.type;
         param.content = this.content;
         param.analysis = this.analysis;
-        console.log(param);
       }, 0);
     }
   },

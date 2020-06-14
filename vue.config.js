@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack')
 
 function resolve(dir) {
     return path.join(__dirname, dir)
@@ -30,11 +29,14 @@ module.exports = {
             .set('store', resolve('src/store'))
             .set('router', resolve('src/router'))
     },
-    publicPath: "",
+    publicPath: "/",
     configureWebpack: {
         externals: {
-            'element-ui': 'ELEMENT',
-            vue: "Vue"
+            vue: 'Vue',
+            element: "ELEMENT",
+            "vue-router": "VueRouter",
+            'vuex': 'Vuex',
+            'axios': 'axios',
         }
     }
 }

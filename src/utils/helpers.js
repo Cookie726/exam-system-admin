@@ -31,20 +31,9 @@ export const hasPermission = (role, route) => {
     }
 }
 
-export const getRoutes = (role, dynamicRoutes) => {
-    const res = []
-    dynamicRoutes.forEach(route => {
-        const temp = {
-            ...route
-        }
-        if (hasPermission(role, temp)) {
-            if (temp.children) {
-                temp.children = getRoutes(role, route.children)
-            }
-            res.push(temp)
-        }
-    })
-    res.forEach(item => {
+export const getRoutes = (permissions, dynamicRoutes) => {
+    dynamicRoutes[0].children = dynamicRoutes[0].children.filter(child => permissions.some(p => p.name === child.meta.name))
+    dynamicRoutes.forEach(item => {
         if (item.name === "layout") {
             item.redirect = {
                 name: item.children[0].name
@@ -52,8 +41,7 @@ export const getRoutes = (role, dynamicRoutes) => {
             return
         }
     })
-    console.log("resresres", res)
-    return res
+    return dynamicRoutes
 }
 
 export const getSidebarList = (routerList) => {

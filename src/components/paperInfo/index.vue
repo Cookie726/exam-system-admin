@@ -81,7 +81,7 @@
           </div>
           <div class="form-row">
             <span class="title">题目数量：</span>
-            <span class="content">{{ paperForm.questionList.length }}</span>
+            <span class="content">{{ paperForm.questionNum }}</span>
           </div>
         </el-card>
       </div>
@@ -92,7 +92,7 @@
 <script>
 import { formatDate } from "@/utils/helpers";
 import { paperClassify } from "@/config/default";
-import { getUserList } from "@/api/userManage";
+import { getStudentList } from "@/api/addPaper";
 export default {
   props: {
     paperInfo: {
@@ -107,6 +107,7 @@ export default {
           studentIdList: [],
           user: {},
           questionList: [],
+          questionNum: 0,
           timeLimit: null,
         };
       },
@@ -126,20 +127,19 @@ export default {
         paperScore: this.paperInfo.paperScore,
         user: this.paperInfo.user,
         studentIdList: this.paperInfo.studentIdList,
-        questionList: this.paperInfo.questionList,
+        questionNum:
+          "questionNum" in this.paperInfo
+            ? this.paperInfo.questionNum
+            : this.paperInfo.questionList.length,
         timeLimit: this.paperInfo.timeLimit,
       };
       return paperForm;
     },
   },
   mounted() {
-    getUserList({
-      roleId: 2,
-      userName: "",
-      sno: "",
-    }).then((res) => {
+    getStudentList().then((res) => {
       if (res.code === 0) {
-        this.studentList = res.data.userList;
+        this.studentList = res.data;
       }
     });
   },

@@ -3,7 +3,7 @@ import {
     post
 } from "@/utils/request"
 
-export const getUserList = param => get("/user/list", param)
+export const getUserList = param => get("/user", param)
 
 export const updateUserPower = data => post("/role/changeByIdList", data)
 
