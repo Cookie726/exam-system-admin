@@ -46,7 +46,7 @@ export default {
   computed: {
     ...mapState(["isSidebarNavCollapse", "crumbList"]),
     userName() {
-      return this.$store.state.user.user.userName;
+      return this.$store.state.user.user?.userName;
     },
   },
   methods: {

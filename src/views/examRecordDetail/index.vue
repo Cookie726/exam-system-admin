@@ -1,6 +1,10 @@
 <template>
   <div class="mark-exam-container">
-    <exam :questionList="questionList"></exam>
+    <exam
+      :userName="userName"
+      :studentScore="studentScore"
+      :questionList="questionList"
+    ></exam>
   </div>
 </template>
 
@@ -14,16 +18,20 @@ export default {
   data() {
     return {
       questionList: [],
+      userName: "",
+      studentScore: 0,
     };
   },
   mounted() {
     this.setData();
+    this.userName = this.$store.state.user.user.userName;
   },
   methods: {
     setData() {
       getRecordDetail(this.$route.params.id).then((res) => {
         if (res.code === 0) {
           this.questionList = res.data.recordQuestionDTOList;
+          this.studentScore = res.data.gradesDTO?.score || 0;
         }
       });
     },
@@ -35,5 +43,6 @@ export default {
 .mark-exam-container {
   padding-top: 20px;
   background: #eff3f7;
+  min-height: 100%;
 }
 </style>

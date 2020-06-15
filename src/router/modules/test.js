@@ -3,7 +3,6 @@ export default [{
     name: "test",
     meta: {
         name: "卷题管理",
-        role: ["admin", "teacher"],
         icon: "test-manage"
     },
     redirect: {
@@ -16,7 +15,6 @@ export default [{
             component: resolve => require(["@/views/test/paper"], resolve),
             meta: {
                 name: "试卷管理",
-                role: ["admin", "teacher"],
                 icon: "paper"
             }
         },
@@ -26,7 +24,6 @@ export default [{
             component: resolve => require(["@/views/test/question"], resolve),
             meta: {
                 name: "题库管理",
-                role: ["admin", "teacher"],
                 icon: "question"
             }
         }

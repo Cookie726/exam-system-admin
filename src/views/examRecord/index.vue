@@ -12,7 +12,6 @@
       </div>
       <div class="block">
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           layout="prev, pager, next"
           :total="total"
@@ -80,12 +79,8 @@ export default {
         loading.close();
       }
     },
-    handleSizeChange(pageSize) {
-      this.pageConfig.limit = pageSize;
-      this.setData();
-    },
     handleCurrentChange(currentPage) {
-      this.pageConfig.limit = currentPage;
+      this.pageConfig.currentPage = currentPage;
       this.setData();
     },
   },

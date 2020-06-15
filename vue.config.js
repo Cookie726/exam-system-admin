@@ -30,6 +30,7 @@ module.exports = {
             .set('router', resolve('src/router'))
     },
     publicPath: "/",
+    productionSourceMap:false,
     configureWebpack: {
         externals: {
             vue: 'Vue',

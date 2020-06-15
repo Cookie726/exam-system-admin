@@ -63,7 +63,9 @@
           />
         </li>
       </ul>
-      <input class="signup-btn" @click="signup" type="button" value="注册" />
+      <el-button class="signup-btn" @click="signup" :loading="isSignup" round
+        >注册</el-button
+      >
       <p class="center">
         <router-link class="router-link" :to="{ name: 'signin' }"
           >已有账号，直接登录</router-link
@@ -87,16 +89,18 @@ export default {
       },
       confirmPwd: "",
       content: "",
+      isSignup: false,
     };
   },
   methods: {
-    signup() {
-      const pass = validateSignupForm.call(this, {
+    async signup() {
+      const pass = validateSignupForm({
         ...this.signupForm,
         confirmPwd: this.confirmPwd,
       });
       if (pass) {
-        signup(this.signupForm)
+        this.isSignup = true;
+        await signup(this.signupForm)
           .then((res) => {
             if (res.code === 0) {
               window.ELEMENT.Message.success("注册成功，请等待管理员审核");
@@ -107,6 +111,7 @@ export default {
           .catch((e) => {
             throw new Error(e);
           });
+        this.isSignup = false;
       }
     },
   },

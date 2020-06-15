@@ -12,7 +12,6 @@ export const asyncRoute = [{
     component: Layout,
     meta: {
       name: 'layout',
-      role: ["admin", "teacher", "student"]
     },
     children: RouterConfig
   },
@@ -32,19 +31,10 @@ const routes = [{
     component: resolve => require(["@/views/examStart"], resolve)
   },
   {
-    path: "/recordDetail/:id",
-    name: "recordDetail",
-    meta: {
-      name: "答题记录",
-      role: ["admin", "teacher", "student"],
-    },
-    component: resolve => require(["@/views/recordDetail"], resolve)
-  }, {
     path: "/examRecordDetail/:id",
     name: "examRecordDetail",
     meta: {
       name: "答题详情",
-      role: ["student"],
     },
     component: resolve => require(["@/views/examRecordDetail"], resolve)
   }, {
@@ -52,7 +42,6 @@ const routes = [{
     name: "paperPreview",
     meta: {
       name: "预览试卷",
-      role: ["admin", "teacher", "student"],
     },
     component: resolve => require(["@/views/paperPreview"], resolve)
   }, {
@@ -93,7 +82,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 });
-
-
 
 export default router;

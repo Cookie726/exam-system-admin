@@ -24,6 +24,8 @@
         :pageName="pageName"
         :startTime="startTime"
         :endTime="endTime"
+        :userName="userName"
+        :studentScore="studentScore"
       ></exam-board>
     </div>
   </div>
@@ -45,6 +47,8 @@ export default {
     timeLimit: Number,
     startTime: String,
     endTime: String,
+    studentScore: Number,
+    userName: String,
   },
   data() {
     return {};

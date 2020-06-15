@@ -163,7 +163,7 @@ export default {
       this.pageConfig.classify = "";
       this.pageConfig.questionType = "";
       this.pageConfig.content = "";
-      this.setData()
+      this.setData();
     },
     handleSearch() {
       if (
@@ -222,17 +222,7 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          id: 1,
-          content: "123123",
-          questionType: "选择题",
-          user: {
-            userName: "潘炳名",
-          },
-          createTime: "2020/04/14 22:18:22",
-        },
-      ],
+      tableData: [],
       pageConfig: {
         limit: 10,
         currentPage: 1,
@@ -244,23 +234,7 @@ export default {
       paperClassify,
       questionType,
       showQuestionDetail: false,
-      quesDetail: {
-        content: "<p>这是题目</p>",
-        questionType: "简答题",
-        classify: "前端",
-        createTime: "2020-05-21 18:05:23",
-        user: {
-          userName: "潘炳名",
-        },
-        analysis: "<p>这是解析</p>",
-        value: 10,
-        optionList: [
-          {
-            status: 1,
-            choice: "<p>这是第一个选项</p>",
-          },
-        ],
-      },
+      quesDetail: {},
       total: 0,
     };
   },

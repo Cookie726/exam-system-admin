@@ -176,12 +176,7 @@ export default {
           },
         ],
       },
-      studentList: [
-        {
-          id: 10,
-          userName: "刘佳昕",
-        },
-      ],
+      studentList: [],
       paperClassify: paperClassify,
     };
   },

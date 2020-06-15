@@ -4,10 +4,7 @@
       :data="tableData"
       border
       style="width: 100%"
-      @selection-change="handleSelectionChange"
     >
-      <el-table-column align="center" type="selection" width="80">
-      </el-table-column>
       <el-table-column align="center" prop="userName" label="姓名" width="180">
       </el-table-column>
       <el-table-column align="center" prop="sno" label="学号" width="160">
@@ -23,13 +20,17 @@
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="240">
         <template slot-scope="scope">
-          <el-button @click="handlePass(scope.row.id)" type="text" size="small">
+          <el-button
+            @click="handlePass(scope.row.id)"
+            type="success"
+            size="small"
+          >
             同意
           </el-button>
           <el-button
             @click="handleRefuse(scope.row.id)"
-            type="text"
             size="small"
+            type="danger"
             >拒绝</el-button
           >
         </template>
@@ -115,7 +116,7 @@ export default {
         limit: 10,
         currentPage: 1,
         sno: "",
-        userName: ""
+        userName: "",
       },
       total: 0,
     };

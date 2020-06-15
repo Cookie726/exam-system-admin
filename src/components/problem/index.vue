@@ -287,17 +287,20 @@ export default {
           return option.id === this.question.studentOptionList[0].id;
         }).choice;
       } else if (this.question.questionType === "单选题") {
-        answer = String.fromCharCode(
+        answer = `
+        <span  style="display: inline-block; text-align: center; line-height: 22px; width: 20px; height: 20px; border: 1px solid #333; border-radius: 50%;">${String.fromCharCode(
           this.question.optionList.findIndex((option) => {
             return option.id === this.question.studentOptionList[0].id;
           }) + 65
-        );
+        )}</span>`;
       } else if (this.question.questionType === "多选题") {
         this.question.optionList.forEach((option, index) => {
           if (
             this.question.studentOptionList.some((op) => op.id === option.id)
           ) {
-            answer += String.fromCharCode(index + 65);
+            answer += `<span style="display: inline-block; text-align: center; line-height: 22px; width: 20px; height: 20px; border: 1px solid #333; border-radius: 50%;">${String.fromCharCode(
+              index + 65
+            )}</span>`;
           }
         });
       }
@@ -318,7 +321,9 @@ export default {
       ) {
         this.question.optionList.forEach((option, index) => {
           if (option.status === 1) {
-            rightAnswer += String.fromCharCode(index + 65);
+            rightAnswer += `<span style="display: inline-block; text-align: center; line-height: 22px; width: 20px; height: 20px; border: 1px solid #333; border-radius: 50%;">${String.fromCharCode(
+              index + 65
+            )}</span>`;
           }
         });
       }

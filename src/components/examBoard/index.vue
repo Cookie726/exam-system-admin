@@ -4,11 +4,11 @@
       <ul class="menu-items">
         <li class="menu-item">
           <div class="item-label">姓名</div>
-          <div class="item-data">潘炳名</div>
+          <div class="item-data">{{ userName }}</div>
         </li>
         <li class="menu-item">
           <div class="item-label">考试成绩</div>
-          <div class="item-data">10.0</div>
+          <div class="item-data">{{ studentScore }}</div>
         </li>
       </ul>
     </div>
@@ -67,6 +67,8 @@ export default {
     paperId: Number,
     timeLimit: Number,
     pageName: String,
+    studentScore: Number,
+    userName: String,
   },
   mounted() {
     setInterval(() => {

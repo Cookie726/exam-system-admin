@@ -23,3 +23,9 @@ npm run serve:dev
 ```
 npm run build
 ```
+
+## 项目内存性能分析
+
+```
+npm run build:report
+```

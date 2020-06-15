@@ -41,7 +41,10 @@
         <div class="title">题目解析：</div>
         <div class="content" v-html="question.analysis"></div>
       </div>
-      <div class="mb-12" v-if="question.questionType === '简答题'">
+      <div
+        class="mb-12"
+        v-if="question.questionType === '简答题' && question.filePath !== ''"
+      >
         <div class="title">附件下载：</div>
         <div class="content">
           <el-button icon="el-icon-download" size="mini" type="success"

@@ -16,7 +16,9 @@
           />
         </li>
       </ul>
-      <input class="signin-btn" type="button" @click="signin" value="登录" />
+      <el-button class="signin-btn" @click="signin" :loading="isSignin" round
+        >登录</el-button
+      >
       <p class="center router-footer">
         <router-link class="router-link" :to="{ name: 'signup' }"
           >注册账号</router-link
@@ -35,12 +37,14 @@ export default {
         sno: "",
         password: "",
       },
+      isSignin: false,
     };
   },
   methods: {
-    signin() {
+    async signin() {
       if (validateSigninForm(this.signinForm)) {
-        this.$store
+        this.isSignin = true;
+        await this.$store
           .dispatch("user/SIGNIN", this.signinForm)
           .then(() => {
             this.$router.replace({ path: "/" });
@@ -48,6 +52,7 @@ export default {
           .catch((e) => {
             window.ELEMENT.Message.error(e);
           });
+        this.isSignin = false;
       }
     },
   },

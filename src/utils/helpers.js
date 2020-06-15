@@ -23,14 +23,6 @@ export const formatDate = function (time) {
     return YY + MM + DD + " " + hh + mm + ss;
 }
 
-export const hasPermission = (role, route) => {
-    if (route.meta && route.meta.role) {
-        return route.meta.role.includes(role)
-    } else {
-        return true
-    }
-}
-
 export const getRoutes = (permissions, dynamicRoutes) => {
     dynamicRoutes[0].children = dynamicRoutes[0].children.filter(child => permissions.some(p => p.name === child.meta.name))
     dynamicRoutes.forEach(item => {

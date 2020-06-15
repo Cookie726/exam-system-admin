@@ -288,21 +288,7 @@ export default {
       showPaperInfoDialog: false,
       showSubmitList: false,
       showMark: false,
-      tableData: [
-        {
-          id: 1,
-          classify: "前端",
-          title: "前端第一次考核",
-          createTime: "2020/04/12 23:26:47",
-          timeLimit: 600,
-          paperScore: 100,
-          startTime: "2020/04/15 00:00:00",
-          endTime: "2020/04/17 00:00:00",
-          user: {
-            userName: "潘炳名",
-          },
-        },
-      ],
+      tableData: [],
       pageConfig: {
         currentPage: 1,
         limit: 10,

@@ -7,10 +7,6 @@
         <p class="content">你要访问的资源不存在</p>
       </div>
     </div>
-    <img
-      style="-webkit-user-select: none;margin: auto;"
-      src="http://js.588ku.com/comp/base/images/lz.gif"
-    />
   </div>
 </template>
 

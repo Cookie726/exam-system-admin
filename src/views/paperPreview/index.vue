@@ -51,5 +51,6 @@ export default {
 .mark-exam-container {
   padding-top: 20px;
   background: #eff3f7;
+  min-height: 100%;
 }
 </style>
