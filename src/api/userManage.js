@@ -5,6 +5,6 @@ import {
 
 export const getUserList = param => get("/user", param)
 
-export const updateUserPower = data => post("/role/changeByIdList", data)
+export const updateUserPower = data => post("/user/changeRoleByIdList", data)
 
 export const updateStatus = data => post("/user/changeStatus", data)

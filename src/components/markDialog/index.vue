@@ -37,7 +37,7 @@
               </template>
             </el-table-column>
             <el-table-column align="center" label="分数" prop="score">
-              <template slot-scope="scope">{{ scope.score || 0 }}</template>
+              <template slot-scope="scope">{{ scope.row.score || 0 }}</template>
             </el-table-column>
           </el-table>
           <div style="text-align: center; margin-top: 12px">

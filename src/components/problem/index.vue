@@ -120,6 +120,7 @@
           <div class="content" v-html="studentAnswer"></div>
         </div>
         <el-button
+          v-if="question.filePath"
           @click="handleFileDownload"
           style="margin-top: 6px"
           size="mini"
@@ -358,8 +359,7 @@ export default {
   },
   computed: {
     content() {
-      // return `${this.question.content}(${this.question.score.toFixed(1)}分)`;
-      return `${this.question.content}`;
+      return `${this.question.content}(${this.question.value.toFixed(1)}分)`;
     },
     typeClass() {
       let className;

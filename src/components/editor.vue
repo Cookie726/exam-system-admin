@@ -9,6 +9,7 @@
 
 <script>
 import E from "wangeditor";
+import { baseURL } from "@/utils/request";
 import "wangeditor/release/wangEditor.min.css";
 export default {
   name: "editoritem",
@@ -86,7 +87,6 @@ export default {
     async seteditor() {
       this.editor = new E(this.$refs.toolbar, this.$refs.editor);
       this.editor.customConfig.uploadImgShowBase64 = false; // base 64 存储图片
-      const { baseURL } = await import("@/utils/request");
       this.editor.customConfig.uploadImgServer = `${baseURL}/upload/pic`; // 填写配置服务器端地址
       this.editor.customConfig.uploadImgHeaders = {
         Accept: "application/json, text/plain, */*",

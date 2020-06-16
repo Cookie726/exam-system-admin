@@ -26,6 +26,16 @@
       >
       <span v-if="!paperItem.isMark">未批改</span>
     </div>
+    <div
+      class="grades"
+      :class="{
+        bc_danger: paperItem.grades / paperItem.paperScore < 0.6,
+        bc_success: paperItem.grades / paperItem.paperScore >= 0.6,
+      }"
+      v-if="pathName === 'examRecord' && paperItem.isMark === true"
+    >
+      {{ paperItem.grades }}
+    </div>
     <div class="item-title">{{ paperItem.title }}</div>
     <div class="item-row item-during">
       <div class="item-label">开始时间：</div>
@@ -73,6 +83,9 @@ export default {
     pathName() {
       return this.$route.name;
     },
+  },
+  mounted() {
+    console.log(this.paperItem);
   },
   methods: {
     handleAnswer() {
@@ -155,6 +168,26 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+  .grades {
+    position: absolute;
+    right: 32px;
+    width: 60px;
+    font-size: 28px;
+    height: 60px;
+    border: 2px solid #333;
+    text-align: center;
+    border-radius: 50%;
+    line-height: 60px;
+    box-sizing: border-box;
+    &.bc_danger {
+      border-color: red;
+      color: red;
+    }
+    &.bc_success {
+      border-color: #67c23a;
+      color: #67c23a;
+    }
   }
   .item-row {
     padding-left: 72px;

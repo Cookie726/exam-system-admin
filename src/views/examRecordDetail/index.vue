@@ -31,7 +31,7 @@ export default {
       getRecordDetail(this.$route.params.id).then((res) => {
         if (res.code === 0) {
           this.questionList = res.data.recordQuestionDTOList;
-          this.studentScore = res.data.gradesDTO?.score || 0;
+          this.studentScore = res.data.recordPaperInfoDTO.gradesDTO?.score || 0;
         }
       });
     },
