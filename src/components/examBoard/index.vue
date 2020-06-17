@@ -67,13 +67,43 @@ export default {
     paperId: Number,
     timeLimit: Number,
     pageName: String,
+    endTime: String,
     studentScore: Number,
     userName: String,
   },
+  data() {
+    return {
+      restTime: 0,
+    };
+  },
   mounted() {
-    setInterval(() => {
-      this.timeLimit--;
-    }, 1000);
+    // setInterval(() => {
+    //   this.timeLimit--;
+    // }, 1000);
+  },
+  watch: {
+    endTime(newVal) {
+      this.restTime =
+        (new Date(newVal).getTime() - new Date().getTime()) / 1000;
+      setInterval(() => {
+        this.restTime--;
+      }, 1000);
+    },
+    async restTime(newval) {
+      if (newval <= 0) {
+        try {
+          const res = await submitAnswer(this.paperId);
+          if (res.code !== 0) {
+            window.ELEMENT.Message.error(res.msg);
+          } else {
+            window.ELEMENT.Message.success("提交成功");
+            this.$router.replace({ path: "/" });
+          }
+        } catch (e) {
+          throw new Error(e);
+        }
+      }
+    },
   },
   methods: {
     handleMarkPaper() {
@@ -130,15 +160,15 @@ export default {
       return this.done.filter((status) => status).length;
     },
     countDownTime() {
-      let h = Math.floor(this.timeLimit / 60 / 60);
+      let h = Math.floor(this.restTime / 60 / 60);
       if (h < 10) {
         h = "0" + h;
       }
-      let m = Math.floor((this.timeLimit - h * 60 * 60) / 60);
+      let m = Math.floor((this.restTime - h * 60 * 60) / 60);
       if (m < 10) {
         m = "0" + m;
       }
-      let s = this.timeLimit - h * 60 * 60 - m * 60;
+      let s = Math.floor(this.restTime - h * 60 * 60 - m * 60);
       if (s < 10) {
         s = "0" + s;
       }
